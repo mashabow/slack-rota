@@ -3,8 +3,8 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
+    "serve": "tsc-watch --onFirstSuccess 'firebase emulators:start --only functions,firestore'",
+    "shell": "tsc-watch --onFirstSuccess 'firebase functions:shell'",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
@@ -18,9 +18,10 @@
     "firebase-functions": "^3.6.1"
   },
   "devDependencies": {
+    "firebase-functions-test": "^0.2.0",
+    "tsc-watch": "^4.2.9",
     "tslint": "^5.12.0",
-    "typescript": "^3.8.0",
-    "firebase-functions-test": "^0.2.0"
+    "typescript": "^3.8.0"
   },
   "private": true
 }
