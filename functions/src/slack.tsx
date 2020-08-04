@@ -5,6 +5,8 @@ import {
   Input,
   Textarea,
   UsersSelect,
+  Blocks,
+  Section,
 } from "@speee-js/jsx-slack";
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
@@ -64,13 +66,35 @@ app.command("/rota", async ({ ack, body, context }) => {
 
 app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, context }) => {
   await ack();
-  functions.logger.info("body", { body });
+  // functions.logger.info("body", { body });
 
   const values = {
     members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
     message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
     channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
   };
-  const user = body.user.id;
-  functions.logger.info("values, user", { values, user });
+  const userId = body.user.id;
+
+  const blocks = JSXSlack(
+    <Blocks>
+      <Section>
+        <a href={`@${userId}`} />{" "}
+        さんがこのチャンネルにローテーションを設定しました！
+      </Section>
+      <Section>
+        <blockquote>{values.message}</blockquote>
+      </Section>
+    </Blocks>
+  );
+
+  try {
+    await app.client.chat.postMessage({
+      token: config.slack.bot_token,
+      channel: values.channel,
+      text: "ローテーションが設定されました",
+      blocks,
+    });
+  } catch (error) {
+    functions.logger.error("error", { error });
+  }
 });
