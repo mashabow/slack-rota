@@ -54,7 +54,7 @@ export const createSlackApp = (rotationStore: RotationStore) => {
         />
         {/* TODO: 日時指定 */}
         <Input type="hidden" name={ID.CHANNEL} value={body.channel_id} />
-        <Input type="submit" value="登録" />
+        <Input type="submit" value="設定する" />
       </Modal>
     );
 
