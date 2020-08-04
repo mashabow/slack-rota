@@ -7,6 +7,8 @@ import {
   UsersSelect,
   Blocks,
   Section,
+  Select,
+  Option,
 } from "@speee-js/jsx-slack";
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
@@ -18,6 +20,8 @@ const ID = {
   MEMBERS: "members",
   MESSAGE: "message",
   CHANNEL: "channel",
+  HOUR: "hour",
+  MINUTE: "minute",
 } as const;
 
 const config = functions.config();
@@ -52,8 +56,20 @@ export const createSlackApp = (rotationStore: RotationStore) => {
           required
           label="メッセージ"
         />
-        {/* TODO: 日時指定 */}
         <Input type="hidden" name={ID.CHANNEL} value={body.channel_id} />
+        {/* TODO: 曜日指定 */}
+        <Select id={ID.HOUR} name={ID.HOUR} required label="時" value="10">
+          {[...Array(24)].map((_, i) => {
+            const hour = i.toString();
+            return <Option value={hour}>{hour}時</Option>;
+          })}
+        </Select>
+        <Select id={ID.MINUTE} name={ID.MINUTE} required label="分" value="0">
+          {[...Array(60 / 5)].map((_, i) => {
+            const minute = (i * 5).toString();
+            return <Option value={minute}>{minute}分</Option>;
+          })}
+        </Select>
         <Input type="submit" value="設定する" />
       </Modal>
     );
@@ -79,6 +95,10 @@ export const createSlackApp = (rotationStore: RotationStore) => {
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
       channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
+      hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
+      minute: Number(
+        view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
+      ),
     };
     const userId = body.user.id;
 
@@ -89,6 +109,9 @@ export const createSlackApp = (rotationStore: RotationStore) => {
         <Section>
           <a href={`@${userId}`} />{" "}
           さんがこのチャンネルにローテーションを設定しました！
+          <br />
+          {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
+          のような感じでお知らせします
         </Section>
         <Section>
           <blockquote>{rotation.message}</blockquote>
