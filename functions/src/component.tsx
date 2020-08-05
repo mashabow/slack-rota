@@ -11,6 +11,8 @@ import {
   Option,
   Fragment,
   Mrkdwn,
+  Overflow,
+  OverflowItem,
 } from "@speee-js/jsx-slack";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
@@ -23,6 +25,7 @@ export const ID = {
   DAYS: "days",
   HOUR: "hour",
   MINUTE: "minute",
+  OVERFLOW_MENU: "overflow_menu",
 } as const;
 
 export const SettingModal = ({ channelId }: { readonly channelId: string }) =>
@@ -70,6 +73,12 @@ const Order = ({ rotation }: { readonly rotation: Rotation }) => (
   </Fragment>
 );
 
+const OverflowMenu = ({ rotation }: { readonly rotation: Rotation }) => (
+  <Overflow actionId={ID.OVERFLOW_MENU}>
+    <OverflowItem value={`delete:${rotation.id}`}>削除</OverflowItem>
+  </Overflow>
+);
+
 export const SettingSuccessMessage = ({
   rotation,
   userId,
@@ -99,6 +108,7 @@ export const SettingSuccessMessage = ({
         <blockquote>
           <Order rotation={rotation} />
         </blockquote>
+        <OverflowMenu rotation={rotation} />
       </Section>
     </Blocks>
   );
@@ -122,6 +132,7 @@ export const RotationMessage = ({
       </Section>
       <Section>
         <Order rotation={rotation} />
+        <OverflowMenu rotation={rotation} />
       </Section>
     </Blocks>
   );
