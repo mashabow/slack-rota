@@ -52,6 +52,18 @@ export const SettingModal = ({ channelId }: { readonly channelId: string }) =>
     </Modal>
   );
 
+const Order = ({ rotation }: { readonly rotation: Rotation }) => (
+  <Fragment>
+    👑 <a href={`@${rotation.onDuty}`} />
+    {rotation.getOrderedRestMembers().map((member) => (
+      <Fragment>
+        {" → "}
+        <a href={`@${member}`} />
+      </Fragment>
+    ))}
+  </Fragment>
+);
+
 export const SettingSuccessMessage = ({
   rotation,
   userId,
@@ -80,6 +92,11 @@ export const SettingSuccessMessage = ({
           ))}
         </Mrkdwn>
       </Section>
+      <Section>
+        <blockquote>
+          <Order rotation={rotation} />
+        </blockquote>
+      </Section>
     </Blocks>
   );
 
@@ -101,13 +118,7 @@ export const RotationMessage = ({
         </Mrkdwn>
       </Section>
       <Section>
-        👑 <a href={`@${rotation.onDuty}`} />
-        {rotation.getOrderedRestMembers().map((member) => (
-          <Fragment>
-            {" → "}
-            <a href={`@${member}`} />
-          </Fragment>
-        ))}
+        <Order rotation={rotation} />
       </Section>
     </Blocks>
   );
