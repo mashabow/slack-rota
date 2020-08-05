@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { RotationStore } from "./store";
-import { INTERVAL_MINUTES, Rotation, rotate } from "./rotation";
+import { INTERVAL_MINUTES, Rotation } from "./rotation";
 
 export const cronHandler = (
   rotationStore: RotationStore,
@@ -20,7 +20,7 @@ export const cronHandler = (
   functions.logger.log("rotations", { rotations });
 
   for (const rotation of rotations) {
-    const newRotation = rotate(rotation);
+    const newRotation = rotation.rotate();
     await postRotation(newRotation);
     await rotationStore.set(newRotation);
   }

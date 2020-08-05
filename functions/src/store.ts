@@ -4,7 +4,10 @@ export class RotationStore {
   constructor(private db: FirebaseFirestore.Firestore) {}
 
   async set(rotation: Rotation): Promise<void> {
-    await this.db.collection("rotations").doc(rotation.id).set(rotation);
+    await this.db
+      .collection("rotations")
+      .doc(rotation.id)
+      .set(rotation.toJSON());
   }
 
   async getByTime(hour: number, minute: number): Promise<readonly Rotation[]> {
@@ -13,6 +16,6 @@ export class RotationStore {
       .where("hour", "==", hour)
       .where("minute", "==", minute)
       .get();
-    return snapshot.docs.map((doc) => doc.data() as Rotation);
+    return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
 }
