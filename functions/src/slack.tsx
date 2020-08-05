@@ -10,6 +10,7 @@ import {
   Select,
   Option,
   Fragment,
+  Mrkdwn,
 } from "@speee-js/jsx-slack";
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
@@ -108,14 +109,23 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     const blocks = JSXSlack(
       <Blocks>
         <Section>
-          <a href={`@${userId}`} />{" "}
-          さんがこのチャンネルにローテーションを設定しました！
-          <br />
-          {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
-          のような感じでお知らせします
+          <p>
+            <a href={`@${userId}`} /> さんがローテーションを設定しました！
+          </p>
+          <p>
+            {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
+            のような感じでお知らせします
+          </p>
         </Section>
         <Section>
-          <blockquote>{rotation.message}</blockquote>
+          <Mrkdwn verbatim={false}>
+            {rotation.message.split("\n").map((line) => (
+              <Fragment>
+                &gt; {line}
+                <br />
+              </Fragment>
+            ))}
+          </Mrkdwn>
         </Section>
       </Blocks>
     );
@@ -138,7 +148,16 @@ export const createSlackApp = (rotationStore: RotationStore) => {
 
     const blocks = JSXSlack(
       <Blocks>
-        <Section>{rotation.message}</Section>
+        <Section>
+          <Mrkdwn verbatim={false}>
+            {rotation.message.split("\n").map((line) => (
+              <Fragment>
+                {line}
+                <br />
+              </Fragment>
+            ))}
+          </Mrkdwn>
+        </Section>
         <Section>
           👑 <a href={`@${onDuty}`} />
           {rotation.members.slice(1).map((member) => (
