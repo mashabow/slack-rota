@@ -7,3 +7,5 @@ export interface Rotation {
   readonly hour: number; // 0, 1, …, 23
   readonly minute: number; // 0, 5, …, 55
 }
+
+export const INTERVAL_MINUTES = 5;

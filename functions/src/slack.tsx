@@ -13,7 +13,7 @@ import {
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
 import { RotationStore } from "./store";
-import { Rotation } from "./rotation";
+import { Rotation, INTERVAL_MINUTES } from "./rotation";
 
 const ID = {
   SUBMIT_CALLBACK: "submit_callback",
@@ -65,8 +65,8 @@ export const createSlackApp = (rotationStore: RotationStore) => {
           })}
         </Select>
         <Select id={ID.MINUTE} name={ID.MINUTE} required label="分" value="0">
-          {[...Array(60 / 5)].map((_, i) => {
-            const minute = (i * 5).toString();
+          {[...Array(60 / INTERVAL_MINUTES)].map((_, i) => {
+            const minute = (i * INTERVAL_MINUTES).toString();
             return <Option value={minute}>{minute}分</Option>;
           })}
         </Select>

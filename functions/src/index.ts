@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { createSlackApp } from "./slack";
 import { RotationStore } from "./store";
 import { cronHandler } from "./cron";
+import { INTERVAL_MINUTES } from "./rotation";
 
 admin.initializeApp();
 
@@ -15,6 +16,6 @@ const functionBuilder = functions.region("asia-northeast1");
 export const slack = functionBuilder.https.onRequest(slackApp);
 
 export const cron = functionBuilder.pubsub
-  .schedule("every 5 minutes synchronized")
+  .schedule(`every ${INTERVAL_MINUTES} minutes synchronized`)
   .timeZone("Asia/Tokyo")
   .onRun(cronHandler(rotationStore));
