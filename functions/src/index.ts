@@ -9,13 +9,13 @@ admin.initializeApp();
 
 const db = admin.firestore();
 const rotationStore = new RotationStore(db);
-const slackApp = createSlackApp(rotationStore);
+const { slackHandler, postRotation } = createSlackApp(rotationStore);
 
 const functionBuilder = functions.region("asia-northeast1");
 
-export const slack = functionBuilder.https.onRequest(slackApp);
+export const slack = functionBuilder.https.onRequest(slackHandler);
 
 export const cron = functionBuilder.pubsub
   .schedule(`every ${INTERVAL_MINUTES} minutes synchronized`)
   .timeZone("Asia/Tokyo")
-  .onRun(cronHandler(rotationStore));
+  .onRun(cronHandler(rotationStore, postRotation));

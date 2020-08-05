@@ -2,11 +2,12 @@ import * as functions from "firebase-functions";
 import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { RotationStore } from "./store";
-import { INTERVAL_MINUTES } from "./rotation";
+import { INTERVAL_MINUTES, Rotation } from "./rotation";
 
-export const cronHandler = (rotationStore: RotationStore) => async (
-  context: functions.EventContext
-): Promise<void> => {
+export const cronHandler = (
+  rotationStore: RotationStore,
+  postRotation: (rotation: Rotation) => Promise<void>
+) => async (context: functions.EventContext): Promise<void> => {
   const utc = roundToNearestMinutes(new Date(context.timestamp), {
     nearestTo: INTERVAL_MINUTES,
   });
@@ -16,6 +17,9 @@ export const cronHandler = (rotationStore: RotationStore) => async (
     jst.getHours(),
     jst.getMinutes()
   );
-
   functions.logger.log("rotations", { rotations });
+
+  for (const rotation of rotations) {
+    await postRotation(rotation);
+  }
 };

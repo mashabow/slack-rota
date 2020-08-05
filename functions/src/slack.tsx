@@ -9,6 +9,7 @@ import {
   Section,
   Select,
   Option,
+  Fragment,
 } from "@speee-js/jsx-slack";
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
@@ -131,5 +132,39 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     }
   });
 
-  return expressReceiver.app;
+  const postRotation = async (rotation: Rotation): Promise<void> => {
+    // TODO: rotate
+    const onDuty = rotation.members[0];
+
+    const blocks = JSXSlack(
+      <Blocks>
+        <Section>{rotation.message}</Section>
+        <Section>
+          👑 <a href={`@${onDuty}`} />
+          {rotation.members.slice(1).map((member) => (
+            <Fragment>
+              {" → "}
+              <a href={`@${member}`} />
+            </Fragment>
+          ))}
+        </Section>
+      </Blocks>
+    );
+
+    try {
+      await app.client.chat.postMessage({
+        token: config.slack.bot_token,
+        channel: rotation.channel,
+        text: rotation.message,
+        blocks,
+      });
+    } catch (error) {
+      functions.logger.error("error", { error });
+    }
+  };
+
+  return {
+    slackHandler: expressReceiver.app,
+    postRotation,
+  };
 };
