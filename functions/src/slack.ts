@@ -45,6 +45,7 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     const rotation: Rotation = {
       id: new Date().valueOf().toString(),
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
+      onDuty: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users[0],
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
       channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
       hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
@@ -68,8 +69,6 @@ export const createSlackApp = (rotationStore: RotationStore) => {
   });
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
-    // TODO: rotate
-
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,

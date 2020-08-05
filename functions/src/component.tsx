@@ -87,8 +87,13 @@ export const RotationMessage = ({
   rotation,
 }: {
   readonly rotation: Rotation;
-}) =>
-  JSXSlack(
+}) => {
+  const index = rotation.members.indexOf(rotation.onDuty);
+  const restMembers = [
+    ...rotation.members.slice(index + 1),
+    ...rotation.members.slice(0, index),
+  ];
+  return JSXSlack(
     <Blocks>
       <Section>
         <Mrkdwn verbatim={false}>
@@ -101,8 +106,8 @@ export const RotationMessage = ({
         </Mrkdwn>
       </Section>
       <Section>
-        👑 <a href={`@${rotation.members}`} />
-        {rotation.members.slice(1).map((member) => (
+        👑 <a href={`@${rotation.onDuty}`} />
+        {restMembers.map((member) => (
           <Fragment>
             {" → "}
             <a href={`@${member}`} />
@@ -111,3 +116,4 @@ export const RotationMessage = ({
       </Section>
     </Blocks>
   );
+};
