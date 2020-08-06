@@ -2,7 +2,8 @@ import * as functions from "firebase-functions";
 import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { RotationStore } from "./store";
-import { INTERVAL_MINUTES, Rotation } from "./rotation";
+import { Rotation } from "./model/rotation";
+import { INTERVAL_MINUTES, Schedule } from "./model/schedule";
 
 export const cronHandler = (
   rotationStore: RotationStore,
@@ -13,9 +14,12 @@ export const cronHandler = (
   });
   const jst = utcToZonedTime(utc, "Asia/Tokyo");
 
-  const rotations = await rotationStore.getByTime(
-    jst.getHours(),
-    jst.getMinutes()
+  const rotations = await rotationStore.getBySchedule(
+    Schedule.fromJSON({
+      days: [jst.getDay()],
+      hour: jst.getHours(),
+      minute: jst.getMinutes(),
+    })
   );
   functions.logger.log("rotations", { rotations });
 

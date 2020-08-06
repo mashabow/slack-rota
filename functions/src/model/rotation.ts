@@ -1,27 +1,26 @@
-import { NonFunctionProperties, Optional } from "./util";
+import { NonFunctionProperties, Optional } from "../util";
+import { Schedule, ScheduleJSON } from "./schedule";
 
-export const INTERVAL_MINUTES = 5;
-
-type RotationJSON = NonFunctionProperties<Rotation>;
+type RotationArgs = NonFunctionProperties<Rotation>;
+type RotationJSON = Omit<RotationArgs, "schedule"> & {
+  readonly schedule: ScheduleJSON;
+};
 
 export class Rotation {
   readonly id: string;
   readonly members: readonly string[];
-  readonly onDuty: string; // 担当者の user_id。member の中の 1 人
+  readonly onDuty: string; // 担当者の user_id。members の中の 1 人
   readonly message: string;
   readonly channel: string;
-  // JST
-  readonly hour: number; // 0, 1, …, 23
-  readonly minute: number; // 0, 5, …, 55
+  readonly schedule: Schedule;
 
-  private constructor(args: RotationJSON) {
+  private constructor(args: RotationArgs) {
     this.id = args.id;
     this.members = args.members;
     this.onDuty = args.onDuty;
     this.message = args.message;
     this.channel = args.channel;
-    this.hour = args.hour;
-    this.minute = args.minute;
+    this.schedule = args.schedule;
   }
 
   toJSON(): RotationJSON {
@@ -31,8 +30,7 @@ export class Rotation {
       onDuty: this.onDuty,
       message: this.message,
       channel: this.channel,
-      hour: this.hour,
-      minute: this.minute,
+      schedule: this.schedule.toJSON(),
     };
   }
 
@@ -43,8 +41,7 @@ export class Rotation {
       onDuty: json.onDuty ?? json.members[json.members.length - 1],
       message: json.message,
       channel: json.channel,
-      hour: json.hour,
-      minute: json.minute,
+      schedule: Schedule.fromJSON(json.schedule),
     });
   }
 
