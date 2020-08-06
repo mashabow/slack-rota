@@ -38,7 +38,7 @@ export class Rotation {
     return new Rotation({
       id: json.id ?? new Date().valueOf().toString(),
       members: json.members,
-      onDuty: json.onDuty ?? json.members[json.members.length - 1],
+      onDuty: json.onDuty ?? json.members[0],
       message: json.message,
       channel: json.channel,
       schedule: Schedule.fromJSON(json.schedule),
