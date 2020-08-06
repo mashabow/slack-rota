@@ -10,9 +10,14 @@ export class RotationStore {
       .set(rotation.toJSON());
   }
 
-  async getByTime(hour: number, minute: number): Promise<readonly Rotation[]> {
+  async getByTime(
+    day: number,
+    hour: number,
+    minute: number
+  ): Promise<readonly Rotation[]> {
     const snapshot = await this.db
       .collection("rotations")
+      .where("days", "array-contains", day)
       .where("hour", "==", hour)
       .where("minute", "==", minute)
       .get();

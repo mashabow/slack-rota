@@ -14,6 +14,7 @@ export const cronHandler = (
   const jst = utcToZonedTime(utc, "Asia/Tokyo");
 
   const rotations = await rotationStore.getByTime(
+    jst.getDay(),
     jst.getHours(),
     jst.getMinutes()
   );
