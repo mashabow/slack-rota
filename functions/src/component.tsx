@@ -19,6 +19,7 @@ export const ID = {
   MEMBERS: "members",
   MESSAGE: "message",
   CHANNEL: "channel",
+  DAYS: "days",
   HOUR: "hour",
   MINUTE: "minute",
 } as const;
@@ -35,7 +36,11 @@ export const SettingModal = ({ channelId }: { readonly channelId: string }) =>
       />
       <Textarea id={ID.MESSAGE} name={ID.MESSAGE} required label="メッセージ" />
       <Input type="hidden" name={ID.CHANNEL} value={channelId} />
-      {/* TODO: 曜日指定 */}
+      <Select id={ID.DAYS} name={ID.DAYS} required multiple label="曜日">
+        {[..."日月火水木金土"].map((s, i) => {
+          return <Option value={i.toString()}>{s}曜</Option>;
+        })}
+      </Select>
       <Select id={ID.HOUR} name={ID.HOUR} required label="時" value="10">
         {[...Array(24)].map((_, i) => {
           const hour = i.toString();
