@@ -8,7 +8,6 @@ import {
   RotationMessage,
   ID,
 } from "./component";
-import { ro } from "date-fns/locale";
 
 const config = functions.config();
 
@@ -79,24 +78,32 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     async ({ ack, action, body }) => {
       await ack();
 
+      const userId = body.user.id;
       const [type, rotationId] = action.selected_option.value.split(":");
       switch (type) {
-        case "delete": {
-          // TODO: rotations が存在していない場合も成功するので、存在チェックを入れる？
-          await rotationStore.delete(rotationId);
+        case "delete":
           try {
-            // respond() だと reply_broadcast が効かない？
-            await app.client.chat.postMessage({
-              token: config.slack.bot_token,
-              channel: body.channel!.id,
-              text: `<@${body.user.id}> さんがこのローテーションを削除しました 👋`,
-              thread_ts: body.container.message_ts,
-              reply_broadcast: true,
-            });
+            if (await rotationStore.has(rotationId)) {
+              await rotationStore.delete(rotationId);
+              // respond() だと reply_broadcast が効かない？
+              await app.client.chat.postMessage({
+                token: config.slack.bot_token,
+                channel: body.channel!.id,
+                text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
+                thread_ts: body.container.message_ts,
+                reply_broadcast: true,
+              });
+            } else {
+              await app.client.chat.postEphemeral({
+                token: config.slack.bot_token,
+                channel: body.channel!.id,
+                text: "このローテーションは削除済みです",
+                user: userId,
+              });
+            }
           } catch (error) {
             functions.logger.error("error", { error });
           }
-        }
         default: {
           functions.logger.error("Unknown overflow menu action", { action });
           functions.logger.info("body", { body });
