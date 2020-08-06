@@ -38,14 +38,18 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     }
   });
 
-  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, context }) => {
+  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view }) => {
     await ack();
-    // functions.logger.info("body", { body });
 
     const rotation = Rotation.fromJSON({
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
       channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
+      days: view.state.values[ID.DAYS][
+        ID.DAYS
+      ].selected_options.map((option: { value: string }) =>
+        parseInt(option.value)
+      ),
       hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
       minute: Number(
         view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value

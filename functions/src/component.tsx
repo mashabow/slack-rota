@@ -83,7 +83,8 @@ export const SettingSuccessMessage = ({
           <a href={`@${userId}`} /> さんがローテーションを設定しました！
         </p>
         <p>
-          {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
+          {rotation.days.map((day) => `${"日月火水木金土"[day]}曜`).join("・")}
+          の {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
           のような感じでお知らせします
         </p>
       </Section>

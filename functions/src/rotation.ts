@@ -11,6 +11,7 @@ export class Rotation {
   readonly message: string;
   readonly channel: string;
   // JST
+  readonly days: readonly number[]; // 0, 1, …, 6。日曜始まり
   readonly hour: number; // 0, 1, …, 23
   readonly minute: number; // 0, 5, …, 55
 
@@ -20,6 +21,7 @@ export class Rotation {
     this.onDuty = args.onDuty;
     this.message = args.message;
     this.channel = args.channel;
+    this.days = args.days;
     this.hour = args.hour;
     this.minute = args.minute;
   }
@@ -31,6 +33,7 @@ export class Rotation {
       onDuty: this.onDuty,
       message: this.message,
       channel: this.channel,
+      days: this.days,
       hour: this.hour,
       minute: this.minute,
     };
@@ -43,6 +46,7 @@ export class Rotation {
       onDuty: json.onDuty ?? json.members[json.members.length - 1],
       message: json.message,
       channel: json.channel,
+      days: json.days,
       hour: json.hour,
       minute: json.minute,
     });
