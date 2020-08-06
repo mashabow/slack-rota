@@ -12,7 +12,8 @@ import {
   Fragment,
   Mrkdwn,
 } from "@speee-js/jsx-slack";
-import { Rotation, INTERVAL_MINUTES } from "./rotation";
+import { Rotation } from "./model/rotation";
+import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
 
 export const ID = {
   SUBMIT_CALLBACK: "submit_callback",
@@ -37,7 +38,7 @@ export const SettingModal = ({ channelId }: { readonly channelId: string }) =>
       <Textarea id={ID.MESSAGE} name={ID.MESSAGE} required label="メッセージ" />
       <Input type="hidden" name={ID.CHANNEL} value={channelId} />
       <Select id={ID.DAYS} name={ID.DAYS} required multiple label="曜日">
-        {[..."日月火水木金土"].map((s, i) => {
+        {DAY_STRINGS.map((s, i) => {
           return <Option value={i.toString()}>{s}曜</Option>;
         })}
       </Select>
@@ -82,11 +83,7 @@ export const SettingSuccessMessage = ({
         <p>
           <a href={`@${userId}`} /> さんがローテーションを設定しました！
         </p>
-        <p>
-          {rotation.days.map((day) => `${"日月火水木金土"[day]}曜`).join("・")}
-          の {rotation.hour}:{rotation.minute.toString().padStart(2, "0")} に 👇
-          のような感じでお知らせします
-        </p>
+        <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>
       <Section>
         <Mrkdwn verbatim={false}>

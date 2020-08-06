@@ -1,4 +1,4 @@
-import { Rotation } from "./rotation";
+import { Rotation } from "./model/rotation";
 
 export class RotationStore {
   constructor(private db: FirebaseFirestore.Firestore) {}
@@ -17,9 +17,9 @@ export class RotationStore {
   ): Promise<readonly Rotation[]> {
     const snapshot = await this.db
       .collection("rotations")
-      .where("days", "array-contains", day)
-      .where("hour", "==", hour)
-      .where("minute", "==", minute)
+      .where("schedule.days", "array-contains", day)
+      .where("schedule.hour", "==", hour)
+      .where("schedule.minute", "==", minute)
       .get();
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }

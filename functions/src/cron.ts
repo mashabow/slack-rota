@@ -2,7 +2,8 @@ import * as functions from "firebase-functions";
 import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { RotationStore } from "./store";
-import { INTERVAL_MINUTES, Rotation } from "./rotation";
+import { Rotation } from "./model/rotation";
+import { INTERVAL_MINUTES } from "./model/schedule";
 
 export const cronHandler = (
   rotationStore: RotationStore,

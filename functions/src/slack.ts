@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { App, ExpressReceiver } from "@slack/bolt";
 import { RotationStore } from "./store";
-import { Rotation } from "./rotation";
+import { Rotation } from "./model/rotation";
 import {
   SettingModal,
   SettingSuccessMessage,
@@ -45,15 +45,17 @@ export const createSlackApp = (rotationStore: RotationStore) => {
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
       channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
-      days: view.state.values[ID.DAYS][
-        ID.DAYS
-      ].selected_options.map((option: { value: string }) =>
-        parseInt(option.value)
-      ),
-      hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
-      minute: Number(
-        view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
-      ),
+      schedule: {
+        days: view.state.values[ID.DAYS][
+          ID.DAYS
+        ].selected_options.map((option: { value: string }) =>
+          parseInt(option.value)
+        ),
+        hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
+        minute: Number(
+          view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
+        ),
+      },
     });
 
     await rotationStore.set(rotation);
