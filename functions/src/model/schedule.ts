@@ -30,7 +30,7 @@ export class Schedule {
 
   static fromJSON(json: ScheduleJSON): Schedule {
     return new Schedule({
-      days: json.days,
+      days: [...json.days].sort(),
       hour: json.hour,
       minute: json.minute,
     });
