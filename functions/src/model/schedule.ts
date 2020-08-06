@@ -1,3 +1,5 @@
+import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
+import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { NonFunctionProperties } from "../util";
 
 export const DAY_STRINGS = ["日", "月", "火", "水", "木", "金", "土"] as const;
@@ -31,6 +33,19 @@ export class Schedule {
       days: json.days,
       hour: json.hour,
       minute: json.minute,
+    });
+  }
+
+  static dateToNearestSchedule(date: Date): Schedule {
+    const utc = roundToNearestMinutes(date, {
+      nearestTo: INTERVAL_MINUTES,
+    });
+    const jst = utcToZonedTime(utc, "Asia/Tokyo");
+
+    return Schedule.fromJSON({
+      days: [jst.getDay()],
+      hour: jst.getHours(),
+      minute: jst.getMinutes(),
     });
   }
 
