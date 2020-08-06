@@ -24,4 +24,8 @@ export class RotationStore {
       .get();
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
+
+  async delete(rotationId: string): Promise<void> {
+    await this.db.collection("rotations").doc(rotationId).delete();
+  }
 }

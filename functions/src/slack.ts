@@ -8,6 +8,7 @@ import {
   RotationMessage,
   ID,
 } from "./component";
+import { ro } from "date-fns/locale";
 
 const config = functions.config();
 
@@ -81,7 +82,8 @@ export const createSlackApp = (rotationStore: RotationStore) => {
       const [type, rotationId] = action.selected_option.value.split(":");
       switch (type) {
         case "delete": {
-          // TODO: delete rotation from store
+          // TODO: rotations が存在していない場合も成功するので、存在チェックを入れる？
+          await rotationStore.delete(rotationId);
           try {
             // respond() だと reply_broadcast が効かない？
             await app.client.chat.postMessage({
