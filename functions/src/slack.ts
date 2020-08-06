@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { App, ExpressReceiver } from "@slack/bolt";
+import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import { RotationStore } from "./store";
 import { Rotation } from "./model/rotation";
 import {
@@ -60,17 +60,57 @@ export const createSlackApp = (rotationStore: RotationStore) => {
 
     await rotationStore.set(rotation);
 
+    const userId = body.user.id;
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
         channel: rotation.channel,
-        text: "ローテーションが設定されました",
-        blocks: SettingSuccessMessage({ rotation, userId: body.user.id }),
+        text: `<@${userId}> さんがローテーションを作成しました！`,
+        blocks: SettingSuccessMessage({ rotation, userId }),
       });
     } catch (error) {
       functions.logger.error("error", { error });
     }
   });
+
+  app.action<BlockOverflowAction>(
+    ID.OVERFLOW_MENU,
+    async ({ ack, action, body }) => {
+      await ack();
+
+      const userId = body.user.id;
+      const [type, rotationId] = action.selected_option.value.split(":");
+      switch (type) {
+        case "delete":
+          try {
+            if (await rotationStore.has(rotationId)) {
+              await rotationStore.delete(rotationId);
+              // respond() だと reply_broadcast が効かない？
+              await app.client.chat.postMessage({
+                token: config.slack.bot_token,
+                channel: body.channel!.id,
+                text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
+                thread_ts: body.container.message_ts,
+                reply_broadcast: true,
+              });
+            } else {
+              await app.client.chat.postEphemeral({
+                token: config.slack.bot_token,
+                channel: body.channel!.id,
+                text: "このローテーションは削除済みです",
+                user: userId,
+              });
+            }
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
+        default: {
+          functions.logger.error("Unknown overflow menu action", { action });
+          functions.logger.info("body", { body });
+        }
+      }
+    }
+  );
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
     try {

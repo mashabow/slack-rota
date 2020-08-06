@@ -24,4 +24,13 @@ export class RotationStore {
       .get();
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
+
+  async has(rotationId: string): Promise<boolean> {
+    const doc = await this.db.collection("rotations").doc(rotationId).get();
+    return doc.exists;
+  }
+
+  async delete(rotationId: string): Promise<void> {
+    await this.db.collection("rotations").doc(rotationId).delete();
+  }
 }
