@@ -101,6 +101,7 @@ export const createSlackApp = (rotationStore: RotationStore) => {
                 user: userId,
               });
             }
+            return;
           } catch (error) {
             functions.logger.error("error", { error });
           }
