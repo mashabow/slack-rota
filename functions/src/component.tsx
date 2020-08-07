@@ -1,4 +1,5 @@
 /** @jsx JSXSlack.h **/
+import { KnownBlock, View } from "@slack/types";
 import {
   JSXSlack,
   Modal,
@@ -28,7 +29,11 @@ export const ID = {
   OVERFLOW_MENU: "overflow_menu",
 } as const;
 
-export const SettingModal = ({ channelId }: { readonly channelId: string }) =>
+export const SettingModal = ({
+  channelId,
+}: {
+  readonly channelId: string;
+}): View =>
   JSXSlack(
     <Modal callbackId={ID.SUBMIT_CALLBACK} title="Rota" close="キャンセル">
       <UsersSelect
@@ -79,13 +84,15 @@ const OverflowMenu = ({ rotation }: { readonly rotation: Rotation }) => (
   </Overflow>
 );
 
+type Blocks = KnownBlock[];
+
 export const SettingSuccessMessage = ({
   rotation,
   userId,
 }: {
   readonly rotation: Rotation;
   readonly userId: string;
-}) =>
+}): Blocks =>
   JSXSlack(
     <Blocks>
       <Section>
@@ -117,7 +124,7 @@ export const RotationMessage = ({
   rotation,
 }: {
   readonly rotation: Rotation;
-}) =>
+}): Blocks =>
   JSXSlack(
     <Blocks>
       <Section>

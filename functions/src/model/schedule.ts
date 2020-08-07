@@ -1,5 +1,5 @@
-import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
+import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import { NonFunctionProperties } from "../util";
 
 export const DAY_STRINGS = ["日", "月", "火", "水", "木", "金", "土"] as const;

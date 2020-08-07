@@ -1,9 +1,9 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { createSlackApp } from "./slack";
-import { RotationStore } from "./store";
 import { cronHandler } from "./cron";
 import { INTERVAL_MINUTES } from "./model/schedule";
+import { createSlackApp } from "./slack";
+import { RotationStore } from "./store";
 
 admin.initializeApp();
 
