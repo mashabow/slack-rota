@@ -1,4 +1,5 @@
 /** @jsx JSXSlack.h **/
+import { KnownBlock, View } from "@slack/types";
 import {
   JSXSlack,
   Modal,
@@ -14,7 +15,6 @@ import {
   Overflow,
   OverflowItem,
 } from "@speee-js/jsx-slack";
-import { KnownBlock, View } from "@slack/types";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
 
