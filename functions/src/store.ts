@@ -22,6 +22,7 @@ export class RotationStore {
       .where("schedule.hour", "==", schedule.hour)
       .where("schedule.minute", "==", schedule.minute)
       .get();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
 

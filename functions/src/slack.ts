@@ -11,7 +11,12 @@ import {
 
 const config = functions.config();
 
-export const createSlackApp = (rotationStore: RotationStore) => {
+export const createSlackApp = (
+  rotationStore: RotationStore
+): {
+  readonly slackHandler: ExpressReceiver["app"];
+  readonly postRotation: (rotation: Rotation) => Promise<void>;
+} => {
   const expressReceiver = new ExpressReceiver({
     signingSecret: config.slack.signing_secret,
     endpoints: "/events",
@@ -78,6 +83,12 @@ export const createSlackApp = (rotationStore: RotationStore) => {
     async ({ ack, action, body }) => {
       await ack();
 
+      const channelId = body.channel?.id;
+      if (!channelId) {
+        functions.logger.error("Missing channel id", { body });
+        return;
+      }
+
       const userId = body.user.id;
       const [type, rotationId] = action.selected_option.value.split(":");
       switch (type) {
@@ -88,7 +99,7 @@ export const createSlackApp = (rotationStore: RotationStore) => {
               // respond() だと reply_broadcast が効かない？
               await app.client.chat.postMessage({
                 token: config.slack.bot_token,
-                channel: body.channel!.id,
+                channel: channelId,
                 text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
                 thread_ts: body.container.message_ts,
                 reply_broadcast: true,
@@ -96,15 +107,15 @@ export const createSlackApp = (rotationStore: RotationStore) => {
             } else {
               await app.client.chat.postEphemeral({
                 token: config.slack.bot_token,
-                channel: body.channel!.id,
+                channel: channelId,
                 text: "このローテーションは削除済みです",
                 user: userId,
               });
             }
-            return;
           } catch (error) {
             functions.logger.error("error", { error });
           }
+          break;
         default: {
           functions.logger.error("Unknown overflow menu action", { action });
           functions.logger.info("body", { body });
