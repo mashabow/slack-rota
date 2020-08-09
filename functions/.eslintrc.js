@@ -22,5 +22,6 @@ module.exports = {
     "import/newline-after-import": "error",
     "import/order": ["error", { alphabetize: { order: "asc" } }],
     "react/jsx-key": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
   },
 };
