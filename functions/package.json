@@ -8,7 +8,9 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "lint": "eslint --format codeframe --ext .js,.jsx,.ts,.tsx .",
-    "test": "jest"
+    "lint:ci": "npm run lint -- --max-warnings=0",
+    "test": "jest",
+    "test:ci": "npm run test -- --ci"
   },
   "engines": {
     "node": "10"

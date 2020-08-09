@@ -14,4 +14,5 @@ jobs:
         with:
           node-version: "10.x"
       - run: npm ci
-      - run: npm run lint -- --max-warnings=0
+      - run: npm run lint:ci
+      - run: npm run test:ci
