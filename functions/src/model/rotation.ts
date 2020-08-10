@@ -2,7 +2,7 @@ import { NonFunctionProperties, Optional } from "../util";
 import { Schedule, ScheduleJSON } from "./schedule";
 
 type RotationArgs = NonFunctionProperties<Rotation>;
-type RotationJSON = Omit<RotationArgs, "schedule"> & {
+export type RotationJSON = Omit<RotationArgs, "schedule"> & {
   readonly schedule: ScheduleJSON;
 };
 
