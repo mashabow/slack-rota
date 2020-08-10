@@ -42,7 +42,7 @@ describe("functions", () => {
     client = MockedWebClient.mock.instances[0];
   });
   afterEach(async () => {
-    MockedWebClient.mockClear();
+    client.chat.postMessage.mockClear();
   });
 
   describe("cron", () => {
@@ -98,7 +98,6 @@ describe("functions", () => {
         },
       },
     ];
-    let client: MockWebClient;
 
     beforeEach(async () => {
       // Prepare rotations in Firestore
@@ -112,19 +111,27 @@ describe("functions", () => {
       await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
     });
 
-    it("updates onDuty fields of matched rotations", async () => {
+    it("posts matched rotations and updates onDuty fields of them", async () => {
       await wrappedCron({
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
-      expect(client.chat.postMessage).toHaveBeenCalledWith([]); // TODO
-
-      const snapshot = await rotationsRef.get();
-      expect(snapshot.docs.map((doc) => doc.data())).toEqual([
+      expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual([
         { ...rotations[0], onDuty: "user-b" },
         { ...rotations[1], onDuty: "user-p" },
         rotations[2],
         rotations[3],
       ]);
+    });
+
+    it("does nothing when no rotation matched", async () => {
+      await wrappedCron({
+        timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
+      });
+      expect(client.chat.postMessage.mock.calls).toEqual([]);
+      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual(
+        rotations
+      );
     });
   });
 });
