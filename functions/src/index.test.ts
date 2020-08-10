@@ -1,4 +1,8 @@
 import { describe, it, expect } from "@jest/globals";
+import {
+  MockedWebClient,
+  MockWebClient,
+} from "@slack-wrench/jest-mock-web-client";
 import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import functionsTest from "firebase-functions-test";
@@ -18,12 +22,27 @@ const test = functionsTest(
   },
   `${__dirname}/../../serviceAccountKey.json`
 );
+test.mockConfig({
+  slack: {
+    bot_token: "dummy-bot-token",
+    signing_secret: "dummy-signing-secret",
+  },
+});
 
 import { cron } from "./index";
 
 describe("functions", () => {
   afterAll(() => {
     test.cleanup();
+  });
+
+  // Mock Slack API client
+  let client: MockWebClient;
+  beforeEach(async () => {
+    client = MockedWebClient.mock.instances[0];
+  });
+  afterEach(async () => {
+    MockedWebClient.mockClear();
   });
 
   describe("cron", () => {
@@ -79,15 +98,16 @@ describe("functions", () => {
         },
       },
     ];
+    let client: MockWebClient;
 
     beforeEach(async () => {
+      // Prepare rotations in Firestore
       await Promise.all(
         rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
       );
     });
-
     afterEach(async () => {
-      // Delete all rotations
+      // Delete all rotations from Firestore
       const snapshot = await rotationsRef.get();
       await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
     });
@@ -96,6 +116,7 @@ describe("functions", () => {
       await wrappedCron({
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
+      expect(client.chat.postMessage).toHaveBeenCalledWith([]); // TODO
 
       const snapshot = await rotationsRef.get();
       expect(snapshot.docs.map((doc) => doc.data())).toEqual([

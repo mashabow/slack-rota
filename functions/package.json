@@ -25,6 +25,7 @@
     "firebase-functions": "^3.6.1"
   },
   "devDependencies": {
+    "@slack-wrench/jest-mock-web-client": "^1.2.0",
     "@types/jest": "^26.0.9",
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",
