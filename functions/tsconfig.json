@@ -9,7 +9,9 @@
     "strict": true,
     "target": "es2017",
     "jsx": "react",
-    "jsxFactory": "JSXSlack.h"
+    "jsxFactory": "JSXSlack.h",
+    // node_modules/@slack-wrench/jest-mock-web-client/lib/index.d.ts で型エラーが出るので無視する
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]
