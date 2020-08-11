@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import functionsTest from "firebase-functions-test";
 import { RotationJSON } from "./model/rotation";
+import { CONFIG, postSlackEvent } from "./test-helper";
 
 dotenv.config({ path: `${__dirname}/../../.env` });
 const { TEST_PROJECT_ID } = process.env;
@@ -22,14 +23,9 @@ const test = functionsTest(
   },
   `${__dirname}/../../serviceAccountKey.json`
 );
-test.mockConfig({
-  slack: {
-    bot_token: "dummy-bot-token",
-    signing_secret: "dummy-signing-secret",
-  },
-});
+test.mockConfig(CONFIG);
 
-import { cron } from "./index";
+import { slack, cron } from "./index";
 
 describe("functions", () => {
   afterAll(() => {
@@ -43,6 +39,16 @@ describe("functions", () => {
   });
   afterEach(async () => {
     client.chat.postMessage.mockClear();
+  });
+
+  describe.only("slack", () => {
+    it("TODO", async () => {
+      const res = await postSlackEvent(slack, {
+        foo: "bar",
+      });
+      console.log(res);
+      expect(client.chat.postMessage.mock.calls).toEqual(0); // TODO
+    });
   });
 
   describe("cron", () => {
