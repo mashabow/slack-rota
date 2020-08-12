@@ -75,6 +75,8 @@ describe("functions", () => {
 
     describe("submit from SettingModal", () => {
       it("posts SettingSuccessMessage and creates a rotation on Firestore", async () => {
+        Date.now = jest.fn(() => 1597200000000);
+
         const res = await postSlackEvent(slack, {
           payload: JSON.stringify({
             type: "view_submission",
@@ -172,7 +174,7 @@ describe("functions", () => {
           (await rotationsRef.get()).docs.map((doc) => doc.data())
         ).toEqual([
           {
-            id: "1597252801237",
+            id: "1597200000000",
             channel: "channel-id",
             members: ["user-a", "user-b", "user-c"],
             message: "てすてす\n\n*テスト*です",
