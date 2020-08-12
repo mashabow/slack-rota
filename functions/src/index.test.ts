@@ -189,6 +189,96 @@ describe("functions", () => {
         ]);
       });
     });
+
+    describe("delete rotation", () => {
+      it("deletes the selected rotation from Firestore and posts that", async () => {
+        const res = await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "block_actions",
+            user: {
+              id: "user-id",
+              // ...snip
+            },
+            container: {
+              type: "message",
+              message_ts: "1596814246.000200",
+              channel_id: "channel-id",
+              is_ephemeral: false,
+              thread_ts: "1596814246.000200",
+            },
+            team: { id: "team-id", domain: "team-domain" },
+            channel: { id: "channel-id", name: "channel-name" },
+            actions: [
+              {
+                type: "overflow",
+                action_id: "overflow_menu",
+                block_id: "QpPST",
+                selected_option: {
+                  text: {
+                    type: "plain_text",
+                    text: "削除",
+                    emoji: true,
+                  },
+                  value: "delete:rotation-1",
+                },
+                action_ts: "1597254212.672091",
+              },
+            ],
+            // ...snip
+          }),
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+        expect(
+          (await rotationsRef.get()).docs.map((doc) => doc.data())
+        ).toEqual(rotations.filter((r) => r.id !== "rotation-1"));
+      });
+
+      it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+        const res = await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "block_actions",
+            user: {
+              id: "user-id",
+              // ...snip
+            },
+            container: {
+              type: "message",
+              message_ts: "1596814246.000200",
+              channel_id: "channel-id",
+              is_ephemeral: false,
+              thread_ts: "1596814246.000200",
+            },
+            team: { id: "team-id", domain: "team-domain" },
+            channel: { id: "channel-id", name: "channel-name" },
+            actions: [
+              {
+                type: "overflow",
+                action_id: "overflow_menu",
+                block_id: "QpPST",
+                selected_option: {
+                  text: {
+                    type: "plain_text",
+                    text: "削除",
+                    emoji: true,
+                  },
+                  value: "delete:rotation-not-exist",
+                },
+                action_ts: "1597254212.672091",
+              },
+            ],
+            // ...snip
+          }),
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+        expect(
+          (await rotationsRef.get()).docs.map((doc) => doc.data())
+        ).toEqual(rotations);
+      });
+    });
   });
 
   describe("cron", () => {

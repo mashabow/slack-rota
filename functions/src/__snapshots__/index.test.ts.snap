@@ -555,6 +555,33 @@ Array [
 ]
 `;
 
+exports[`functions slack delete rotation deletes the selected rotation from Firestore and posts that 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "reply_broadcast": true,
+      "text": "<@user-id> さんがこのローテーションを削除しました 👋",
+      "thread_ts": "1596814246.000200",
+      "token": "dummy-bot-token",
+    },
+  ],
+]
+`;
+
+exports[`functions slack delete rotation posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+]
+`;
+
 exports[`functions slack submit from SettingModal posts SettingSuccessMessage and creates a rotation on Firestore 1`] = `
 Array [
   Array [
