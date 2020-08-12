@@ -2,7 +2,14 @@
 
 ## テスト
 
+```console
+$ cd functions/
+$ npm run test
+```
+
 ### firebase-functions-test によるオンラインテスト
+
+`functions/src/index.test.ts` は[オンラインテスト](https://firebase.google.com/docs/functions/unit-testing?hl=ja#initializing)になっているため、Firebase 上にある実物の Firestore を使用します（一方、Functions はローカルで動作します）。以下の手順で、テスト用のプロジェクトを用意してください。
 
 1. テスト用の Firebase プロジェクトを作成する
 1. プロジェクトにウェブアプリを追加する
