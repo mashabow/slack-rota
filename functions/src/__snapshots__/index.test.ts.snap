@@ -554,3 +554,61 @@ Array [
   ],
 ]
 `;
+
+exports[`functions slack submit from SettingModal posts SettingSuccessMessage and creates a rotation on Firestore 1`] = `
+Array [
+  Array [
+    Object {
+      "blocks": Array [
+        Object {
+          "text": Object {
+            "text": "<@user-id|>さんがローテーションを設定しました！
+
+月曜・水曜・金曜の 23:45 に 👇 のような感じでお知らせします",
+            "type": "mrkdwn",
+            "verbatim": true,
+          },
+          "type": "section",
+        },
+        Object {
+          "text": Object {
+            "text": "&gt; てすてす
+&gt;
+&gt; *テスト*です
+",
+            "type": "mrkdwn",
+            "verbatim": false,
+          },
+          "type": "section",
+        },
+        Object {
+          "accessory": Object {
+            "action_id": "overflow_menu",
+            "options": Array [
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "削除",
+                  "type": "plain_text",
+                },
+                "value": "delete:1597252513378",
+              },
+            ],
+            "type": "overflow",
+          },
+          "text": Object {
+            "text": "&gt; 👑 <@user-a|>→ <@user-b|>→<@user-c|>
+&gt; ",
+            "type": "mrkdwn",
+            "verbatim": true,
+          },
+          "type": "section",
+        },
+      ],
+      "channel": "channel-id",
+      "text": "<@user-id> さんがローテーションを作成しました！",
+      "token": "dummy-bot-token",
+    },
+  ],
+]
+`;

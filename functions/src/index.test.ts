@@ -6,8 +6,7 @@ import {
 import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import functionsTest from "firebase-functions-test";
-import { RotationJSON } from "./model/rotation";
-import { CONFIG, postSlackEvent } from "./test-helper";
+import { CONFIG, postSlackEvent, rotations } from "./test-helper";
 
 dotenv.config({ path: `${__dirname}/../../.env` });
 const { TEST_PROJECT_ID } = process.env;
@@ -41,6 +40,20 @@ describe("functions", () => {
     client.chat.postMessage.mockClear();
   });
 
+  // Firestore
+  const rotationsRef = admin.firestore().collection("rotations");
+  beforeEach(async () => {
+    // Prepare rotations in Firestore
+    await Promise.all(
+      rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
+    );
+  });
+  afterEach(async () => {
+    // Delete all rotations from Firestore
+    const snapshot = await rotationsRef.get();
+    await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
+  });
+
   describe("slack", () => {
     describe("/rota command", () => {
       it("opens SettingModal", async () => {
@@ -53,75 +66,131 @@ describe("functions", () => {
         });
         expect(res.body).toEqual({}); // ack
         expect(client.views.open.mock.calls).toMatchSnapshot();
+
+        expect(
+          (await rotationsRef.get()).docs.map((doc) => doc.data())
+        ).toEqual(rotations);
+      });
+    });
+
+    describe("submit from SettingModal", () => {
+      it("posts SettingSuccessMessage and creates a rotation on Firestore", async () => {
+        const res = await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "view_submission",
+            team: { id: "team-id", domain: "team-domain" },
+            user: {
+              id: "user-id",
+              // ...snip
+            },
+            view: {
+              type: "modal",
+              private_metadata: '{"channel":"channel-id"}',
+              callback_id: "submit_callback",
+              state: {
+                values: {
+                  hour: {
+                    hour: {
+                      type: "static_select",
+                      selected_option: {
+                        text: {
+                          type: "plain_text",
+                          text: "23時",
+                          emoji: true,
+                        },
+                        value: "23",
+                      },
+                    },
+                  },
+                  minute: {
+                    minute: {
+                      type: "static_select",
+                      selected_option: {
+                        text: {
+                          type: "plain_text",
+                          text: "45分",
+                          emoji: true,
+                        },
+                        value: "45",
+                      },
+                    },
+                  },
+                  members: {
+                    members: {
+                      type: "multi_users_select",
+                      selected_users: ["user-a", "user-b", "user-c"],
+                    },
+                  },
+                  message: {
+                    message: {
+                      type: "plain_text_input",
+                      value: "てすてす\n\n*テスト*です",
+                    },
+                  },
+                  days: {
+                    days: {
+                      type: "multi_static_select",
+                      selected_options: [
+                        {
+                          text: {
+                            type: "plain_text",
+                            text: "月曜",
+                            emoji: true,
+                          },
+                          value: "1",
+                        },
+                        {
+                          text: {
+                            type: "plain_text",
+                            text: "水曜",
+                            emoji: true,
+                          },
+                          value: "3",
+                        },
+                        {
+                          text: {
+                            type: "plain_text",
+                            text: "金曜",
+                            emoji: true,
+                          },
+                          value: "5",
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+              // ...snip
+            },
+            // ...snip
+          }),
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+        expect(
+          (await rotationsRef.get()).docs.map((doc) => doc.data())
+        ).toEqual([
+          {
+            id: "1597252801237",
+            channel: "channel-id",
+            members: ["user-a", "user-b", "user-c"],
+            message: "てすてす\n\n*テスト*です",
+            onDuty: "user-a",
+            schedule: {
+              days: [1, 3, 5],
+              hour: 23,
+              minute: 45,
+            },
+          },
+          ...rotations,
+        ]);
       });
     });
   });
 
   describe("cron", () => {
     const wrappedCron = test.wrap(cron);
-    const rotationsRef = admin.firestore().collection("rotations");
-    const rotations: readonly RotationJSON[] = [
-      {
-        id: "rotation-1",
-        members: ["user-a", "user-b", "user-c"],
-        onDuty: "user-a",
-        message: "rotation-1 message",
-        channel: "channel-1",
-        schedule: {
-          days: [0],
-          hour: 7,
-          minute: 35,
-        },
-      },
-      {
-        id: "rotation-2",
-        members: ["user-p", "user-q"],
-        onDuty: "user-q",
-        message: "rotation-2 message",
-        channel: "channel-2",
-        schedule: {
-          days: [0, 6],
-          hour: 7,
-          minute: 35,
-        },
-      },
-      {
-        id: "rotation-3",
-        members: ["user-s", "user-t"],
-        onDuty: "user-s",
-        message: "rotation-3 message",
-        channel: "channel-3",
-        schedule: {
-          days: [0],
-          hour: 22,
-          minute: 35,
-        },
-      },
-      {
-        id: "rotation-4",
-        members: ["user-x", "user-y", "user-z"],
-        onDuty: "user-y",
-        message: "rotation-4 message",
-        channel: "channel-4",
-        schedule: {
-          days: [2, 3, 4, 5],
-          hour: 7,
-          minute: 35,
-        },
-      },
-    ];
-
-    beforeEach(async () => {
-      // Prepare rotations in Firestore
-      await Promise.all(
-        rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
-      );
-    });
-    afterEach(async () => {
-      // Delete all rotations from Firestore
-      const snapshot = await rotationsRef.get();
-      await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
-    });
 
     it("posts matched rotations and updates onDuty fields of them", async () => {
       await wrappedCron({
