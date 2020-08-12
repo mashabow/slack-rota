@@ -41,13 +41,19 @@ describe("functions", () => {
     client.chat.postMessage.mockClear();
   });
 
-  describe.only("slack", () => {
-    it("TODO", async () => {
-      const res = await postSlackEvent(slack, {
-        foo: "bar",
+  describe("slack", () => {
+    describe("/rota command", () => {
+      it("opens SettingModal", async () => {
+        const res = await postSlackEvent(slack, {
+          command: "/rota",
+          text: "foobar",
+          channel_id: "channel-id",
+          trigger_id: "trigger-id",
+          // ...more unused parameters
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(client.views.open.mock.calls).toMatchSnapshot();
       });
-      console.log(res);
-      expect(client.chat.postMessage.mock.calls).toEqual(0); // TODO
     });
   });
 

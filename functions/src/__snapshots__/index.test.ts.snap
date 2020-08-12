@@ -84,3 +84,473 @@ Array [
   ],
 ]
 `;
+
+exports[`functions slack /rota command opens SettingModal 1`] = `
+Array [
+  Array [
+    Object {
+      "token": "dummy-bot-token",
+      "trigger_id": "trigger-id",
+      "view": Object {
+        "blocks": Array [
+          Object {
+            "block_id": "members",
+            "element": Object {
+              "action_id": "members",
+              "type": "multi_users_select",
+            },
+            "label": Object {
+              "emoji": true,
+              "text": "メンバー",
+              "type": "plain_text",
+            },
+            "optional": false,
+            "type": "input",
+          },
+          Object {
+            "block_id": "message",
+            "element": Object {
+              "action_id": "message",
+              "multiline": true,
+              "type": "plain_text_input",
+            },
+            "label": Object {
+              "emoji": true,
+              "text": "メッセージ",
+              "type": "plain_text",
+            },
+            "optional": false,
+            "type": "input",
+          },
+          Object {
+            "block_id": "days",
+            "element": Object {
+              "action_id": "days",
+              "options": Array [
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "日曜",
+                    "type": "plain_text",
+                  },
+                  "value": "0",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "月曜",
+                    "type": "plain_text",
+                  },
+                  "value": "1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "火曜",
+                    "type": "plain_text",
+                  },
+                  "value": "2",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "水曜",
+                    "type": "plain_text",
+                  },
+                  "value": "3",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "木曜",
+                    "type": "plain_text",
+                  },
+                  "value": "4",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "金曜",
+                    "type": "plain_text",
+                  },
+                  "value": "5",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "土曜",
+                    "type": "plain_text",
+                  },
+                  "value": "6",
+                },
+              ],
+              "type": "multi_static_select",
+            },
+            "label": Object {
+              "emoji": true,
+              "text": "曜日",
+              "type": "plain_text",
+            },
+            "optional": false,
+            "type": "input",
+          },
+          Object {
+            "block_id": "hour",
+            "element": Object {
+              "action_id": "hour",
+              "initial_option": Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "10時",
+                  "type": "plain_text",
+                },
+                "value": "10",
+              },
+              "options": Array [
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "0時",
+                    "type": "plain_text",
+                  },
+                  "value": "0",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "1時",
+                    "type": "plain_text",
+                  },
+                  "value": "1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "2時",
+                    "type": "plain_text",
+                  },
+                  "value": "2",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "3時",
+                    "type": "plain_text",
+                  },
+                  "value": "3",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "4時",
+                    "type": "plain_text",
+                  },
+                  "value": "4",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "5時",
+                    "type": "plain_text",
+                  },
+                  "value": "5",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "6時",
+                    "type": "plain_text",
+                  },
+                  "value": "6",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "7時",
+                    "type": "plain_text",
+                  },
+                  "value": "7",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "8時",
+                    "type": "plain_text",
+                  },
+                  "value": "8",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "9時",
+                    "type": "plain_text",
+                  },
+                  "value": "9",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "10時",
+                    "type": "plain_text",
+                  },
+                  "value": "10",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "11時",
+                    "type": "plain_text",
+                  },
+                  "value": "11",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "12時",
+                    "type": "plain_text",
+                  },
+                  "value": "12",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "13時",
+                    "type": "plain_text",
+                  },
+                  "value": "13",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "14時",
+                    "type": "plain_text",
+                  },
+                  "value": "14",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "15時",
+                    "type": "plain_text",
+                  },
+                  "value": "15",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "16時",
+                    "type": "plain_text",
+                  },
+                  "value": "16",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "17時",
+                    "type": "plain_text",
+                  },
+                  "value": "17",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "18時",
+                    "type": "plain_text",
+                  },
+                  "value": "18",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "19時",
+                    "type": "plain_text",
+                  },
+                  "value": "19",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "20時",
+                    "type": "plain_text",
+                  },
+                  "value": "20",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "21時",
+                    "type": "plain_text",
+                  },
+                  "value": "21",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "22時",
+                    "type": "plain_text",
+                  },
+                  "value": "22",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "23時",
+                    "type": "plain_text",
+                  },
+                  "value": "23",
+                },
+              ],
+              "type": "static_select",
+            },
+            "label": Object {
+              "emoji": true,
+              "text": "時",
+              "type": "plain_text",
+            },
+            "optional": false,
+            "type": "input",
+          },
+          Object {
+            "block_id": "minute",
+            "element": Object {
+              "action_id": "minute",
+              "initial_option": Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "0分",
+                  "type": "plain_text",
+                },
+                "value": "0",
+              },
+              "options": Array [
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "0分",
+                    "type": "plain_text",
+                  },
+                  "value": "0",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "5分",
+                    "type": "plain_text",
+                  },
+                  "value": "5",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "10分",
+                    "type": "plain_text",
+                  },
+                  "value": "10",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "15分",
+                    "type": "plain_text",
+                  },
+                  "value": "15",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "20分",
+                    "type": "plain_text",
+                  },
+                  "value": "20",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "25分",
+                    "type": "plain_text",
+                  },
+                  "value": "25",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "30分",
+                    "type": "plain_text",
+                  },
+                  "value": "30",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "35分",
+                    "type": "plain_text",
+                  },
+                  "value": "35",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "40分",
+                    "type": "plain_text",
+                  },
+                  "value": "40",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "45分",
+                    "type": "plain_text",
+                  },
+                  "value": "45",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "50分",
+                    "type": "plain_text",
+                  },
+                  "value": "50",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "55分",
+                    "type": "plain_text",
+                  },
+                  "value": "55",
+                },
+              ],
+              "type": "static_select",
+            },
+            "label": Object {
+              "emoji": true,
+              "text": "分",
+              "type": "plain_text",
+            },
+            "optional": false,
+            "type": "input",
+          },
+        ],
+        "callback_id": "submit_callback",
+        "close": Object {
+          "emoji": true,
+          "text": "キャンセル",
+          "type": "plain_text",
+        },
+        "private_metadata": "{\\"channel\\":\\"channel-id\\"}",
+        "submit": Object {
+          "emoji": true,
+          "text": "設定する",
+          "type": "plain_text",
+        },
+        "title": Object {
+          "emoji": true,
+          "text": "Rota",
+          "type": "plain_text",
+        },
+        "type": "modal",
+      },
+    },
+  ],
+]
+`;
