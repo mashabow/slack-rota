@@ -176,7 +176,7 @@ describe("functions", () => {
             channel: "channel-id",
             members: ["user-a", "user-b", "user-c"],
             message: "てすてす\n\n*テスト*です",
-            onDuty: "user-a",
+            onDuty: "user-c",
             schedule: {
               days: [1, 3, 5],
               hour: 23,

@@ -561,7 +561,7 @@ Array [
       "type": "overflow",
     },
     "text": Object {
-      "text": "&gt; 👑 <@user-b|>→ <@user-c|>→<@user-a|>
+      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
 &gt; ",
       "type": "mrkdwn",
       "verbatim": true,

@@ -131,7 +131,8 @@ export const SettingSuccessMessage = ({
       </Section>
       <Section>
         <blockquote>
-          <Order rotation={rotation} />
+          {/* プレビューなので、次回 post 時の順序で表示する */}
+          <Order rotation={rotation.rotate()} />
         </blockquote>
         <OverflowMenu rotation={rotation} canRotate={false} />
       </Section>

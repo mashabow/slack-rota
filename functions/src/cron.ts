@@ -12,7 +12,8 @@ export const cronHandler = (
   functions.logger.log("rotations", { rotations });
 
   for (const rotation of rotations) {
-    await postRotation(rotation);
-    await rotationStore.set(rotation.rotate());
+    const newRotation = rotation.rotate();
+    await rotationStore.set(newRotation);
+    await postRotation(newRotation);
   }
 };

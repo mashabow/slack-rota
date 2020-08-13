@@ -9,7 +9,9 @@ export type RotationJSON = Omit<RotationArgs, "schedule"> & {
 export class Rotation {
   readonly id: string;
   readonly members: readonly string[];
-  readonly onDuty: string; // 担当者の user_id。members の中の 1 人
+  // 担当者の user_id。members の中の 1 人。
+  // store には、「最後に post したときの担当者」の状態で保存する。「次の担当者」ではない。
+  readonly onDuty: string;
   readonly message: string;
   readonly channel: string;
   readonly schedule: Schedule;
@@ -38,7 +40,8 @@ export class Rotation {
     return new Rotation({
       id: json.id ?? Date.now().toString(),
       members: json.members,
-      onDuty: json.onDuty ?? json.members[0],
+      // 初回 post 時に先頭のメンバーを onDuty にしたいので、末尾のメンバーを割り当てておく
+      onDuty: json.onDuty ?? json.members[json.members.length - 1],
       message: json.message,
       channel: json.channel,
       schedule: Schedule.fromJSON(json.schedule),

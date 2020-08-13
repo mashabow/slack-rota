@@ -54,7 +54,7 @@ Array [
             "type": "overflow",
           },
           "text": Object {
-            "text": "👑 <@user-a|>→ <@user-b|>→<@user-c|>",
+            "text": "👑 <@user-b|>→ <@user-c|>→<@user-a|>",
             "type": "mrkdwn",
             "verbatim": true,
           },
@@ -118,7 +118,7 @@ Array [
             "type": "overflow",
           },
           "text": Object {
-            "text": "👑 <@user-q|>→<@user-p|>",
+            "text": "👑 <@user-p|>→<@user-q|>",
             "type": "mrkdwn",
             "verbatim": true,
           },

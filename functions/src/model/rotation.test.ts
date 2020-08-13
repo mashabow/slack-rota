@@ -38,9 +38,9 @@ describe("Rotation", () => {
       expect(rotation.id).toBe("1597200000000");
     });
 
-    it("defaults to the first member for onDuty", () => {
+    it("defaults to the last member for onDuty", () => {
       const rotation = Rotation.fromJSON({ ...json, onDuty: undefined });
-      expect(rotation.onDuty).toBe(json.members[0]);
+      expect(rotation.onDuty).toBe("user-c");
     });
   });
 
