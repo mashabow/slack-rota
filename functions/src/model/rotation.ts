@@ -53,6 +53,14 @@ export class Rotation {
     });
   }
 
+  unrotate(): Rotation {
+    const index = this.members.indexOf(this.onDuty);
+    return new Rotation({
+      ...this,
+      onDuty: this.members[index - 1] ?? this.members[this.members.length - 1],
+    });
+  }
+
   getOrderedRestMembers(): readonly string[] {
     const index = this.members.indexOf(this.onDuty);
     return [...this.members.slice(index + 1), ...this.members.slice(0, index)];

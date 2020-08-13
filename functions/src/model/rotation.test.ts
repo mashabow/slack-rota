@@ -70,6 +70,32 @@ describe("Rotation", () => {
     });
   });
 
+  describe("unrotate", () => {
+    it("unrotates onDuty to the previous member", () => {
+      const original = Rotation.fromJSON(json);
+      const rotated = original.unrotate();
+      expect(rotated.onDuty).toBe("user-a");
+
+      expect(rotated).not.toBe(original);
+      expect(rotated.id).toBe(original.id);
+      expect(rotated.members).toEqual(original.members);
+      expect(rotated.channel).toBe(original.channel);
+      expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+    });
+
+    it("unrotates onDuty to the last member when onDuty was the first", () => {
+      const original = Rotation.fromJSON({ ...json, onDuty: "user-a" });
+      const rotated = original.unrotate();
+      expect(rotated.onDuty).toBe("user-c");
+
+      expect(rotated).not.toBe(original);
+      expect(rotated.id).toBe(original.id);
+      expect(rotated.members).toEqual(original.members);
+      expect(rotated.channel).toBe(original.channel);
+      expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+    });
+  });
+
   describe("getOrderedRestMembers", () => {
     it("returns non-onDuty members in the rotation order", () => {
       const rotation = Rotation.fromJSON(json);

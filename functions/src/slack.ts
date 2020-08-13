@@ -123,7 +123,19 @@ export const createSlackApp = (
           }
           break;
         case "unrotate":
-          // TODO
+          try {
+            const newRotation = rotation.unrotate();
+            await rotationStore.set(newRotation);
+            await app.client.chat.update({
+              token: config.slack.bot_token,
+              channel: channelId,
+              ts: body.container.message_ts,
+              text: newRotation.message,
+              blocks: RotationMessage({ rotation: newRotation }),
+            });
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
           break;
         case "noop":
           break;
