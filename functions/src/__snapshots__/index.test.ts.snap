@@ -603,7 +603,7 @@ Array [
 ]
 `;
 
-exports[`functions slack delete rotation deletes the selected rotation from Firestore and posts that 1`] = `
+exports[`functions slack overflow menu actions delete deletes the selected rotation from Firestore and posts that 1`] = `
 Array [
   Array [
     Object {
@@ -617,7 +617,7 @@ Array [
 ]
 `;
 
-exports[`functions slack delete rotation posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+exports[`functions slack overflow menu actions delete posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [
     Object {
