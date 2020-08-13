@@ -11,6 +11,12 @@ export class RotationStore {
       .set(rotation.toJSON());
   }
 
+  async get(rotationId: string): Promise<Rotation | null> {
+    const doc = await this.db.collection("rotations").doc(rotationId).get();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return doc.exists ? Rotation.fromJSON(doc.data() as any) : null;
+  }
+
   async getBySchedule(schedule: Schedule): Promise<readonly Rotation[]> {
     if (schedule.days.length !== 1) {
       throw new Error("Length of schedule.days must be 1");
@@ -24,11 +30,6 @@ export class RotationStore {
       .get();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
-  }
-
-  async has(rotationId: string): Promise<boolean> {
-    const doc = await this.db.collection("rotations").doc(rotationId).get();
-    return doc.exists;
   }
 
   async delete(rotationId: string): Promise<void> {
