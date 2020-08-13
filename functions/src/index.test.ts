@@ -228,6 +228,88 @@ describe("functions", () => {
           }),
         });
 
+      describe("rotate", () => {
+        it("rotates the selected rotation and posts that", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "➡️ ひとつ進む",
+              emoji: true,
+            },
+            value: "rotate:rotation-1",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+          expect(
+            (await rotationsRef.get()).docs.map((doc) => doc.data())
+          ).toEqual([
+            { ...rotations[0], onDuty: "user-b" },
+            rotations[1],
+            rotations[2],
+            rotations[3],
+          ]);
+        });
+
+        it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "➡️ ひとつ進む",
+              emoji: true,
+            },
+            value: "rotate:rotation-not-exist",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+          expect(
+            (await rotationsRef.get()).docs.map((doc) => doc.data())
+          ).toEqual(rotations);
+        });
+      });
+
+      describe("unrotate", () => {
+        it("unrotates the selected rotation and posts that", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "⬅️ ひとつ戻る",
+              emoji: true,
+            },
+            value: "unrotate:rotation-1",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+          expect(
+            (await rotationsRef.get()).docs.map((doc) => doc.data())
+          ).toEqual([
+            { ...rotations[0], onDuty: "user-c" },
+            rotations[1],
+            rotations[2],
+            rotations[3],
+          ]);
+        });
+
+        it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "⬅️ ひとつ戻る",
+              emoji: true,
+            },
+            value: "unrotate:rotation-not-exist",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+          expect(
+            (await rotationsRef.get()).docs.map((doc) => doc.data())
+          ).toEqual(rotations);
+        });
+      });
+
       describe("delete", () => {
         it("deletes the selected rotation from Firestore and posts that", async () => {
           const res = await postOverflowAction({

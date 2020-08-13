@@ -627,8 +627,62 @@ Array [
       "user": "user-id",
     },
   ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
 ]
 `;
+
+exports[`functions slack overflow menu actions rotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+]
+`;
+
+exports[`functions slack overflow menu actions rotate rotates the selected rotation and posts that 1`] = `Array []`;
+
+exports[`functions slack overflow menu actions unrotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+]
+`;
+
+exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `Array []`;
 
 exports[`functions slack submit from SettingModal posts SettingSuccessMessage and creates a rotation on Firestore 1`] = `
 Array [
