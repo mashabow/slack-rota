@@ -19,7 +19,7 @@ message line 2
         Object {
           "text": Object {
             "emoji": true,
-            "text": "➡️ ひとつ進む",
+            "text": "ひとつ進む",
             "type": "plain_text",
           },
           "value": "rotate:rotation-id",
@@ -27,7 +27,7 @@ message line 2
         Object {
           "text": Object {
             "emoji": true,
-            "text": "⬅️ ひとつ戻る",
+            "text": "ひとつ戻る",
             "type": "plain_text",
           },
           "value": "unrotate:rotation-id",

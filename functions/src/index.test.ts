@@ -231,7 +231,7 @@ describe("functions", () => {
           const res = await postOverflowAction({
             text: {
               type: "plain_text",
-              text: "➡️ ひとつ進む",
+              text: "ひとつ進む",
               emoji: true,
             },
             value: "rotate:rotation-1",
@@ -251,7 +251,7 @@ describe("functions", () => {
           const res = await postOverflowAction({
             text: {
               type: "plain_text",
-              text: "➡️ ひとつ進む",
+              text: "ひとつ進む",
               emoji: true,
             },
             value: "rotate:rotation-not-exist",
@@ -268,7 +268,7 @@ describe("functions", () => {
           const res = await postOverflowAction({
             text: {
               type: "plain_text",
-              text: "⬅️ ひとつ戻る",
+              text: "ひとつ戻る",
               emoji: true,
             },
             value: "unrotate:rotation-1",
@@ -288,7 +288,7 @@ describe("functions", () => {
           const res = await postOverflowAction({
             text: {
               type: "plain_text",
-              text: "⬅️ ひとつ戻る",
+              text: "ひとつ戻る",
               emoji: true,
             },
             value: "unrotate:rotation-not-exist",

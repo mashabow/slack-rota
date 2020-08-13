@@ -21,7 +21,7 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
-                  "text": "➡️ ひとつ進む",
+                  "text": "ひとつ進む",
                   "type": "plain_text",
                 },
                 "value": "rotate:rotation-1",
@@ -29,7 +29,7 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
-                  "text": "⬅️ ひとつ戻る",
+                  "text": "ひとつ戻る",
                   "type": "plain_text",
                 },
                 "value": "unrotate:rotation-1",
@@ -85,7 +85,7 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
-                  "text": "➡️ ひとつ進む",
+                  "text": "ひとつ進む",
                   "type": "plain_text",
                 },
                 "value": "rotate:rotation-2",
@@ -93,7 +93,7 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
-                  "text": "⬅️ ひとつ戻る",
+                  "text": "ひとつ戻る",
                   "type": "plain_text",
                 },
                 "value": "unrotate:rotation-2",

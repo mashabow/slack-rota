@@ -88,11 +88,9 @@ const OverflowMenu = ({
   <Overflow actionId={ID.OVERFLOW_MENU}>
     {canRotate && (
       <Fragment>
-        <OverflowItem value={`rotate:${rotation.id}`}>
-          ➡️ ひとつ進む
-        </OverflowItem>
+        <OverflowItem value={`rotate:${rotation.id}`}>ひとつ進む</OverflowItem>
         <OverflowItem value={`unrotate:${rotation.id}`}>
-          ⬅️ ひとつ戻る
+          ひとつ戻る
         </OverflowItem>
         <OverflowItem value={`noop:${rotation.id}`}>
           {/* 「削除」誤クリック防止のため、divider っぽい項目で区切る */}
