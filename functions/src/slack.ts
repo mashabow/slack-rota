@@ -91,27 +91,65 @@ export const createSlackApp = (
 
       const userId = body.user.id;
       const [type, rotationId] = action.selected_option.value.split(":");
+      const rotation = await rotationStore.get(rotationId);
+      if (!rotation) {
+        try {
+          await app.client.chat.postEphemeral({
+            token: config.slack.bot_token,
+            channel: channelId,
+            text: "このローテーションは削除済みです",
+            user: userId,
+          });
+        } catch (error) {
+          functions.logger.error("error", { error });
+        }
+        return;
+      }
+
       switch (type) {
+        case "rotate":
+          try {
+            const newRotation = rotation.rotate();
+            await rotationStore.set(newRotation);
+            await app.client.chat.update({
+              token: config.slack.bot_token,
+              channel: channelId,
+              ts: body.container.message_ts,
+              text: newRotation.message,
+              blocks: RotationMessage({ rotation: newRotation }),
+            });
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
+          break;
+        case "unrotate":
+          try {
+            const newRotation = rotation.unrotate();
+            await rotationStore.set(newRotation);
+            await app.client.chat.update({
+              token: config.slack.bot_token,
+              channel: channelId,
+              ts: body.container.message_ts,
+              text: newRotation.message,
+              blocks: RotationMessage({ rotation: newRotation }),
+            });
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
+          break;
+        case "noop":
+          break;
         case "delete":
           try {
-            if (await rotationStore.has(rotationId)) {
-              await rotationStore.delete(rotationId);
-              // respond() だと reply_broadcast が効かない？
-              await app.client.chat.postMessage({
-                token: config.slack.bot_token,
-                channel: channelId,
-                text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
-                thread_ts: body.container.message_ts,
-                reply_broadcast: true,
-              });
-            } else {
-              await app.client.chat.postEphemeral({
-                token: config.slack.bot_token,
-                channel: channelId,
-                text: "このローテーションは削除済みです",
-                user: userId,
-              });
-            }
+            await rotationStore.delete(rotationId);
+            // respond() だと reply_broadcast が効かない？
+            await app.client.chat.postMessage({
+              token: config.slack.bot_token,
+              channel: channelId,
+              text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
+              thread_ts: body.container.message_ts,
+              reply_broadcast: true,
+            });
           } catch (error) {
             functions.logger.error("error", { error });
           }

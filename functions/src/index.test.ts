@@ -42,6 +42,8 @@ describe("functions", () => {
 
   // Firestore
   const rotationsRef = admin.firestore().collection("rotations");
+  const getAllRotations = async () =>
+    (await rotationsRef.get()).docs.map((doc) => doc.data());
   beforeEach(async () => {
     // Prepare rotations in Firestore
     await Promise.all(
@@ -67,9 +69,7 @@ describe("functions", () => {
         expect(res.body).toEqual({}); // ack
         expect(client.views.open.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual(rotations);
+        expect(await getAllRotations()).toEqual(rotations);
       });
     });
 
@@ -170,15 +170,13 @@ describe("functions", () => {
         expect(res.body).toEqual({}); // ack
         expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual([
+        expect(await getAllRotations()).toEqual([
           {
             id: "1597200000000",
             channel: "channel-id",
             members: ["user-a", "user-b", "user-c"],
             message: "てすてす\n\n*テスト*です",
-            onDuty: "user-a",
+            onDuty: "user-c",
             schedule: {
               days: [1, 3, 5],
               hour: 23,
@@ -190,9 +188,16 @@ describe("functions", () => {
       });
     });
 
-    describe("delete rotation", () => {
-      it("deletes the selected rotation from Firestore and posts that", async () => {
-        const res = await postSlackEvent(slack, {
+    describe("overflow menu actions", () => {
+      const postOverflowAction = (selected_option: {
+        readonly text: {
+          readonly type: string;
+          readonly text: string;
+          readonly emoji: boolean;
+        };
+        readonly value: string;
+      }) =>
+        postSlackEvent(slack, {
           payload: JSON.stringify({
             type: "block_actions",
             user: {
@@ -213,70 +218,122 @@ describe("functions", () => {
                 type: "overflow",
                 action_id: "overflow_menu",
                 block_id: "QpPST",
-                selected_option: {
-                  text: {
-                    type: "plain_text",
-                    text: "削除",
-                    emoji: true,
-                  },
-                  value: "delete:rotation-1",
-                },
+                selected_option,
                 action_ts: "1597254212.672091",
               },
             ],
             // ...snip
           }),
         });
-        expect(res.body).toEqual({}); // ack
-        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual(rotations.filter((r) => r.id !== "rotation-1"));
+      describe("rotate", () => {
+        it("rotates the selected rotation and posts that", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "ひとつ進む",
+              emoji: true,
+            },
+            value: "rotate:rotation-1",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+          expect(await getAllRotations()).toEqual([
+            { ...rotations[0], onDuty: "user-b" },
+            rotations[1],
+            rotations[2],
+            rotations[3],
+          ]);
+        });
+
+        it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "ひとつ進む",
+              emoji: true,
+            },
+            value: "rotate:rotation-not-exist",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+          expect(await getAllRotations()).toEqual(rotations);
+        });
       });
 
-      it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
-        const res = await postSlackEvent(slack, {
-          payload: JSON.stringify({
-            type: "block_actions",
-            user: {
-              id: "user-id",
-              // ...snip
+      describe("unrotate", () => {
+        it("unrotates the selected rotation and posts that", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "ひとつ戻る",
+              emoji: true,
             },
-            container: {
-              type: "message",
-              message_ts: "1596814246.000200",
-              channel_id: "channel-id",
-              is_ephemeral: false,
-              thread_ts: "1596814246.000200",
-            },
-            team: { id: "team-id", domain: "team-domain" },
-            channel: { id: "channel-id", name: "channel-name" },
-            actions: [
-              {
-                type: "overflow",
-                action_id: "overflow_menu",
-                block_id: "QpPST",
-                selected_option: {
-                  text: {
-                    type: "plain_text",
-                    text: "削除",
-                    emoji: true,
-                  },
-                  value: "delete:rotation-not-exist",
-                },
-                action_ts: "1597254212.672091",
-              },
-            ],
-            // ...snip
-          }),
-        });
-        expect(res.body).toEqual({}); // ack
-        expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+            value: "unrotate:rotation-1",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual(rotations);
+          expect(await getAllRotations()).toEqual([
+            { ...rotations[0], onDuty: "user-c" },
+            rotations[1],
+            rotations[2],
+            rotations[3],
+          ]);
+        });
+
+        it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "ひとつ戻る",
+              emoji: true,
+            },
+            value: "unrotate:rotation-not-exist",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+          expect(
+            (await rotationsRef.get()).docs.map((doc) => doc.data())
+          ).toEqual(rotations);
+        });
+      });
+
+      describe("delete", () => {
+        it("deletes the selected rotation from Firestore and posts that", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "削除",
+              emoji: true,
+            },
+            value: "delete:rotation-1",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+          expect(await getAllRotations()).toEqual(
+            rotations.filter((r) => r.id !== "rotation-1")
+          );
+        });
+
+        it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
+          const res = await postOverflowAction({
+            text: {
+              type: "plain_text",
+              text: "削除",
+              emoji: true,
+            },
+            value: "delete:rotation-not-exist",
+          });
+          expect(res.body).toEqual({}); // ack
+          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+
+          expect(await getAllRotations()).toEqual(rotations);
+        });
       });
     });
   });
@@ -289,7 +346,7 @@ describe("functions", () => {
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
       expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
-      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual([
+      expect(await getAllRotations()).toEqual([
         { ...rotations[0], onDuty: "user-b" },
         { ...rotations[1], onDuty: "user-p" },
         rotations[2],
@@ -302,9 +359,7 @@ describe("functions", () => {
         timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
       });
       expect(client.chat.postMessage.mock.calls).toEqual([]);
-      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual(
-        rotations
-      );
+      expect(await getAllRotations()).toEqual(rotations);
     });
   });
 });

@@ -21,6 +21,30 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
+                  "text": "ひとつ進む",
+                  "type": "plain_text",
+                },
+                "value": "rotate:rotation-1",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "ひとつ戻る",
+                  "type": "plain_text",
+                },
+                "value": "unrotate:rotation-1",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "───────────────────",
+                  "type": "plain_text",
+                },
+                "value": "noop:rotation-1",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
                   "text": "削除",
                   "type": "plain_text",
                 },
@@ -30,7 +54,7 @@ Array [
             "type": "overflow",
           },
           "text": Object {
-            "text": "👑 <@user-a|>→ <@user-b|>→<@user-c|>",
+            "text": "👑 <@user-b|>→ <@user-c|>→<@user-a|>",
             "type": "mrkdwn",
             "verbatim": true,
           },
@@ -61,6 +85,30 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
+                  "text": "ひとつ進む",
+                  "type": "plain_text",
+                },
+                "value": "rotate:rotation-2",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "ひとつ戻る",
+                  "type": "plain_text",
+                },
+                "value": "unrotate:rotation-2",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "───────────────────",
+                  "type": "plain_text",
+                },
+                "value": "noop:rotation-2",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
                   "text": "削除",
                   "type": "plain_text",
                 },
@@ -70,7 +118,7 @@ Array [
             "type": "overflow",
           },
           "text": Object {
-            "text": "👑 <@user-q|>→<@user-p|>",
+            "text": "👑 <@user-p|>→<@user-q|>",
             "type": "mrkdwn",
             "verbatim": true,
           },
@@ -555,7 +603,7 @@ Array [
 ]
 `;
 
-exports[`functions slack delete rotation deletes the selected rotation from Firestore and posts that 1`] = `
+exports[`functions slack overflow menu actions delete deletes the selected rotation from Firestore and posts that 1`] = `
 Array [
   Array [
     Object {
@@ -569,7 +617,36 @@ Array [
 ]
 `;
 
-exports[`functions slack delete rotation posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+exports[`functions slack overflow menu actions delete posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+]
+`;
+
+exports[`functions slack overflow menu actions rotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [
     Object {
@@ -581,6 +658,31 @@ Array [
   ],
 ]
 `;
+
+exports[`functions slack overflow menu actions rotate rotates the selected rotation and posts that 1`] = `Array []`;
+
+exports[`functions slack overflow menu actions unrotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+Array [
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+  Array [
+    Object {
+      "channel": "channel-id",
+      "text": "このローテーションは削除済みです",
+      "token": "dummy-bot-token",
+      "user": "user-id",
+    },
+  ],
+]
+`;
+
+exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `Array []`;
 
 exports[`functions slack submit from SettingModal posts SettingSuccessMessage and creates a rotation on Firestore 1`] = `
 Array [

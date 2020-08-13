@@ -78,8 +78,26 @@ const Order = ({ rotation }: { readonly rotation: Rotation }) => (
   </Fragment>
 );
 
-const OverflowMenu = ({ rotation }: { readonly rotation: Rotation }) => (
+const OverflowMenu = ({
+  rotation,
+  canRotate,
+}: {
+  readonly rotation: Rotation;
+  readonly canRotate: boolean;
+}) => (
   <Overflow actionId={ID.OVERFLOW_MENU}>
+    {canRotate && (
+      <Fragment>
+        <OverflowItem value={`rotate:${rotation.id}`}>ひとつ進む</OverflowItem>
+        <OverflowItem value={`unrotate:${rotation.id}`}>
+          ひとつ戻る
+        </OverflowItem>
+        <OverflowItem value={`noop:${rotation.id}`}>
+          {/* 「削除」誤クリック防止のため、divider っぽい項目で区切る */}
+          ───────────────────
+        </OverflowItem>
+      </Fragment>
+    )}
     <OverflowItem value={`delete:${rotation.id}`}>削除</OverflowItem>
   </Overflow>
 );
@@ -113,9 +131,10 @@ export const SettingSuccessMessage = ({
       </Section>
       <Section>
         <blockquote>
-          <Order rotation={rotation} />
+          {/* プレビューなので、次回 post 時の順序で表示する */}
+          <Order rotation={rotation.rotate()} />
         </blockquote>
-        <OverflowMenu rotation={rotation} />
+        <OverflowMenu rotation={rotation} canRotate={false} />
       </Section>
     </Blocks>
   );
@@ -139,7 +158,7 @@ export const RotationMessage = ({
       </Section>
       <Section>
         <Order rotation={rotation} />
-        <OverflowMenu rotation={rotation} />
+        <OverflowMenu rotation={rotation} canRotate={true} />
       </Section>
     </Blocks>
   );
