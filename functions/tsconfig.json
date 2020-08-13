@@ -9,7 +9,10 @@
     "strict": true,
     "target": "es2017",
     "jsx": "react",
-    "jsxFactory": "JSXSlack.h"
+    "jsxFactory": "JSXSlack.h",
+    // @slack-wrench/jest-mock-web-client が @slack/web-api の少し古いバージョン（~5.9.0）に依存しており、
+    // ビルド時に型エラーが出てしまうので、無視する
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"]

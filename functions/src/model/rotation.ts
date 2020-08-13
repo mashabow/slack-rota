@@ -2,7 +2,7 @@ import { NonFunctionProperties, Optional } from "../util";
 import { Schedule, ScheduleJSON } from "./schedule";
 
 type RotationArgs = NonFunctionProperties<Rotation>;
-type RotationJSON = Omit<RotationArgs, "schedule"> & {
+export type RotationJSON = Omit<RotationArgs, "schedule"> & {
   readonly schedule: ScheduleJSON;
 };
 
@@ -36,7 +36,7 @@ export class Rotation {
 
   static fromJSON(json: Optional<RotationJSON, "id" | "onDuty">): Rotation {
     return new Rotation({
-      id: json.id ?? new Date().valueOf().toString(),
+      id: json.id ?? Date.now().toString(),
       members: json.members,
       onDuty: json.onDuty ?? json.members[0],
       message: json.message,

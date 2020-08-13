@@ -33,11 +33,9 @@ describe("Rotation", () => {
     });
 
     it("defaults to unix timestamp for id", () => {
-      const date = new Date("2020-08-08");
-      // @ts-ignore: jest の型の問題？
-      jest.spyOn(global, "Date").mockImplementation(() => date);
+      Date.now = jest.fn(() => 1597200000000);
       const rotation = Rotation.fromJSON({ ...json, id: undefined });
-      expect(rotation.id).toBe("1596844800000"); // 2020-08-08
+      expect(rotation.id).toBe("1597200000000");
     });
 
     it("defaults to the first member for onDuty", () => {

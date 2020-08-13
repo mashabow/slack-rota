@@ -15,4 +15,10 @@ jobs:
           node-version: "10.x"
       - run: npm ci
       - run: npm run lint:ci
+      - name: Create serviceAccountKey.json for online testing
+        run: echo "$SERVICE_ACCOUNT_KEY_JSON" > ../serviceAccountKey.json
+        env:
+          SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
       - run: npm run test:ci
+        env:
+          TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
