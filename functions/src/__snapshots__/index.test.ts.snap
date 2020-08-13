@@ -717,30 +717,6 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
-                  "text": "➡️ ひとつ進む",
-                  "type": "plain_text",
-                },
-                "value": "rotate:1597200000000",
-              },
-              Object {
-                "text": Object {
-                  "emoji": true,
-                  "text": "⬅️ ひとつ戻る",
-                  "type": "plain_text",
-                },
-                "value": "unrotate:1597200000000",
-              },
-              Object {
-                "text": Object {
-                  "emoji": true,
-                  "text": "───────────────────",
-                  "type": "plain_text",
-                },
-                "value": "noop:1597200000000",
-              },
-              Object {
-                "text": Object {
-                  "emoji": true,
                   "text": "削除",
                   "type": "plain_text",
                 },
