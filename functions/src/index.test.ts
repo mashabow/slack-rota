@@ -42,6 +42,8 @@ describe("functions", () => {
 
   // Firestore
   const rotationsRef = admin.firestore().collection("rotations");
+  const getAllRotations = async () =>
+    (await rotationsRef.get()).docs.map((doc) => doc.data());
   beforeEach(async () => {
     // Prepare rotations in Firestore
     await Promise.all(
@@ -67,9 +69,7 @@ describe("functions", () => {
         expect(res.body).toEqual({}); // ack
         expect(client.views.open.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual(rotations);
+        expect(await getAllRotations()).toEqual(rotations);
       });
     });
 
@@ -170,9 +170,7 @@ describe("functions", () => {
         expect(res.body).toEqual({}); // ack
         expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-        expect(
-          (await rotationsRef.get()).docs.map((doc) => doc.data())
-        ).toEqual([
+        expect(await getAllRotations()).toEqual([
           {
             id: "1597200000000",
             channel: "channel-id",
@@ -241,9 +239,7 @@ describe("functions", () => {
           expect(res.body).toEqual({}); // ack
           expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual([
+          expect(await getAllRotations()).toEqual([
             { ...rotations[0], onDuty: "user-b" },
             rotations[1],
             rotations[2],
@@ -263,9 +259,7 @@ describe("functions", () => {
           expect(res.body).toEqual({}); // ack
           expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual(rotations);
+          expect(await getAllRotations()).toEqual(rotations);
         });
       });
 
@@ -282,9 +276,7 @@ describe("functions", () => {
           expect(res.body).toEqual({}); // ack
           expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual([
+          expect(await getAllRotations()).toEqual([
             { ...rotations[0], onDuty: "user-c" },
             rotations[1],
             rotations[2],
@@ -323,9 +315,9 @@ describe("functions", () => {
           expect(res.body).toEqual({}); // ack
           expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual(rotations.filter((r) => r.id !== "rotation-1"));
+          expect(await getAllRotations()).toEqual(
+            rotations.filter((r) => r.id !== "rotation-1")
+          );
         });
 
         it("posts 'already deleted' as ephemeral if the rotation not exist", async () => {
@@ -340,9 +332,7 @@ describe("functions", () => {
           expect(res.body).toEqual({}); // ack
           expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual(rotations);
+          expect(await getAllRotations()).toEqual(rotations);
         });
       });
     });
@@ -356,7 +346,7 @@ describe("functions", () => {
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
       expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
-      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual([
+      expect(await getAllRotations()).toEqual([
         { ...rotations[0], onDuty: "user-b" },
         { ...rotations[1], onDuty: "user-p" },
         rotations[2],
@@ -369,9 +359,7 @@ describe("functions", () => {
         timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
       });
       expect(client.chat.postMessage.mock.calls).toEqual([]);
-      expect((await rotationsRef.get()).docs.map((doc) => doc.data())).toEqual(
-        rotations
-      );
+      expect(await getAllRotations()).toEqual(rotations);
     });
   });
 });
