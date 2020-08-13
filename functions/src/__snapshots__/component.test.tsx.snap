@@ -19,6 +19,30 @@ message line 2
         Object {
           "text": Object {
             "emoji": true,
+            "text": "➡️ ひとつ進む",
+            "type": "plain_text",
+          },
+          "value": "rotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "⬅️ ひとつ戻る",
+            "type": "plain_text",
+          },
+          "value": "unrotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
             "text": "削除",
             "type": "plain_text",
           },
@@ -525,6 +549,30 @@ Array [
     "accessory": Object {
       "action_id": "overflow_menu",
       "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "➡️ ひとつ進む",
+            "type": "plain_text",
+          },
+          "value": "rotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "⬅️ ひとつ戻る",
+            "type": "plain_text",
+          },
+          "value": "unrotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
         Object {
           "text": Object {
             "emoji": true,

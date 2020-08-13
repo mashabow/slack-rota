@@ -80,6 +80,12 @@ const Order = ({ rotation }: { readonly rotation: Rotation }) => (
 
 const OverflowMenu = ({ rotation }: { readonly rotation: Rotation }) => (
   <Overflow actionId={ID.OVERFLOW_MENU}>
+    <OverflowItem value={`rotate:${rotation.id}`}>➡️ ひとつ進む</OverflowItem>
+    <OverflowItem value={`unrotate:${rotation.id}`}>⬅️ ひとつ戻る</OverflowItem>
+    <OverflowItem value={`noop:${rotation.id}`}>
+      {/* 「削除」誤クリック防止のため、divider っぽい項目で区切る */}
+      ───────────────────
+    </OverflowItem>
     <OverflowItem value={`delete:${rotation.id}`}>削除</OverflowItem>
   </Overflow>
 );
