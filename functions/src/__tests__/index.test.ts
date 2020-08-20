@@ -6,9 +6,9 @@ import {
 import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import functionsTest from "firebase-functions-test";
-import { CONFIG, postSlackEvent, rotations } from "./test-helper";
+import { CONFIG, postSlackEvent, rotations } from "./index.helper";
 
-dotenv.config({ path: `${__dirname}/../../.env` });
+dotenv.config({ path: `${__dirname}/../../../.env` });
 const { TEST_PROJECT_ID } = process.env;
 if (!TEST_PROJECT_ID) {
   throw new Error("Environment variable TEST_PROJECT_ID not set.");
@@ -20,11 +20,12 @@ const test = functionsTest(
     databaseURL: `https://${TEST_PROJECT_ID}.firebaseio.com`,
     storageBucket: `${TEST_PROJECT_ID}.appspot.com`,
   },
-  `${__dirname}/../../serviceAccountKey.json`
+  `${__dirname}/../../../serviceAccountKey.json`
 );
 test.mockConfig(CONFIG);
 
-import { slack, cron } from "./index";
+// eslint-disable-next-line import/order
+import { slack, cron } from "../index";
 
 describe("functions", () => {
   afterAll(() => {

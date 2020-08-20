@@ -2,7 +2,7 @@ import crypto from "crypto";
 import querystring from "querystring";
 import { HttpsFunction } from "firebase-functions";
 import request from "supertest";
-import { RotationJSON } from "./model/rotation";
+import { RotationJSON } from "../model/rotation";
 
 export const CONFIG = {
   slack: {

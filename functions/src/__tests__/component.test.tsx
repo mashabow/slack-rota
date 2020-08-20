@@ -3,8 +3,8 @@ import {
   SettingModal,
   SettingSuccessMessage,
   RotationMessage,
-} from "./component";
-import { Rotation } from "./model/rotation";
+} from "../component";
+import { Rotation } from "../model/rotation";
 
 const rotationMentionAll = Rotation.fromJSON({
   id: "rotation-id",
