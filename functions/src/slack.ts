@@ -28,6 +28,29 @@ export const createSlackApp = (
     token: config.slack.bot_token,
   });
 
+  /**
+   * { [user_id]: user_name } の辞書を返す
+   */
+  const getUserNameDict = async (): Promise<Record<string, string> | null> => {
+    try {
+      const json = await app.client.users.list({
+        token: config.slack.bot_token,
+      });
+      // @ts-ignore
+      return json.members.reduce(
+        // @ts-ignore
+        (acc, { id, profile }) => ({
+          ...acc,
+          [id]: profile.display_name || profile.real_name,
+        }),
+        {}
+      );
+    } catch (error) {
+      functions.logger.error("error", { error });
+    }
+    return null;
+  };
+
   app.command("/rota", async ({ ack, body, context }) => {
     await ack();
 
@@ -61,17 +84,21 @@ export const createSlackApp = (
           view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
         ),
       },
+      mentionAll: JSON.parse(
+        view.state.values[ID.MENTION_ALL][ID.MENTION_ALL].selected_option.value
+      ),
     });
 
     await rotationStore.set(rotation);
 
     const userId = body.user.id;
+    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
         channel: rotation.channel,
         text: `<@${userId}> さんがローテーションを作成しました！`,
-        blocks: SettingSuccessMessage({ rotation, userId }),
+        blocks: SettingSuccessMessage({ rotation, userId, userNameDict }),
       });
     } catch (error) {
       functions.logger.error("error", { error });
@@ -111,12 +138,15 @@ export const createSlackApp = (
           try {
             const newRotation = rotation.rotate();
             await rotationStore.set(newRotation);
+            const userNameDict = newRotation.mentionAll
+              ? null
+              : await getUserNameDict();
             await app.client.chat.update({
               token: config.slack.bot_token,
               channel: channelId,
               ts: body.container.message_ts,
               text: newRotation.message,
-              blocks: RotationMessage({ rotation: newRotation }),
+              blocks: RotationMessage({ rotation: newRotation, userNameDict }),
             });
           } catch (error) {
             functions.logger.error("error", { error });
@@ -126,12 +156,15 @@ export const createSlackApp = (
           try {
             const newRotation = rotation.unrotate();
             await rotationStore.set(newRotation);
+            const userNameDict = newRotation.mentionAll
+              ? null
+              : await getUserNameDict();
             await app.client.chat.update({
               token: config.slack.bot_token,
               channel: channelId,
               ts: body.container.message_ts,
               text: newRotation.message,
-              blocks: RotationMessage({ rotation: newRotation }),
+              blocks: RotationMessage({ rotation: newRotation, userNameDict }),
             });
           } catch (error) {
             functions.logger.error("error", { error });
@@ -163,12 +196,13 @@ export const createSlackApp = (
   );
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
+    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
         channel: rotation.channel,
         text: rotation.message,
-        blocks: RotationMessage({ rotation }),
+        blocks: RotationMessage({ rotation, userNameDict }),
       });
     } catch (error) {
       functions.logger.error("error", { error });

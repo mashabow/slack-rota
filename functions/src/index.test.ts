@@ -160,6 +160,19 @@ describe("functions", () => {
                       ],
                     },
                   },
+                  mention_all: {
+                    mention_all: {
+                      type: "radio_buttons",
+                      selected_option: {
+                        text: {
+                          type: "mrkdwn",
+                          text: "全員にメンションする",
+                          verbatim: true,
+                        },
+                        value: "true",
+                      },
+                    },
+                  },
                 },
               },
               // ...snip
@@ -182,6 +195,7 @@ describe("functions", () => {
               hour: 23,
               minute: 45,
             },
+            mentionAll: true,
           },
           ...rotations,
         ]);

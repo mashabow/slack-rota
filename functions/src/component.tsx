@@ -14,6 +14,8 @@ import {
   Mrkdwn,
   Overflow,
   OverflowItem,
+  RadioButtonGroup,
+  RadioButton,
 } from "@speee-js/jsx-slack";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
@@ -26,6 +28,7 @@ export const ID = {
   DAYS: "days",
   HOUR: "hour",
   MINUTE: "minute",
+  MENTION_ALL: "mention_all",
   OVERFLOW_MENU: "overflow_menu",
 } as const;
 
@@ -62,17 +65,39 @@ export const SettingModal = ({
           return <Option value={minute}>{minute}分</Option>;
         })}
       </Select>
+      <RadioButtonGroup
+        id={ID.MENTION_ALL}
+        name={ID.MENTION_ALL}
+        required
+        label="メンション"
+        value="true"
+      >
+        <RadioButton value="true">全員にメンションする</RadioButton>
+        <RadioButton value="false">担当者だけにメンションする</RadioButton>
+      </RadioButtonGroup>
       <Input type="submit" value="設定する" />
     </Modal>
   );
 
-const Order = ({ rotation }: { readonly rotation: Rotation }) => (
+const Order = ({
+  rotation,
+  userNameDict,
+}: {
+  readonly rotation: Rotation;
+  readonly userNameDict: Record<string, string> | null;
+}) => (
   <Fragment>
     👑 <a href={`@${rotation.onDuty}`} />
     {rotation.getOrderedRestMembers().map((member) => (
       <Fragment>
         {" → "}
-        <a href={`@${member}`} />
+        {/* 念のため、条件に !userNameDict を含めてはいるが、
+            mentionAll が false の場合は、本当は userNameDict が存在するはず */}
+        {rotation.mentionAll || !userNameDict ? (
+          <a href={`@${member}`} />
+        ) : (
+          `@${userNameDict[member]}`
+        )}
       </Fragment>
     ))}
   </Fragment>
@@ -107,9 +132,11 @@ type Blocks = KnownBlock[];
 export const SettingSuccessMessage = ({
   rotation,
   userId,
+  userNameDict,
 }: {
   readonly rotation: Rotation;
   readonly userId: string;
+  readonly userNameDict: Record<string, string> | null;
 }): Blocks =>
   JSXSlack(
     <Blocks>
@@ -132,7 +159,7 @@ export const SettingSuccessMessage = ({
       <Section>
         <blockquote>
           {/* プレビューなので、次回 post 時の順序で表示する */}
-          <Order rotation={rotation.rotate()} />
+          <Order rotation={rotation.rotate()} userNameDict={userNameDict} />
         </blockquote>
         <OverflowMenu rotation={rotation} canRotate={false} />
       </Section>
@@ -141,8 +168,10 @@ export const SettingSuccessMessage = ({
 
 export const RotationMessage = ({
   rotation,
+  userNameDict,
 }: {
   readonly rotation: Rotation;
+  readonly userNameDict: Record<string, string> | null;
 }): Blocks =>
   JSXSlack(
     <Blocks>
@@ -157,7 +186,7 @@ export const RotationMessage = ({
         </Mrkdwn>
       </Section>
       <Section>
-        <Order rotation={rotation} />
+        <Order rotation={rotation} userNameDict={userNameDict} />
         <OverflowMenu rotation={rotation} canRotate={true} />
       </Section>
     </Blocks>

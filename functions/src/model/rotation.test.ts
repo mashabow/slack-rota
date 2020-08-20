@@ -13,6 +13,7 @@ describe("Rotation", () => {
       hour: 23,
       minute: 45,
     },
+    mentionAll: true,
   };
 
   describe("toJSON", () => {
@@ -30,6 +31,7 @@ describe("Rotation", () => {
       expect(rotation.onDuty).toBe(json.onDuty);
       expect(rotation.channel).toBe(json.channel);
       expect(rotation.schedule.toJSON()).toEqual(json.schedule);
+      expect(rotation.mentionAll).toBe(json.mentionAll);
     });
 
     it("defaults to unix timestamp for id", () => {
@@ -55,6 +57,7 @@ describe("Rotation", () => {
       expect(rotated.members).toEqual(original.members);
       expect(rotated.channel).toBe(original.channel);
       expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(rotated.mentionAll).toBe(json.mentionAll);
     });
 
     it("rotates onDuty to the first member when onDuty was the last", () => {
@@ -67,6 +70,7 @@ describe("Rotation", () => {
       expect(rotated.members).toEqual(original.members);
       expect(rotated.channel).toBe(original.channel);
       expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(rotated.mentionAll).toBe(json.mentionAll);
     });
   });
 
@@ -81,6 +85,7 @@ describe("Rotation", () => {
       expect(rotated.members).toEqual(original.members);
       expect(rotated.channel).toBe(original.channel);
       expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(rotated.mentionAll).toBe(json.mentionAll);
     });
 
     it("unrotates onDuty to the last member when onDuty was the first", () => {
@@ -93,6 +98,7 @@ describe("Rotation", () => {
       expect(rotated.members).toEqual(original.members);
       expect(rotated.channel).toBe(original.channel);
       expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(rotated.mentionAll).toBe(json.mentionAll);
     });
   });
 

@@ -44,6 +44,7 @@ export const rotations: readonly RotationJSON[] = [
       hour: 7,
       minute: 35,
     },
+    mentionAll: true,
   },
   {
     id: "rotation-2",
@@ -56,6 +57,7 @@ export const rotations: readonly RotationJSON[] = [
       hour: 7,
       minute: 35,
     },
+    mentionAll: false,
   },
   {
     id: "rotation-3",
@@ -68,6 +70,7 @@ export const rotations: readonly RotationJSON[] = [
       hour: 22,
       minute: 35,
     },
+    mentionAll: true,
   },
   {
     id: "rotation-4",
@@ -80,5 +83,6 @@ export const rotations: readonly RotationJSON[] = [
       hour: 7,
       minute: 35,
     },
+    mentionAll: false,
   },
 ];
