@@ -1,6 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RotationMessage renders correctly 1`] = `
+exports[`RotationMessage renders correctly when mentionAll: false 1`] = `
+Array [
+  Object {
+    "text": Object {
+      "text": "message line 1
+message line 2
+",
+      "type": "mrkdwn",
+      "verbatim": false,
+    },
+    "type": "section",
+  },
+  Object {
+    "accessory": Object {
+      "action_id": "overflow_menu",
+      "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "ひとつ進む",
+            "type": "plain_text",
+          },
+          "value": "rotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "ひとつ戻る",
+            "type": "plain_text",
+          },
+          "value": "unrotate:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "削除",
+            "type": "plain_text",
+          },
+          "value": "delete:rotation-id",
+        },
+      ],
+      "type": "overflow",
+    },
+    "text": Object {
+      "text": "👑 <@user-b|>→ @userC → @userA",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+]
+`;
+
+exports[`RotationMessage renders correctly when mentionAll: true 1`] = `
 Array [
   Object {
     "text": Object {
@@ -563,7 +624,55 @@ Object {
 }
 `;
 
-exports[`SettingSuccessMessage renders correctly 1`] = `
+exports[`SettingSuccessMessage renders correctly when mentionAll: false 1`] = `
+Array [
+  Object {
+    "text": Object {
+      "text": "<@user-x|>さんがローテーションを設定しました！
+
+火曜の 23:45 に 👇 のような感じでお知らせします",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+  Object {
+    "text": Object {
+      "text": "&gt; message line 1
+&gt; message line 2
+",
+      "type": "mrkdwn",
+      "verbatim": false,
+    },
+    "type": "section",
+  },
+  Object {
+    "accessory": Object {
+      "action_id": "overflow_menu",
+      "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "削除",
+            "type": "plain_text",
+          },
+          "value": "delete:rotation-id",
+        },
+      ],
+      "type": "overflow",
+    },
+    "text": Object {
+      "text": "&gt; 👑 <@user-c|>→ @userA → @userB
+&gt; ",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+]
+`;
+
+exports[`SettingSuccessMessage renders correctly when mentionAll: true 1`] = `
 Array [
   Object {
     "text": Object {
