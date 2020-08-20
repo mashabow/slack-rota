@@ -1,14 +1,37 @@
 import crypto from "crypto";
 import querystring from "querystring";
+import dotenv from "dotenv";
 import { HttpsFunction } from "firebase-functions";
-import request from "supertest";
-import { RotationJSON } from "./model/rotation";
+import functionsTest from "firebase-functions-test";
 
-export const CONFIG = {
+import request from "supertest";
+import { RotationJSON } from "../model/rotation";
+
+const CONFIG = {
   slack: {
     bot_token: "dummy-bot-token",
     signing_secret: "dummy-signing-secret",
   },
+};
+
+export const setupFunctionsTest = (): ReturnType<typeof functionsTest> => {
+  dotenv.config({ path: `${__dirname}/../../../.env` });
+  const { TEST_PROJECT_ID } = process.env;
+  if (!TEST_PROJECT_ID) {
+    throw new Error("Environment variable TEST_PROJECT_ID not set.");
+  }
+
+  const test = functionsTest(
+    {
+      projectId: `${TEST_PROJECT_ID}`,
+      databaseURL: `https://${TEST_PROJECT_ID}.firebaseio.com`,
+      storageBucket: `${TEST_PROJECT_ID}.appspot.com`,
+    },
+    `${__dirname}/../../../serviceAccountKey.json`
+  );
+  test.mockConfig(CONFIG);
+
+  return test;
 };
 
 export const postSlackEvent = (

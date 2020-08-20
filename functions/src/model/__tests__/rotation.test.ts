@@ -1,5 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import { Rotation } from "./rotation";
+import { Rotation } from "../rotation";
 
 describe("Rotation", () => {
   const json = {

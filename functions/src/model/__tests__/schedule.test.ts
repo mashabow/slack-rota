@@ -1,5 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import { Schedule } from "./schedule";
+import { Schedule } from "../schedule";
 
 describe("Schedule", () => {
   const json = {
