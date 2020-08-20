@@ -3,27 +3,12 @@ import {
   MockedWebClient,
   MockWebClient,
 } from "@slack-wrench/jest-mock-web-client";
-import dotenv from "dotenv";
 import * as admin from "firebase-admin";
-import functionsTest from "firebase-functions-test";
-import { CONFIG, postSlackEvent, rotations } from "./index.helper";
+import { setupFunctionsTest, postSlackEvent, rotations } from "./index.helper";
 
-dotenv.config({ path: `${__dirname}/../../../.env` });
-const { TEST_PROJECT_ID } = process.env;
-if (!TEST_PROJECT_ID) {
-  throw new Error("Environment variable TEST_PROJECT_ID not set.");
-}
+const test = setupFunctionsTest();
 
-const test = functionsTest(
-  {
-    projectId: `${TEST_PROJECT_ID}`,
-    databaseURL: `https://${TEST_PROJECT_ID}.firebaseio.com`,
-    storageBucket: `${TEST_PROJECT_ID}.appspot.com`,
-  },
-  `${__dirname}/../../../serviceAccountKey.json`
-);
-test.mockConfig(CONFIG);
-
+// setupFunctionsTest() の後で import する必要がある
 // eslint-disable-next-line import/order
 import { slack, cron } from "../index";
 
