@@ -17,6 +17,7 @@ const rotation = Rotation.fromJSON({
     hour: 23,
     minute: 45,
   },
+  mentionAll: true,
 });
 
 describe("SettingModal", () => {

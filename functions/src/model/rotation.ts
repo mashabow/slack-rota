@@ -15,6 +15,7 @@ export class Rotation {
   readonly message: string;
   readonly channel: string;
   readonly schedule: Schedule;
+  readonly mentionAll: boolean;
 
   private constructor(args: RotationArgs) {
     this.id = args.id;
@@ -23,6 +24,7 @@ export class Rotation {
     this.message = args.message;
     this.channel = args.channel;
     this.schedule = args.schedule;
+    this.mentionAll = args.mentionAll;
   }
 
   toJSON(): RotationJSON {
@@ -33,6 +35,7 @@ export class Rotation {
       message: this.message,
       channel: this.channel,
       schedule: this.schedule.toJSON(),
+      mentionAll: this.mentionAll,
     };
   }
 
@@ -45,6 +48,7 @@ export class Rotation {
       message: json.message,
       channel: json.channel,
       schedule: Schedule.fromJSON(json.schedule),
+      mentionAll: json.mentionAll,
     });
   }
 

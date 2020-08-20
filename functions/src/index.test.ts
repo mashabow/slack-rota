@@ -182,6 +182,7 @@ describe("functions", () => {
               hour: 23,
               minute: 45,
             },
+            mentionAll: true,
           },
           ...rotations,
         ]);
