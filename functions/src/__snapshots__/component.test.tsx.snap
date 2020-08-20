@@ -501,6 +501,46 @@ Object {
       "optional": false,
       "type": "input",
     },
+    Object {
+      "block_id": "mention_all",
+      "element": Object {
+        "action_id": "mention_all",
+        "initial_option": Object {
+          "text": Object {
+            "text": "全員にメンションする",
+            "type": "mrkdwn",
+            "verbatim": true,
+          },
+          "value": "true",
+        },
+        "options": Array [
+          Object {
+            "text": Object {
+              "text": "全員にメンションする",
+              "type": "mrkdwn",
+              "verbatim": true,
+            },
+            "value": "true",
+          },
+          Object {
+            "text": Object {
+              "text": "担当者だけにメンションする",
+              "type": "mrkdwn",
+              "verbatim": true,
+            },
+            "value": "false",
+          },
+        ],
+        "type": "radio_buttons",
+      },
+      "label": Object {
+        "emoji": true,
+        "text": "メンション",
+        "type": "plain_text",
+      },
+      "optional": false,
+      "type": "input",
+    },
   ],
   "callback_id": "submit_callback",
   "close": Object {

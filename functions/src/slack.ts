@@ -61,7 +61,9 @@ export const createSlackApp = (
           view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
         ),
       },
-      mentionAll: true, // TODO
+      mentionAll: JSON.parse(
+        view.state.values[ID.MENTION_ALL][ID.MENTION_ALL].selected_option.value
+      ),
     });
 
     await rotationStore.set(rotation);

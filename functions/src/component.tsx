@@ -14,6 +14,8 @@ import {
   Mrkdwn,
   Overflow,
   OverflowItem,
+  RadioButtonGroup,
+  RadioButton,
 } from "@speee-js/jsx-slack";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
@@ -26,6 +28,7 @@ export const ID = {
   DAYS: "days",
   HOUR: "hour",
   MINUTE: "minute",
+  MENTION_ALL: "mention_all",
   OVERFLOW_MENU: "overflow_menu",
 } as const;
 
@@ -62,6 +65,16 @@ export const SettingModal = ({
           return <Option value={minute}>{minute}分</Option>;
         })}
       </Select>
+      <RadioButtonGroup
+        id={ID.MENTION_ALL}
+        name={ID.MENTION_ALL}
+        required
+        label="メンション"
+        value="true"
+      >
+        <RadioButton value="true">全員にメンションする</RadioButton>
+        <RadioButton value="false">担当者だけにメンションする</RadioButton>
+      </RadioButtonGroup>
       <Input type="submit" value="設定する" />
     </Modal>
   );

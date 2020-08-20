@@ -160,6 +160,19 @@ describe("functions", () => {
                       ],
                     },
                   },
+                  mention_all: {
+                    mention_all: {
+                      type: "radio_buttons",
+                      selected_option: {
+                        text: {
+                          type: "mrkdwn",
+                          text: "全員にメンションする",
+                          verbatim: true,
+                        },
+                        value: "true",
+                      },
+                    },
+                  },
                 },
               },
               // ...snip
