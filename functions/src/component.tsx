@@ -129,6 +129,20 @@ const OverflowMenu = ({
 
 type Blocks = KnownBlock[];
 
+/**
+ * Slack mrkdwn 形式の文字列をそのまま表示する
+ * https://github.com/speee/jsx-slack/issues/160#issuecomment-625598213
+ */
+const RawMrkdwn = (props: Parameters<typeof Mrkdwn>[0]) => {
+  // Generate mrkdwn text composition object (skip unnecessary HTML parsing by assigning children to null)
+  // eslint-disable-next-line react/no-children-prop
+  const mrkdwn = <Mrkdwn {...props} children={null} />;
+  // Define the passed raw mrkdwn as text
+  // @ts-ignore
+  mrkdwn.text = props.children;
+  return mrkdwn;
+};
+
 export const SettingSuccessMessage = ({
   rotation,
   userId,
@@ -147,14 +161,12 @@ export const SettingSuccessMessage = ({
         <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>
       <Section>
-        <Mrkdwn verbatim={false}>
-          {rotation.message.split("\n").map((line) => (
-            <Fragment>
-              &gt; {line}
-              <br />
-            </Fragment>
-          ))}
-        </Mrkdwn>
+        <RawMrkdwn verbatim={false}>
+          {rotation.message
+            .split("\n")
+            .map((line) => `&gt; ${line}`)
+            .join("\n")}
+        </RawMrkdwn>
       </Section>
       <Section>
         <blockquote>
@@ -176,14 +188,7 @@ export const RotationMessage = ({
   JSXSlack(
     <Blocks>
       <Section>
-        <Mrkdwn verbatim={false}>
-          {rotation.message.split("\n").map((line) => (
-            <Fragment>
-              {line}
-              <br />
-            </Fragment>
-          ))}
-        </Mrkdwn>
+        <RawMrkdwn verbatim={false}>{rotation.message}</RawMrkdwn>
       </Section>
       <Section>
         <Order rotation={rotation} userNameDict={userNameDict} />

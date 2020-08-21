@@ -5,8 +5,7 @@ Array [
   Object {
     "text": Object {
       "text": "message line 1
-message line 2
-",
+message line 2",
       "type": "mrkdwn",
       "verbatim": false,
     },
@@ -66,8 +65,7 @@ Array [
   Object {
     "text": Object {
       "text": "message line 1
-message line 2
-",
+message line 2",
       "type": "mrkdwn",
       "verbatim": false,
     },
@@ -639,8 +637,7 @@ Array [
   Object {
     "text": Object {
       "text": "&gt; message line 1
-&gt; message line 2
-",
+&gt; message line 2",
       "type": "mrkdwn",
       "verbatim": false,
     },
@@ -687,8 +684,7 @@ Array [
   Object {
     "text": Object {
       "text": "&gt; message line 1
-&gt; message line 2
-",
+&gt; message line 2",
       "type": "mrkdwn",
       "verbatim": false,
     },
