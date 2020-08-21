@@ -127,6 +127,11 @@ Object {
       "block_id": "members",
       "element": Object {
         "action_id": "members",
+        "placeholder": Object {
+          "emoji": true,
+          "text": "ローテーションさせる順番で選択してください",
+          "type": "plain_text",
+        },
         "type": "multi_users_select",
       },
       "label": Object {
@@ -142,6 +147,11 @@ Object {
       "element": Object {
         "action_id": "message",
         "multiline": true,
+        "placeholder": Object {
+          "emoji": false,
+          "text": "お知らせする本文です。Slack の mrkdwn が使えます",
+          "type": "plain_text",
+        },
         "type": "plain_text_input",
       },
       "label": Object {
@@ -214,6 +224,11 @@ Object {
             "value": "6",
           },
         ],
+        "placeholder": Object {
+          "emoji": true,
+          "text": "複数選択可能です",
+          "type": "plain_text",
+        },
         "type": "multi_static_select",
       },
       "label": Object {

@@ -45,10 +45,24 @@ export const SettingModal = ({
         required
         multiple
         label="メンバー"
+        placeholder="ローテーションさせる順番で選択してください"
       />
-      <Textarea id={ID.MESSAGE} name={ID.MESSAGE} required label="メッセージ" />
+      <Textarea
+        id={ID.MESSAGE}
+        name={ID.MESSAGE}
+        required
+        label="メッセージ"
+        placeholder="お知らせする本文です。Slack の mrkdwn が使えます"
+      />
       <Input type="hidden" name={ID.CHANNEL} value={channelId} />
-      <Select id={ID.DAYS} name={ID.DAYS} required multiple label="曜日">
+      <Select
+        id={ID.DAYS}
+        name={ID.DAYS}
+        required
+        multiple
+        label="曜日"
+        placeholder="複数選択可能です"
+      >
         {DAY_STRINGS.map((s, i) => {
           return <Option value={i.toString()}>{s}曜</Option>;
         })}
