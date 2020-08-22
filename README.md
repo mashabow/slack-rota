@@ -2,7 +2,7 @@
 
 日々のローテーションをお知らせする Slack アプリ
 
-![お知らせ1回目](assets/post-1.png)
+<img src="assets/post-1.png" alt="お知らせの例" width="668">
 
 ## 使い方
 
@@ -10,33 +10,33 @@
 
 ローテーションをお知らせしたいチャンネルで、`/rota` コマンドを実行します。
 
-![/rota コマンドを実行する](assets/command.png)
+<img src="assets/command.png" alt="/rota コマンドを実行する" width="643">
 
 すると、ローテーションを作成するためのモーダルが開きます。ローテーションを回すメンバーや、お知らせするメッセージ、曜日・時刻を入力しましょう。
 
-![作成モーダル](assets/modal-1.png)
+<img src="assets/modal-1.png" alt="作成モーダル" width="534">
 
 お知らせ時にメンションする範囲を選ぶこともできます（スクロールで隠れていて少々わかりにくいですが…）。
 
-![作成モーダル下部](assets/modal-2.png)
+<img src="assets/modal-2.png" alt="作成モーダル下部" width="534">
 
 [作成する] をクリックして完了です。「ローテーションを作成しました！」というメッセージが表示されます。
 
-![作成成功メッセージ](assets/success.png)
+<img src="assets/success.png" alt="作成成功メッセージ" width="668">
 
 ### Rota からのお知らせ
 
 指定した日時になると、Rota が今日の担当者をお知らせします。
 
-![お知らせ1回目](assets/post-1.png)
+<img src="assets/post-1.png" alt="お知らせ1回目" width="668">
 
 指定した日時がもう一度来ると、ローテーションがひとつ進み、次の担当者になります。以降も同様です。
 
-![お知らせ2回目](assets/post-2.png)
+<img src="assets/post-2.png" alt="お知らせ2回目" width="668">
 
 右端の […] メニューから、手動でローテーションを進めたり、戻したりもできます。
 
-![[…] メニュー](assets/overflow.png)
+<img src="assets/overflow.png" alt="[…] メニュー" width="286">
 
 ### 補足
 
