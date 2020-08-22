@@ -1,7 +1,7 @@
 import { describe, it, expect } from "@jest/globals";
 import {
-  SettingModal,
-  SettingSuccessMessage,
+  CreateModal,
+  CreateSuccessMessage,
   RotationMessage,
 } from "../component";
 import { Rotation } from "../model/rotation";
@@ -34,16 +34,16 @@ const rotationNotMentionAll = Rotation.fromJSON({
   mentionAll: false,
 });
 
-describe("SettingModal", () => {
+describe("CreateModal", () => {
   it("renders correctly", () => {
-    expect(SettingModal({ channelId: "channel-id" })).toMatchSnapshot();
+    expect(CreateModal({ channelId: "channel-id" })).toMatchSnapshot();
   });
 });
 
-describe("SettingSuccessMessage", () => {
+describe("CreateSuccessMessage", () => {
   it("renders correctly when mentionAll: true", () => {
     expect(
-      SettingSuccessMessage({
+      CreateSuccessMessage({
         rotation: rotationMentionAll,
         userId: "user-x",
         userNameDict: null,
@@ -52,7 +52,7 @@ describe("SettingSuccessMessage", () => {
   });
   it("renders correctly when mentionAll: false", () => {
     expect(
-      SettingSuccessMessage({
+      CreateSuccessMessage({
         rotation: rotationNotMentionAll,
         userId: "user-x",
         userNameDict: {

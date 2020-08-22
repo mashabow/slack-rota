@@ -1,8 +1,8 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import {
-  SettingModal,
-  SettingSuccessMessage,
+  CreateModal,
+  CreateSuccessMessage,
   RotationMessage,
   ID,
 } from "./component";
@@ -58,7 +58,7 @@ export const createSlackApp = (
       const result = await app.client.views.open({
         token: context.botToken as string,
         trigger_id: body.trigger_id,
-        view: SettingModal({ channelId: body.channel_id }),
+        view: CreateModal({ channelId: body.channel_id }),
       });
       functions.logger.info("result", { result });
     } catch (error) {
@@ -98,7 +98,7 @@ export const createSlackApp = (
         token: config.slack.bot_token,
         channel: rotation.channel,
         text: `<@${userId}> さんがローテーションを作成しました！`,
-        blocks: SettingSuccessMessage({ rotation, userId, userNameDict }),
+        blocks: CreateSuccessMessage({ rotation, userId, userNameDict }),
       });
     } catch (error) {
       functions.logger.error("error", { error });
