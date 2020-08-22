@@ -32,7 +32,7 @@ export const ID = {
   OVERFLOW_MENU: "overflow_menu",
 } as const;
 
-export const SettingModal = ({
+export const CreateModal = ({
   channelId,
 }: {
   readonly channelId: string;
@@ -89,7 +89,7 @@ export const SettingModal = ({
         <RadioButton value="true">全員にメンションする</RadioButton>
         <RadioButton value="false">担当者だけにメンションする</RadioButton>
       </RadioButtonGroup>
-      <Input type="submit" value="設定する" />
+      <Input type="submit" value="作成する" />
     </Modal>
   );
 
@@ -157,7 +157,7 @@ const RawMrkdwn = (props: Parameters<typeof Mrkdwn>[0]) => {
   return mrkdwn;
 };
 
-export const SettingSuccessMessage = ({
+export const CreateSuccessMessage = ({
   rotation,
   userId,
   userNameDict,
@@ -170,7 +170,7 @@ export const SettingSuccessMessage = ({
     <Blocks>
       <Section>
         <p>
-          <a href={`@${userId}`} /> さんがローテーションを設定しました！
+          <a href={`@${userId}`} /> さんがローテーションを作成しました！
         </p>
         <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>
