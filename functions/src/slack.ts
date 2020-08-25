@@ -99,6 +99,7 @@ export const createSlackApp = (
         channel: rotation.channel,
         text: `<@${userId}> さんがローテーションを作成しました！`,
         blocks: CreateSuccessMessage({ rotation, userId, userNameDict }),
+        unfurl_links: false,
       });
     } catch (error) {
       functions.logger.error("error", { error });
@@ -147,6 +148,7 @@ export const createSlackApp = (
               ts: body.container.message_ts,
               text: newRotation.message,
               blocks: RotationMessage({ rotation: newRotation, userNameDict }),
+              unfurl_links: false,
             });
           } catch (error) {
             functions.logger.error("error", { error });
@@ -165,6 +167,7 @@ export const createSlackApp = (
               ts: body.container.message_ts,
               text: newRotation.message,
               blocks: RotationMessage({ rotation: newRotation, userNameDict }),
+              unfurl_links: false,
             });
           } catch (error) {
             functions.logger.error("error", { error });
@@ -203,6 +206,7 @@ export const createSlackApp = (
         channel: rotation.channel,
         text: rotation.message,
         blocks: RotationMessage({ rotation, userNameDict }),
+        unfurl_links: false,
       });
     } catch (error) {
       functions.logger.error("error", { error });

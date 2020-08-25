@@ -63,6 +63,7 @@ Array [
       "channel": "channel-1",
       "text": "rotation-1 message",
       "token": "dummy-bot-token",
+      "unfurl_links": false,
     },
   ],
   Array [
@@ -126,6 +127,7 @@ Array [
       "channel": "channel-2",
       "text": "rotation-2 message",
       "token": "dummy-bot-token",
+      "unfurl_links": false,
     },
   ],
 ]
@@ -789,6 +791,7 @@ Array [
       "channel": "channel-id",
       "text": "<@user-id> さんがローテーションを作成しました！",
       "token": "dummy-bot-token",
+      "unfurl_links": false,
     },
   ],
 ]
