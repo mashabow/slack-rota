@@ -1,8 +1,8 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import {
-  CreateModal,
-  CreateSuccessMessage,
+  RotationModal,
+  SuccessMessage,
   RotationMessage,
   ID,
 } from "./component";
@@ -58,7 +58,7 @@ export const createSlackApp = (
       const result = await app.client.views.open({
         token: context.botToken as string,
         trigger_id: body.trigger_id,
-        view: CreateModal({ channelId: body.channel_id }),
+        view: RotationModal({ channelId: body.channel_id }),
       });
       functions.logger.info("result", { result });
     } catch (error) {
@@ -69,10 +69,13 @@ export const createSlackApp = (
   app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view }) => {
     await ack();
 
+    const hiddenFields = JSON.parse(view.private_metadata);
+
     const rotation = Rotation.fromJSON({
+      id: hiddenFields[ID.ROTATION_ID], // 新規作成のときは undefined
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
-      channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
+      channel: hiddenFields[ID.CHANNEL],
       schedule: {
         days: view.state.values[ID.DAYS][
           ID.DAYS
@@ -93,12 +96,20 @@ export const createSlackApp = (
 
     const userId = body.user.id;
     const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
         channel: rotation.channel,
-        text: `<@${userId}> さんがローテーションを作成しました！`,
-        blocks: CreateSuccessMessage({ rotation, userId, userNameDict }),
+        text: `<@${userId}> さんがローテーションを${
+          isUpdate ? "編集" : "作成"
+        }しました！`,
+        blocks: SuccessMessage({
+          rotation,
+          userId,
+          userNameDict,
+          isUpdate,
+        }),
         unfurl_links: false,
       });
     } catch (error) {
@@ -135,6 +146,17 @@ export const createSlackApp = (
       }
 
       switch (type) {
+        case "edit":
+          try {
+            await app.client.views.open({
+              token: config.slack.bot_token,
+              trigger_id: body.trigger_id,
+              view: RotationModal({ channelId, rotation }),
+            });
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
+          break;
         case "rotate":
           try {
             const newRotation = rotation.rotate();

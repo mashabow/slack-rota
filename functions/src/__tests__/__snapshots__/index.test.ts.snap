@@ -20,6 +20,14 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
+                  "text": "編集",
+                  "type": "plain_text",
+                },
+                "value": "edit:rotation-1",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
                   "text": "ひとつ進む",
                   "type": "plain_text",
                 },
@@ -84,6 +92,14 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
+                  "text": "編集",
+                  "type": "plain_text",
+                },
+                "value": "edit:rotation-2",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
                   "text": "ひとつ進む",
                   "type": "plain_text",
                 },
@@ -133,7 +149,7 @@ Array [
 ]
 `;
 
-exports[`functions slack /rota command opens CreateModal 1`] = `
+exports[`functions slack /rota command opens RotationModal 1`] = `
 Array [
   Array [
     Object {
@@ -648,7 +664,7 @@ Array [
         },
         "title": Object {
           "emoji": true,
-          "text": "Rota",
+          "text": "ローテーション作成",
           "type": "plain_text",
         },
         "type": "modal",
@@ -739,7 +755,7 @@ Array [
 
 exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `Array []`;
 
-exports[`functions slack submit from CreateModal posts CreateSuccessMessage and creates a rotation on Firestore 1`] = `
+exports[`functions slack submit from RotationModal creates a new rotation in Firestore and posts a SuccessMessage 1`] = `
 Array [
   Array [
     Object {
@@ -771,6 +787,22 @@ Array [
               Object {
                 "text": Object {
                   "emoji": true,
+                  "text": "編集",
+                  "type": "plain_text",
+                },
+                "value": "edit:1597200000000",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "───────────────────",
+                  "type": "plain_text",
+                },
+                "value": "noop:1597200000000",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
                   "text": "削除",
                   "type": "plain_text",
                 },
@@ -790,6 +822,80 @@ Array [
       ],
       "channel": "channel-id",
       "text": "<@user-id> さんがローテーションを作成しました！",
+      "token": "dummy-bot-token",
+      "unfurl_links": false,
+    },
+  ],
+]
+`;
+
+exports[`functions slack submit from RotationModal updates a existing rotation in Firestore and posts a SuccessMessage 1`] = `
+Array [
+  Array [
+    Object {
+      "blocks": Array [
+        Object {
+          "text": Object {
+            "text": "<@user-id|>さんがローテーションを編集しました！
+
+月曜・水曜・金曜の 23:45 に 👇 のような感じでお知らせします",
+            "type": "mrkdwn",
+            "verbatim": true,
+          },
+          "type": "section",
+        },
+        Object {
+          "text": Object {
+            "text": "&gt; てすてす
+&gt; 
+&gt; *テスト*です",
+            "type": "mrkdwn",
+            "verbatim": false,
+          },
+          "type": "section",
+        },
+        Object {
+          "accessory": Object {
+            "action_id": "overflow_menu",
+            "options": Array [
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "編集",
+                  "type": "plain_text",
+                },
+                "value": "edit:rotation-4",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "───────────────────",
+                  "type": "plain_text",
+                },
+                "value": "noop:rotation-4",
+              },
+              Object {
+                "text": Object {
+                  "emoji": true,
+                  "text": "削除",
+                  "type": "plain_text",
+                },
+                "value": "delete:rotation-4",
+              },
+            ],
+            "type": "overflow",
+          },
+          "text": Object {
+            "text": "&gt; 👑 <@user-a|>→ <@user-b|>→<@user-c|>
+&gt; ",
+            "type": "mrkdwn",
+            "verbatim": true,
+          },
+          "type": "section",
+        },
+      ],
+      "channel": "channel-id",
+      "text": "<@user-id> さんがローテーションを編集しました！",
       "token": "dummy-bot-token",
       "unfurl_links": false,
     },

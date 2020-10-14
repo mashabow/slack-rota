@@ -1,9 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import {
-  CreateModal,
-  CreateSuccessMessage,
-  RotationMessage,
-} from "../component";
+import { RotationModal, SuccessMessage, RotationMessage } from "../component";
 import { Rotation } from "../model/rotation";
 
 const rotationMentionAll = Rotation.fromJSON({
@@ -34,25 +30,39 @@ const rotationNotMentionAll = Rotation.fromJSON({
   mentionAll: false,
 });
 
-describe("CreateModal", () => {
-  it("renders correctly", () => {
-    expect(CreateModal({ channelId: "channel-id" })).toMatchSnapshot();
+describe("RotationModal", () => {
+  describe("without `rotation` prop", () => {
+    it("renders a modal to create a new rotation", () => {
+      expect(RotationModal({ channelId: "channel-id" })).toMatchSnapshot();
+    });
+  });
+
+  describe("with `rotation` prop", () => {
+    it("renders as a modal to edit an existing rotation", () => {
+      expect(
+        RotationModal({
+          channelId: "channel-id",
+          rotation: rotationNotMentionAll,
+        })
+      ).toMatchSnapshot();
+    });
   });
 });
 
-describe("CreateSuccessMessage", () => {
+describe("SuccessMessage", () => {
   it("renders correctly when mentionAll: true", () => {
     expect(
-      CreateSuccessMessage({
+      SuccessMessage({
         rotation: rotationMentionAll,
         userId: "user-x",
         userNameDict: null,
+        isUpdate: false,
       })
     ).toMatchSnapshot();
   });
   it("renders correctly when mentionAll: false", () => {
     expect(
-      CreateSuccessMessage({
+      SuccessMessage({
         rotation: rotationNotMentionAll,
         userId: "user-x",
         userNameDict: {
@@ -60,6 +70,17 @@ describe("CreateSuccessMessage", () => {
           "user-b": "userB",
           "user-c": "userC",
         },
+        isUpdate: false,
+      })
+    ).toMatchSnapshot();
+  });
+  it("renders correctly when isUpdate: true", () => {
+    expect(
+      SuccessMessage({
+        rotation: rotationMentionAll,
+        userId: "user-x",
+        userNameDict: null,
+        isUpdate: true,
       })
     ).toMatchSnapshot();
   });
