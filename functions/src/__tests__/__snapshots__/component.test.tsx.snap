@@ -545,6 +545,22 @@ Array [
         Object {
           "text": Object {
             "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
             "text": "削除",
             "type": "plain_text",
           },
@@ -592,6 +608,22 @@ Array [
         Object {
           "text": Object {
             "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
             "text": "削除",
             "type": "plain_text",
           },
@@ -626,6 +658,14 @@ message line 2",
     "accessory": Object {
       "action_id": "overflow_menu",
       "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
         Object {
           "text": Object {
             "emoji": true,
@@ -686,6 +726,14 @@ message line 2",
     "accessory": Object {
       "action_id": "overflow_menu",
       "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
         Object {
           "text": Object {
             "emoji": true,
