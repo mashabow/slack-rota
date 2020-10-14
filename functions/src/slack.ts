@@ -90,7 +90,7 @@ export const createSlackApp = (
       mentionAll: JSON.parse(
         view.state.values[ID.MENTION_ALL][ID.MENTION_ALL].selected_option.value
       ),
-    });
+    }).unrotate(); // store には「前回の担当者が先頭」になるように保存するので、一つ戻した状態にする
 
     await rotationStore.set(rotation);
 
@@ -151,7 +151,10 @@ export const createSlackApp = (
             await app.client.views.open({
               token: config.slack.bot_token,
               trigger_id: body.trigger_id,
-              view: RotationModal({ channelId, rotation }),
+              view: RotationModal({
+                channelId,
+                rotation: rotation.rotate(), // 次回の担当者を先頭に表示したいので、rotate でずらしておく
+              }),
             });
           } catch (error) {
             functions.logger.error("error", { error });
