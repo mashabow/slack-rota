@@ -32,7 +32,7 @@ export const ID = {
   OVERFLOW_MENU: "overflow_menu",
 } as const;
 
-export const CreateModal = ({
+export const RotationModal = ({
   channelId,
 }: {
   readonly channelId: string;

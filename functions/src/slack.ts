@@ -1,7 +1,7 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import {
-  CreateModal,
+  RotationModal,
   CreateSuccessMessage,
   RotationMessage,
   ID,
@@ -58,7 +58,7 @@ export const createSlackApp = (
       const result = await app.client.views.open({
         token: context.botToken as string,
         trigger_id: body.trigger_id,
-        view: CreateModal({ channelId: body.channel_id }),
+        view: RotationModal({ channelId: body.channel_id }),
       });
       functions.logger.info("result", { result });
     } catch (error) {

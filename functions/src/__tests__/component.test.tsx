@@ -1,6 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 import {
-  CreateModal,
+  RotationModal,
   CreateSuccessMessage,
   RotationMessage,
 } from "../component";
@@ -34,9 +34,9 @@ const rotationNotMentionAll = Rotation.fromJSON({
   mentionAll: false,
 });
 
-describe("CreateModal", () => {
+describe("RotationModal", () => {
   it("renders correctly", () => {
-    expect(CreateModal({ channelId: "channel-id" })).toMatchSnapshot();
+    expect(RotationModal({ channelId: "channel-id" })).toMatchSnapshot();
   });
 });
 

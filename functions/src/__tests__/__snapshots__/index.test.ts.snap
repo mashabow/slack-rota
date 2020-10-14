@@ -149,7 +149,7 @@ Array [
 ]
 `;
 
-exports[`functions slack /rota command opens CreateModal 1`] = `
+exports[`functions slack /rota command opens RotationModal 1`] = `
 Array [
   Array [
     Object {
@@ -755,7 +755,7 @@ Array [
 
 exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `Array []`;
 
-exports[`functions slack submit from CreateModal posts CreateSuccessMessage and creates a rotation on Firestore 1`] = `
+exports[`functions slack submit from RotationModal posts CreateSuccessMessage and creates a rotation on Firestore 1`] = `
 Array [
   Array [
     Object {

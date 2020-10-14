@@ -44,7 +44,7 @@ describe("functions", () => {
 
   describe("slack", () => {
     describe("/rota command", () => {
-      it("opens CreateModal", async () => {
+      it("opens RotationModal", async () => {
         const res = await postSlackEvent(slack, {
           command: "/rota",
           text: "foobar",
@@ -59,7 +59,7 @@ describe("functions", () => {
       });
     });
 
-    describe("submit from CreateModal", () => {
+    describe("submit from RotationModal", () => {
       it("posts CreateSuccessMessage and creates a rotation on Firestore", async () => {
         Date.now = jest.fn(() => 1597200000000);
 

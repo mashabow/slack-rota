@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateModal renders correctly 1`] = `
+exports[`RotationModal renders correctly 1`] = `
 Object {
   "blocks": Array [
     Object {
