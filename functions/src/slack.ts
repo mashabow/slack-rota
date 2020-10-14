@@ -2,7 +2,7 @@ import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import {
   RotationModal,
-  CreateSuccessMessage,
+  SuccessMessage,
   RotationMessage,
   ID,
 } from "./component";
@@ -104,7 +104,12 @@ export const createSlackApp = (
         text: `<@${userId}> さんがローテーションを${
           isUpdate ? "編集" : "作成"
         }しました！`,
-        blocks: CreateSuccessMessage({ rotation, userId, userNameDict }),
+        blocks: SuccessMessage({
+          rotation,
+          userId,
+          userNameDict,
+          isUpdate,
+        }),
         unfurl_links: false,
       });
     } catch (error) {

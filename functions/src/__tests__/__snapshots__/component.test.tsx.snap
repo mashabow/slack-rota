@@ -1,131 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateSuccessMessage renders correctly when mentionAll: false 1`] = `
-Array [
-  Object {
-    "text": Object {
-      "text": "<@user-x|>さんがローテーションを作成しました！
-
-火曜の 23:45 に 👇 のような感じでお知らせします",
-      "type": "mrkdwn",
-      "verbatim": true,
-    },
-    "type": "section",
-  },
-  Object {
-    "text": Object {
-      "text": "&gt; message line 1
-&gt; message line 2",
-      "type": "mrkdwn",
-      "verbatim": false,
-    },
-    "type": "section",
-  },
-  Object {
-    "accessory": Object {
-      "action_id": "overflow_menu",
-      "options": Array [
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "編集",
-            "type": "plain_text",
-          },
-          "value": "edit:rotation-id",
-        },
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "───────────────────",
-            "type": "plain_text",
-          },
-          "value": "noop:rotation-id",
-        },
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "削除",
-            "type": "plain_text",
-          },
-          "value": "delete:rotation-id",
-        },
-      ],
-      "type": "overflow",
-    },
-    "text": Object {
-      "text": "&gt; 👑 <@user-c|>→ @userA → @userB
-&gt; ",
-      "type": "mrkdwn",
-      "verbatim": true,
-    },
-    "type": "section",
-  },
-]
-`;
-
-exports[`CreateSuccessMessage renders correctly when mentionAll: true 1`] = `
-Array [
-  Object {
-    "text": Object {
-      "text": "<@user-x|>さんがローテーションを作成しました！
-
-火曜の 23:45 に 👇 のような感じでお知らせします",
-      "type": "mrkdwn",
-      "verbatim": true,
-    },
-    "type": "section",
-  },
-  Object {
-    "text": Object {
-      "text": "&gt; message line 1
-&gt; message line 2",
-      "type": "mrkdwn",
-      "verbatim": false,
-    },
-    "type": "section",
-  },
-  Object {
-    "accessory": Object {
-      "action_id": "overflow_menu",
-      "options": Array [
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "編集",
-            "type": "plain_text",
-          },
-          "value": "edit:rotation-id",
-        },
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "───────────────────",
-            "type": "plain_text",
-          },
-          "value": "noop:rotation-id",
-        },
-        Object {
-          "text": Object {
-            "emoji": true,
-            "text": "削除",
-            "type": "plain_text",
-          },
-          "value": "delete:rotation-id",
-        },
-      ],
-      "type": "overflow",
-    },
-    "text": Object {
-      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
-&gt; ",
-      "type": "mrkdwn",
-      "verbatim": true,
-    },
-    "type": "section",
-  },
-]
-`;
-
 exports[`RotationMessage renders correctly when mentionAll: false 1`] = `
 Array [
   Object {
@@ -1311,4 +1185,193 @@ Object {
   },
   "type": "modal",
 }
+`;
+
+exports[`SuccessMessage renders correctly when isUpdate: true 1`] = `
+Array [
+  Object {
+    "text": Object {
+      "text": "<@user-x|>さんがローテーションを編集しました！
+
+火曜の 23:45 に 👇 のような感じでお知らせします",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+  Object {
+    "text": Object {
+      "text": "&gt; message line 1
+&gt; message line 2",
+      "type": "mrkdwn",
+      "verbatim": false,
+    },
+    "type": "section",
+  },
+  Object {
+    "accessory": Object {
+      "action_id": "overflow_menu",
+      "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "削除",
+            "type": "plain_text",
+          },
+          "value": "delete:rotation-id",
+        },
+      ],
+      "type": "overflow",
+    },
+    "text": Object {
+      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
+&gt; ",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+]
+`;
+
+exports[`SuccessMessage renders correctly when mentionAll: false 1`] = `
+Array [
+  Object {
+    "text": Object {
+      "text": "<@user-x|>さんがローテーションを作成しました！
+
+火曜の 23:45 に 👇 のような感じでお知らせします",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+  Object {
+    "text": Object {
+      "text": "&gt; message line 1
+&gt; message line 2",
+      "type": "mrkdwn",
+      "verbatim": false,
+    },
+    "type": "section",
+  },
+  Object {
+    "accessory": Object {
+      "action_id": "overflow_menu",
+      "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "削除",
+            "type": "plain_text",
+          },
+          "value": "delete:rotation-id",
+        },
+      ],
+      "type": "overflow",
+    },
+    "text": Object {
+      "text": "&gt; 👑 <@user-c|>→ @userA → @userB
+&gt; ",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+]
+`;
+
+exports[`SuccessMessage renders correctly when mentionAll: true 1`] = `
+Array [
+  Object {
+    "text": Object {
+      "text": "<@user-x|>さんがローテーションを作成しました！
+
+火曜の 23:45 に 👇 のような感じでお知らせします",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+  Object {
+    "text": Object {
+      "text": "&gt; message line 1
+&gt; message line 2",
+      "type": "mrkdwn",
+      "verbatim": false,
+    },
+    "type": "section",
+  },
+  Object {
+    "accessory": Object {
+      "action_id": "overflow_menu",
+      "options": Array [
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "編集",
+            "type": "plain_text",
+          },
+          "value": "edit:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "───────────────────",
+            "type": "plain_text",
+          },
+          "value": "noop:rotation-id",
+        },
+        Object {
+          "text": Object {
+            "emoji": true,
+            "text": "削除",
+            "type": "plain_text",
+          },
+          "value": "delete:rotation-id",
+        },
+      ],
+      "type": "overflow",
+    },
+    "text": Object {
+      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
+&gt; ",
+      "type": "mrkdwn",
+      "verbatim": true,
+    },
+    "type": "section",
+  },
+]
 `;

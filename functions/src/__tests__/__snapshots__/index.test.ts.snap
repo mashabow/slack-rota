@@ -755,7 +755,7 @@ Array [
 
 exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `Array []`;
 
-exports[`functions slack submit from RotationModal creates a new rotation in Firestore and posts a CreateSuccessMessage 1`] = `
+exports[`functions slack submit from RotationModal creates a new rotation in Firestore and posts a SuccessMessage 1`] = `
 Array [
   Array [
     Object {
@@ -829,14 +829,14 @@ Array [
 ]
 `;
 
-exports[`functions slack submit from RotationModal updates a existing rotation in Firestore and posts a CreateSuccessMessage 1`] = `
+exports[`functions slack submit from RotationModal updates a existing rotation in Firestore and posts a SuccessMessage 1`] = `
 Array [
   Array [
     Object {
       "blocks": Array [
         Object {
           "text": Object {
-            "text": "<@user-id|>さんがローテーションを作成しました！
+            "text": "<@user-id|>さんがローテーションを編集しました！
 
 月曜・水曜・金曜の 23:45 に 👇 のような感じでお知らせします",
             "type": "mrkdwn",

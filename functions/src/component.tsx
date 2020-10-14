@@ -181,20 +181,23 @@ const RawMrkdwn = (props: Parameters<typeof Mrkdwn>[0]) => {
   return mrkdwn;
 };
 
-export const CreateSuccessMessage = ({
+export const SuccessMessage = ({
   rotation,
   userId,
   userNameDict,
+  isUpdate,
 }: {
   readonly rotation: Rotation;
   readonly userId: string;
   readonly userNameDict: Record<string, string> | null;
+  readonly isUpdate: boolean;
 }): Blocks =>
   JSXSlack(
     <Blocks>
       <Section>
         <p>
-          <a href={`@${userId}`} /> さんがローテーションを作成しました！
+          <a href={`@${userId}`} /> さんがローテーションを
+          {isUpdate ? "編集" : "作成"}しました！
         </p>
         <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>

@@ -175,7 +175,7 @@ describe("functions", () => {
         mentionAll: true,
       };
 
-      it("creates a new rotation in Firestore and posts a CreateSuccessMessage", async () => {
+      it("creates a new rotation in Firestore and posts a SuccessMessage", async () => {
         Date.now = jest.fn(() => 1597200000000);
 
         const res = await postSlackEvent(slack, {
@@ -190,7 +190,7 @@ describe("functions", () => {
         ]);
       });
 
-      it("updates a existing rotation in Firestore and posts a CreateSuccessMessage", async () => {
+      it("updates a existing rotation in Firestore and posts a SuccessMessage", async () => {
         const res = await postSlackEvent(slack, {
           payload: JSON.stringify({
             ...payloadObj,
