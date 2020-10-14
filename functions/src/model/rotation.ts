@@ -8,10 +8,8 @@ export type RotationJSON = Omit<RotationArgs, "schedule"> & {
 
 export class Rotation {
   readonly id: string;
+  // members の先頭が担当者。store には、最後に post したときの状態で保存する
   readonly members: readonly string[];
-  // 担当者の user_id。members の中の 1 人。
-  // store には、「最後に post したときの担当者」の状態で保存する。「次の担当者」ではない。
-  readonly onDuty: string;
   readonly message: string;
   readonly channel: string;
   readonly schedule: Schedule;
@@ -20,7 +18,6 @@ export class Rotation {
   private constructor(args: RotationArgs) {
     this.id = args.id;
     this.members = args.members;
-    this.onDuty = args.onDuty;
     this.message = args.message;
     this.channel = args.channel;
     this.schedule = args.schedule;
@@ -31,7 +28,6 @@ export class Rotation {
     return {
       id: this.id,
       members: this.members,
-      onDuty: this.onDuty,
       message: this.message,
       channel: this.channel,
       schedule: this.schedule.toJSON(),
@@ -39,12 +35,10 @@ export class Rotation {
     };
   }
 
-  static fromJSON(json: Optional<RotationJSON, "id" | "onDuty">): Rotation {
+  static fromJSON(json: Optional<RotationJSON, "id">): Rotation {
     return new Rotation({
       id: json.id ?? Date.now().toString(),
       members: json.members,
-      // 初回 post 時に先頭のメンバーを onDuty にしたいので、末尾のメンバーを割り当てておく
-      onDuty: json.onDuty ?? json.members[json.members.length - 1],
       message: json.message,
       channel: json.channel,
       schedule: Schedule.fromJSON(json.schedule),
@@ -53,23 +47,19 @@ export class Rotation {
   }
 
   rotate(): Rotation {
-    const index = this.members.indexOf(this.onDuty);
     return new Rotation({
       ...this,
-      onDuty: this.members[index + 1] ?? this.members[0],
+      members: [...this.members.slice(1), this.members[0]],
     });
   }
 
   unrotate(): Rotation {
-    const index = this.members.indexOf(this.onDuty);
     return new Rotation({
       ...this,
-      onDuty: this.members[index - 1] ?? this.members[this.members.length - 1],
+      members: [
+        this.members[this.members.length - 1],
+        ...this.members.slice(0, -1),
+      ],
     });
-  }
-
-  getOrderedRestMembers(): readonly string[] {
-    const index = this.members.indexOf(this.onDuty);
-    return [...this.members.slice(index + 1), ...this.members.slice(0, index)];
   }
 }

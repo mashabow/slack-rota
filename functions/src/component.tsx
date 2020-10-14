@@ -124,8 +124,8 @@ const Order = ({
   readonly userNameDict: Record<string, string> | null;
 }) => (
   <Fragment>
-    👑 <a href={`@${rotation.onDuty}`} />
-    {rotation.getOrderedRestMembers().map((member) => (
+    👑 <a href={`@${rotation.members[0]}`} />
+    {rotation.members.slice(1).map((member) => (
       <Fragment>
         {" → "}
         {/* 念のため、条件に !userNameDict を含めてはいるが、
