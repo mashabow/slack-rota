@@ -664,7 +664,7 @@ Array [
         },
         "title": Object {
           "emoji": true,
-          "text": "Rota",
+          "text": "ローテーション作成",
           "type": "plain_text",
         },
         "type": "modal",

@@ -35,8 +35,21 @@ const rotationNotMentionAll = Rotation.fromJSON({
 });
 
 describe("RotationModal", () => {
-  it("renders correctly", () => {
-    expect(RotationModal({ channelId: "channel-id" })).toMatchSnapshot();
+  describe("without `rotation` prop", () => {
+    it("renders a modal to create a new rotation", () => {
+      expect(RotationModal({ channelId: "channel-id" })).toMatchSnapshot();
+    });
+  });
+
+  describe("with `rotation` prop", () => {
+    it("renders as a modal to edit an existing rotation", () => {
+      expect(
+        RotationModal({
+          channelId: "channel-id",
+          rotation: rotationNotMentionAll,
+        })
+      ).toMatchSnapshot();
+    });
   });
 });
 

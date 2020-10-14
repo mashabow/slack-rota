@@ -34,11 +34,17 @@ export const ID = {
 
 export const RotationModal = ({
   channelId,
+  rotation,
 }: {
   readonly channelId: string;
+  readonly rotation?: Rotation;
 }): View =>
   JSXSlack(
-    <Modal callbackId={ID.SUBMIT_CALLBACK} title="Rota" close="キャンセル">
+    <Modal
+      callbackId={ID.SUBMIT_CALLBACK}
+      title={rotation ? "ローテーション編集" : "ローテーション作成"}
+      close="キャンセル"
+    >
       <UsersSelect
         id={ID.MEMBERS}
         name={ID.MEMBERS}
@@ -46,6 +52,7 @@ export const RotationModal = ({
         multiple
         label="メンバー"
         placeholder="ローテーションさせる順番で選択してください"
+        value={rotation?.members as string[]}
       />
       <Textarea
         id={ID.MESSAGE}
@@ -53,6 +60,7 @@ export const RotationModal = ({
         required
         label="メッセージ"
         placeholder="お知らせする本文です。Slack の mrkdwn が使えます"
+        value={rotation?.message}
       />
       <Input type="hidden" name={ID.CHANNEL} value={channelId} />
       <Select
@@ -62,18 +70,31 @@ export const RotationModal = ({
         multiple
         label="曜日"
         placeholder="複数選択可能です"
+        value={rotation?.schedule.days.map((day) => day.toString())}
       >
         {DAY_STRINGS.map((s, i) => {
           return <Option value={i.toString()}>{s}曜</Option>;
         })}
       </Select>
-      <Select id={ID.HOUR} name={ID.HOUR} required label="時" value="10">
+      <Select
+        id={ID.HOUR}
+        name={ID.HOUR}
+        required
+        label="時"
+        value={(rotation?.schedule.hour ?? 10).toString()}
+      >
         {[...Array(24)].map((_, i) => {
           const hour = i.toString();
           return <Option value={hour}>{hour}時</Option>;
         })}
       </Select>
-      <Select id={ID.MINUTE} name={ID.MINUTE} required label="分" value="0">
+      <Select
+        id={ID.MINUTE}
+        name={ID.MINUTE}
+        required
+        label="分"
+        value={(rotation?.schedule.minute ?? 0).toString()}
+      >
         {[...Array(60 / INTERVAL_MINUTES)].map((_, i) => {
           const minute = (i * INTERVAL_MINUTES).toString();
           return <Option value={minute}>{minute}分</Option>;
@@ -84,12 +105,12 @@ export const RotationModal = ({
         name={ID.MENTION_ALL}
         required
         label="メンション"
-        value="true"
+        value={(rotation?.mentionAll ?? true).toString()}
       >
         <RadioButton value="true">全員にメンションする</RadioButton>
         <RadioButton value="false">担当者だけにメンションする</RadioButton>
       </RadioButtonGroup>
-      <Input type="submit" value="作成する" />
+      <Input type="submit" value={rotation ? "保存する" : "作成する"} />
     </Modal>
   );
 
