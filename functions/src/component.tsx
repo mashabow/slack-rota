@@ -22,6 +22,7 @@ import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
 
 export const ID = {
   SUBMIT_CALLBACK: "submit_callback",
+  ROTATION_ID: "rotation_id",
   MEMBERS: "members",
   MESSAGE: "message",
   CHANNEL: "channel",
@@ -45,6 +46,7 @@ export const RotationModal = ({
       title={rotation ? "ローテーション編集" : "ローテーション作成"}
       close="キャンセル"
     >
+      <Input type="hidden" name={ID.ROTATION_ID} value={rotation?.id} />
       <UsersSelect
         id={ID.MEMBERS}
         name={ID.MEMBERS}

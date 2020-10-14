@@ -69,10 +69,13 @@ export const createSlackApp = (
   app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view }) => {
     await ack();
 
+    const hiddenFields = JSON.parse(view.private_metadata);
+
     const rotation = Rotation.fromJSON({
+      id: hiddenFields[ID.ROTATION_ID], // 新規作成のときは undefined
       members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
       message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
-      channel: JSON.parse(view.private_metadata)[ID.CHANNEL],
+      channel: hiddenFields[ID.CHANNEL],
       schedule: {
         days: view.state.values[ID.DAYS][
           ID.DAYS
@@ -93,11 +96,14 @@ export const createSlackApp = (
 
     const userId = body.user.id;
     const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
         channel: rotation.channel,
-        text: `<@${userId}> さんがローテーションを作成しました！`,
+        text: `<@${userId}> さんがローテーションを${
+          isUpdate ? "編集" : "作成"
+        }しました！`,
         blocks: CreateSuccessMessage({ rotation, userId, userNameDict }),
         unfurl_links: false,
       });
@@ -135,6 +141,17 @@ export const createSlackApp = (
       }
 
       switch (type) {
+        case "edit":
+          try {
+            await app.client.views.open({
+              token: config.slack.bot_token,
+              trigger_id: body.trigger_id,
+              view: RotationModal({ channelId, rotation }),
+            });
+          } catch (error) {
+            functions.logger.error("error", { error });
+          }
+          break;
         case "rotate":
           try {
             const newRotation = rotation.rotate();

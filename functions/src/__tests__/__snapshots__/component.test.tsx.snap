@@ -781,7 +781,7 @@ message line 2",
     "text": "キャンセル",
     "type": "plain_text",
   },
-  "private_metadata": "{\\"channel\\":\\"channel-id\\"}",
+  "private_metadata": "{\\"rotation_id\\":\\"rotation-id\\",\\"channel\\":\\"channel-id\\"}",
   "submit": Object {
     "emoji": true,
     "text": "保存する",

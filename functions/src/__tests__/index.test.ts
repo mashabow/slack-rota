@@ -60,130 +60,156 @@ describe("functions", () => {
     });
 
     describe("submit from RotationModal", () => {
-      it("posts CreateSuccessMessage and creates a rotation on Firestore", async () => {
-        Date.now = jest.fn(() => 1597200000000);
-
-        const res = await postSlackEvent(slack, {
-          payload: JSON.stringify({
-            type: "view_submission",
-            team: { id: "team-id", domain: "team-domain" },
-            user: {
-              id: "user-id",
-              // ...snip
-            },
-            view: {
-              type: "modal",
-              private_metadata: '{"channel":"channel-id"}',
-              callback_id: "submit_callback",
-              state: {
-                values: {
-                  hour: {
-                    hour: {
-                      type: "static_select",
-                      selected_option: {
-                        text: {
-                          type: "plain_text",
-                          text: "23時",
-                          emoji: true,
-                        },
-                        value: "23",
-                      },
+      const payloadObj = {
+        type: "view_submission",
+        team: { id: "team-id", domain: "team-domain" },
+        user: {
+          id: "user-id",
+          // ...snip
+        },
+        view: {
+          type: "modal",
+          private_metadata: '{"channel":"channel-id"}',
+          callback_id: "submit_callback",
+          state: {
+            values: {
+              hour: {
+                hour: {
+                  type: "static_select",
+                  selected_option: {
+                    text: {
+                      type: "plain_text",
+                      text: "23時",
+                      emoji: true,
                     },
-                  },
-                  minute: {
-                    minute: {
-                      type: "static_select",
-                      selected_option: {
-                        text: {
-                          type: "plain_text",
-                          text: "45分",
-                          emoji: true,
-                        },
-                        value: "45",
-                      },
-                    },
-                  },
-                  members: {
-                    members: {
-                      type: "multi_users_select",
-                      selected_users: ["user-a", "user-b", "user-c"],
-                    },
-                  },
-                  message: {
-                    message: {
-                      type: "plain_text_input",
-                      value: "てすてす\n\n*テスト*です",
-                    },
-                  },
-                  days: {
-                    days: {
-                      type: "multi_static_select",
-                      selected_options: [
-                        {
-                          text: {
-                            type: "plain_text",
-                            text: "月曜",
-                            emoji: true,
-                          },
-                          value: "1",
-                        },
-                        {
-                          text: {
-                            type: "plain_text",
-                            text: "水曜",
-                            emoji: true,
-                          },
-                          value: "3",
-                        },
-                        {
-                          text: {
-                            type: "plain_text",
-                            text: "金曜",
-                            emoji: true,
-                          },
-                          value: "5",
-                        },
-                      ],
-                    },
-                  },
-                  mention_all: {
-                    mention_all: {
-                      type: "radio_buttons",
-                      selected_option: {
-                        text: {
-                          type: "mrkdwn",
-                          text: "全員にメンションする",
-                          verbatim: true,
-                        },
-                        value: "true",
-                      },
-                    },
+                    value: "23",
                   },
                 },
               },
-              // ...snip
+              minute: {
+                minute: {
+                  type: "static_select",
+                  selected_option: {
+                    text: {
+                      type: "plain_text",
+                      text: "45分",
+                      emoji: true,
+                    },
+                    value: "45",
+                  },
+                },
+              },
+              members: {
+                members: {
+                  type: "multi_users_select",
+                  selected_users: ["user-a", "user-b", "user-c"],
+                },
+              },
+              message: {
+                message: {
+                  type: "plain_text_input",
+                  value: "てすてす\n\n*テスト*です",
+                },
+              },
+              days: {
+                days: {
+                  type: "multi_static_select",
+                  selected_options: [
+                    {
+                      text: {
+                        type: "plain_text",
+                        text: "月曜",
+                        emoji: true,
+                      },
+                      value: "1",
+                    },
+                    {
+                      text: {
+                        type: "plain_text",
+                        text: "水曜",
+                        emoji: true,
+                      },
+                      value: "3",
+                    },
+                    {
+                      text: {
+                        type: "plain_text",
+                        text: "金曜",
+                        emoji: true,
+                      },
+                      value: "5",
+                    },
+                  ],
+                },
+              },
+              mention_all: {
+                mention_all: {
+                  type: "radio_buttons",
+                  selected_option: {
+                    text: {
+                      type: "mrkdwn",
+                      text: "全員にメンションする",
+                      verbatim: true,
+                    },
+                    value: "true",
+                  },
+                },
+              },
             },
-            // ...snip
+          },
+          // ...snip
+        },
+        // ...snip
+      };
+      const submittedRotation = {
+        id: "1597200000000",
+        channel: "channel-id",
+        members: ["user-a", "user-b", "user-c"],
+        message: "てすてす\n\n*テスト*です",
+        onDuty: "user-c",
+        schedule: {
+          days: [1, 3, 5],
+          hour: 23,
+          minute: 45,
+        },
+        mentionAll: true,
+      };
+
+      it("creates a new rotation in Firestore and posts a CreateSuccessMessage", async () => {
+        Date.now = jest.fn(() => 1597200000000);
+
+        const res = await postSlackEvent(slack, {
+          payload: JSON.stringify(payloadObj),
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+
+        expect(await getAllRotations()).toEqual([
+          submittedRotation,
+          ...rotations,
+        ]);
+      });
+
+      it("updates a existing rotation in Firestore and posts a CreateSuccessMessage", async () => {
+        const res = await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            ...payloadObj,
+            view: {
+              ...payloadObj.view,
+              private_metadata:
+                '{"rotation_id":"rotation-4","channel":"channel-id"}',
+            },
           }),
         });
         expect(res.body).toEqual({}); // ack
         expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual([
+          ...rotations.slice(0, 3),
           {
-            id: "1597200000000",
-            channel: "channel-id",
-            members: ["user-a", "user-b", "user-c"],
-            message: "てすてす\n\n*テスト*です",
-            onDuty: "user-c",
-            schedule: {
-              days: [1, 3, 5],
-              hour: 23,
-              minute: 45,
-            },
-            mentionAll: true,
+            ...submittedRotation,
+            id: "rotation-4",
           },
-          ...rotations,
         ]);
       });
     });
