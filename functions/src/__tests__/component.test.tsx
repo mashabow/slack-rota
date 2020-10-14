@@ -5,7 +5,6 @@ import { Rotation } from "../model/rotation";
 const rotationMentionAll = Rotation.fromJSON({
   id: "rotation-id",
   members: ["user-a", "user-b", "user-c"],
-  onDuty: "user-b",
   message: "message line 1\nmessage line 2",
   channel: "channel-id",
   schedule: {
@@ -19,7 +18,6 @@ const rotationMentionAll = Rotation.fromJSON({
 const rotationNotMentionAll = Rotation.fromJSON({
   id: "rotation-id",
   members: ["user-a", "user-b", "user-c"],
-  onDuty: "user-b",
   message: "message line 1\nmessage line 2",
   channel: "channel-id",
   schedule: {
