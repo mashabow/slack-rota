@@ -59,7 +59,7 @@ message line 2",
       "type": "overflow",
     },
     "text": Object {
-      "text": "👑 <@user-b|>→ @userC → @userA",
+      "text": "👑 <@user-a|>→ @userB → @userC",
       "type": "mrkdwn",
       "verbatim": true,
     },
@@ -127,7 +127,7 @@ message line 2",
       "type": "overflow",
     },
     "text": Object {
-      "text": "👑 <@user-b|>→ <@user-c|>→<@user-a|>",
+      "text": "👑 <@user-a|>→ <@user-b|>→<@user-c|>",
       "type": "mrkdwn",
       "verbatim": true,
     },
@@ -1240,7 +1240,7 @@ Array [
       "type": "overflow",
     },
     "text": Object {
-      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
+      "text": "&gt; 👑 <@user-b|>→ <@user-c|>→<@user-a|>
 &gt; ",
       "type": "mrkdwn",
       "verbatim": true,
@@ -1303,7 +1303,7 @@ Array [
       "type": "overflow",
     },
     "text": Object {
-      "text": "&gt; 👑 <@user-c|>→ @userA → @userB
+      "text": "&gt; 👑 <@user-b|>→ @userC → @userA
 &gt; ",
       "type": "mrkdwn",
       "verbatim": true,
@@ -1366,7 +1366,7 @@ Array [
       "type": "overflow",
     },
     "text": Object {
-      "text": "&gt; 👑 <@user-c|>→ <@user-a|>→<@user-b|>
+      "text": "&gt; 👑 <@user-b|>→ <@user-c|>→<@user-a|>
 &gt; ",
       "type": "mrkdwn",
       "verbatim": true,

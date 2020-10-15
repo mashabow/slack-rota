@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`functions cron posts matched rotations and updates onDuty fields of them 1`] = `
+exports[`functions cron posts matched rotations and updates members field of them 1`] = `
 Array [
   Array [
     Object {
@@ -133,7 +133,7 @@ Array [
             "type": "overflow",
           },
           "text": Object {
-            "text": "👑 <@user-p|>→<@user-q|>",
+            "text": "👑 <@user-q|>→<@user-p|>",
             "type": "mrkdwn",
             "verbatim": true,
           },

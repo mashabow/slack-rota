@@ -164,9 +164,8 @@ describe("functions", () => {
       const submittedRotation = {
         id: "1597200000000",
         channel: "channel-id",
-        members: ["user-a", "user-b", "user-c"],
+        members: ["user-c", "user-a", "user-b"],
         message: "てすてす\n\n*テスト*です",
-        onDuty: "user-c",
         schedule: {
           days: [1, 3, 5],
           hour: 23,
@@ -266,7 +265,7 @@ describe("functions", () => {
           expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
-            { ...rotations[0], onDuty: "user-b" },
+            { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
             rotations[1],
             rotations[2],
             rotations[3],
@@ -303,7 +302,7 @@ describe("functions", () => {
           expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
-            { ...rotations[0], onDuty: "user-c" },
+            { ...rotations[0], members: ["user-c", "user-a", "user-b"] },
             rotations[1],
             rotations[2],
             rotations[3],
@@ -367,14 +366,14 @@ describe("functions", () => {
   describe("cron", () => {
     const wrappedCron = test.wrap(cron);
 
-    it("posts matched rotations and updates onDuty fields of them", async () => {
+    it("posts matched rotations and updates members field of them", async () => {
       await wrappedCron({
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
       expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
       expect(await getAllRotations()).toEqual([
-        { ...rotations[0], onDuty: "user-b" },
-        { ...rotations[1], onDuty: "user-p" },
+        { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
+        { ...rotations[1], members: ["user-q", "user-p"] },
         rotations[2],
         rotations[3],
       ]);
