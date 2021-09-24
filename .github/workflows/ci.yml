@@ -15,6 +15,10 @@ jobs:
           node-version: "14.x"
       - run: npm ci
       - run: npm run lint:ci
+      - name: Type check
+        uses: gozala/typescript-error-reporter-action@v1.0.5
+        with:
+          project: functions/tsconfig.json
       - name: Create serviceAccountKey.json for online testing
         run: echo "$SERVICE_ACCOUNT_KEY_JSON" > ../serviceAccountKey.json
         env:
