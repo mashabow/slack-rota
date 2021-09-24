@@ -1,5 +1,5 @@
 /** @jsx JSXSlack.h **/
-import { KnownBlock, View } from "@slack/types";
+import { KnownBlock, View } from "@slack/bolt";
 import {
   JSXSlack,
   Modal,
