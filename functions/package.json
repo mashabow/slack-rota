@@ -9,6 +9,7 @@
     "logs": "firebase functions:log",
     "lint": "eslint --format codeframe --ext .js,.jsx,.ts,.tsx .",
     "lint:ci": "npm run lint -- --max-warnings=0",
+    "type": "tsc --noEmit",
     "test": "jest",
     "test:ci": "npm run test -- --ci"
   },
