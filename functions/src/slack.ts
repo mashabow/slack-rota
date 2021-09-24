@@ -43,7 +43,7 @@ export const createSlackApp = (
       });
       // 型定義上は optional だが、正常系では必ず存在するはず
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return json.members.reduce<Record<string, string>>(
+      return json.members!.reduce<Record<string, string>>(
         (acc, { id, profile }) => ({
           ...acc,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
