@@ -36,12 +36,13 @@ export const createSlackApp = (
       const json = await app.client.users.list({
         token: config.slack.bot_token,
       });
-      // @ts-ignore
-      return json.members.reduce(
-        // @ts-ignore
+      // 型定義上は optional だが、正常系では必ず存在するはず
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return json.members!.reduce<Record<string, string>>(
         (acc, { id, profile }) => ({
           ...acc,
-          [id]: profile.display_name || profile.real_name,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          [id!]: profile?.display_name || profile?.real_name || "",
         }),
         {}
       );
@@ -73,23 +74,28 @@ export const createSlackApp = (
 
     const rotation = Rotation.fromJSON({
       id: hiddenFields[ID.ROTATION_ID], // 新規作成のときは undefined
-      members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users,
-      message: view.state.values[ID.MESSAGE][ID.MESSAGE].value,
+      // 型定義上は optional だが、正常系では必ず存在するはず
+      /* eslint-disable @typescript-eslint/no-non-null-assertion */
+      members: view.state.values[ID.MEMBERS][ID.MEMBERS].selected_users!,
+      message: view.state.values[ID.MESSAGE][ID.MESSAGE].value!,
       channel: hiddenFields[ID.CHANNEL],
       schedule: {
         days: view.state.values[ID.DAYS][
           ID.DAYS
-        ].selected_options.map((option: { value: string }) =>
+        ].selected_options!.map((option: { value: string }) =>
           parseInt(option.value)
         ),
-        hour: Number(view.state.values[ID.HOUR][ID.HOUR].selected_option.value),
+        hour: Number(
+          view.state.values[ID.HOUR][ID.HOUR].selected_option!.value
+        ),
         minute: Number(
-          view.state.values[ID.MINUTE][ID.MINUTE].selected_option.value
+          view.state.values[ID.MINUTE][ID.MINUTE].selected_option!.value
         ),
       },
       mentionAll: JSON.parse(
-        view.state.values[ID.MENTION_ALL][ID.MENTION_ALL].selected_option.value
+        view.state.values[ID.MENTION_ALL][ID.MENTION_ALL].selected_option!.value
       ),
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
     }).unrotate(); // store には「前回の担当者が先頭」になるように保存するので、一つ戻した状態にする
 
     await rotationStore.set(rotation);
