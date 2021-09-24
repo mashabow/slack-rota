@@ -42,7 +42,7 @@
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.4",
     "tsc-watch": "^4.2.9",
-    "typescript": "^3.9.7"
+    "typescript": "^4.4.3"
   },
   "private": true
 }
