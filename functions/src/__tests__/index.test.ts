@@ -26,13 +26,47 @@ describe("functions", () => {
   });
 
   // Mock Slack API client
-  let client: MockWebClient;
+  let clients: MockWebClient[];
   beforeEach(async () => {
-    client = MockedWebClient.mock.instances[0];
+    clients = MockedWebClient.mock.instances;
   });
   afterEach(async () => {
-    client.chat.postMessage.mockClear();
+    clients.map((client) => {
+      client.chat.postMessage.mockClear();
+      client.chat.postEphemeral.mockClear();
+    });
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type IsAny<T> = (any extends T ? true : false) extends true ? true : false;
+
+  /**
+   * jest.Mock<any, any> である T の末端のプロパティを、ドット区切りの keyPath で列挙する
+   */
+  type KeyPath<T> = {
+    [K in keyof T]: K extends string
+      ? // @slack-wrench/jest-mock-web-client の参照する jest の型定義が古い関係で、
+        // 「jest.Mock<any, any> か否か」は「any か否か」で判別する必要がある
+        IsAny<T[K]> extends true
+        ? K // leaf
+        : T[K] extends Record<string, unknown>
+        ? `${K}.${KeyPath<T[K]>}`
+        : never
+      : never;
+  }[keyof T];
+
+  const getClientCalls = (keyPath: KeyPath<MockWebClient>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const trace = (obj: any, keyPathParts: string[]): any => {
+      if (keyPathParts.length === 0) return obj;
+      const [head, ...rest] = keyPathParts;
+      return trace(obj[head], rest);
+    };
+
+    return clients.map(
+      (client) => trace(client, keyPath.split(".")).mock.calls
+    );
+  };
 
   // Firestore
   const rotationsRef = admin.firestore().collection("rotations");
@@ -61,7 +95,7 @@ describe("functions", () => {
           // ...more unused parameters
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.views.open.mock.calls).toMatchSnapshot();
+        expect(getClientCalls("views.open")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual(rotations);
       });
@@ -189,7 +223,7 @@ describe("functions", () => {
           payload: JSON.stringify(payloadObj),
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+        expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual([
           submittedRotation,
@@ -209,7 +243,7 @@ describe("functions", () => {
           }),
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+        expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual([
           ...rotations.slice(0, 3),
@@ -270,7 +304,7 @@ describe("functions", () => {
             value: "rotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
@@ -290,7 +324,7 @@ describe("functions", () => {
             value: "rotate:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postEphemeral")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(rotations);
         });
@@ -307,7 +341,7 @@ describe("functions", () => {
             value: "unrotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-c", "user-a", "user-b"] },
@@ -327,7 +361,7 @@ describe("functions", () => {
             value: "unrotate:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postEphemeral")).toMatchSnapshot();
 
           expect(
             (await rotationsRef.get()).docs.map((doc) => doc.data())
@@ -346,7 +380,7 @@ describe("functions", () => {
             value: "delete:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(
             rotations.filter((r) => r.id !== "rotation-1")
@@ -363,7 +397,7 @@ describe("functions", () => {
             value: "delete:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+          expect(getClientCalls("chat.postEphemeral")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(rotations);
         });
@@ -378,7 +412,7 @@ describe("functions", () => {
       await wrappedCron({
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
-      expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+      expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
       expect(await getAllRotations()).toEqual([
         { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
         { ...rotations[1], members: ["user-q", "user-p"] },
@@ -391,7 +425,7 @@ describe("functions", () => {
       await wrappedCron({
         timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
       });
-      expect(client.chat.postMessage.mock.calls).toEqual([]);
+      expect(getClientCalls("chat.postMessage")).toEqual([]);
       expect(await getAllRotations()).toEqual(rotations);
     });
   });
