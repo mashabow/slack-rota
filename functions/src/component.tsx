@@ -167,20 +167,6 @@ const OverflowMenu = ({
 
 type Blocks = KnownBlock[];
 
-/**
- * Slack mrkdwn 形式の文字列をそのまま表示する
- * https://github.com/speee/jsx-slack/issues/160#issuecomment-625598213
- */
-const RawMrkdwn = (props: Parameters<typeof Mrkdwn>[0]) => {
-  // Generate mrkdwn text composition object (skip unnecessary HTML parsing by assigning children to null)
-  // eslint-disable-next-line react/no-children-prop
-  const mrkdwn = <Mrkdwn {...props} children={null} />;
-  // Define the passed raw mrkdwn as text
-  // @ts-ignore
-  mrkdwn.text = props.children;
-  return mrkdwn;
-};
-
 export const SuccessMessage = ({
   rotation,
   userId,
@@ -202,12 +188,12 @@ export const SuccessMessage = ({
         <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>
       <Section>
-        <RawMrkdwn verbatim={false}>
+        <Mrkdwn raw verbatim={false}>
           {rotation.message
             .split("\n")
             .map((line) => `&gt; ${line}`)
             .join("\n")}
-        </RawMrkdwn>
+        </Mrkdwn>
       </Section>
       <Section>
         <blockquote>
@@ -229,7 +215,9 @@ export const RotationMessage = ({
   JSXSlack(
     <Blocks>
       <Section>
-        <RawMrkdwn verbatim={false}>{rotation.message}</RawMrkdwn>
+        <Mrkdwn raw verbatim={false}>
+          {rotation.message}
+        </Mrkdwn>
       </Section>
       <Section>
         <Order rotation={rotation} userNameDict={userNameDict} />
