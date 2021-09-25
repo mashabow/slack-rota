@@ -16,7 +16,7 @@ import {
   OverflowItem,
   RadioButtonGroup,
   RadioButton,
-} from "@speee-js/jsx-slack";
+} from "jsx-slack";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
 
