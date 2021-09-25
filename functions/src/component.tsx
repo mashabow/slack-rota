@@ -1,4 +1,3 @@
-/** @jsx JSXSlack.h **/
 import { KnownBlock, View } from "@slack/bolt";
 import {
   JSXSlack,
@@ -10,13 +9,12 @@ import {
   Section,
   Select,
   Option,
-  Fragment,
   Mrkdwn,
   Overflow,
   OverflowItem,
   RadioButtonGroup,
   RadioButton,
-} from "@speee-js/jsx-slack";
+} from "jsx-slack";
 import { Rotation } from "./model/rotation";
 import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
 
@@ -123,10 +121,10 @@ const Order = ({
   readonly rotation: Rotation;
   readonly userNameDict: Record<string, string> | null;
 }) => (
-  <Fragment>
+  <>
     👑 <a href={`@${rotation.members[0]}`} />
     {rotation.members.slice(1).map((member) => (
-      <Fragment>
+      <>
         {" → "}
         {/* 念のため、条件に !userNameDict を含めてはいるが、
             mentionAll が false の場合は、本当は userNameDict が存在するはず */}
@@ -135,9 +133,9 @@ const Order = ({
         ) : (
           `@${userNameDict[member]}`
         )}
-      </Fragment>
+      </>
     ))}
-  </Fragment>
+  </>
 );
 
 const OverflowMenu = ({
@@ -150,12 +148,12 @@ const OverflowMenu = ({
   <Overflow actionId={ID.OVERFLOW_MENU}>
     <OverflowItem value={`edit:${rotation.id}`}>編集</OverflowItem>
     {canRotate && (
-      <Fragment>
+      <>
         <OverflowItem value={`rotate:${rotation.id}`}>ひとつ進む</OverflowItem>
         <OverflowItem value={`unrotate:${rotation.id}`}>
           ひとつ戻る
         </OverflowItem>
-      </Fragment>
+      </>
     )}
     <OverflowItem value={`noop:${rotation.id}`}>
       {/* 「削除」誤クリック防止のため、divider っぽい項目で区切る */}
@@ -166,20 +164,6 @@ const OverflowMenu = ({
 );
 
 type Blocks = KnownBlock[];
-
-/**
- * Slack mrkdwn 形式の文字列をそのまま表示する
- * https://github.com/speee/jsx-slack/issues/160#issuecomment-625598213
- */
-const RawMrkdwn = (props: Parameters<typeof Mrkdwn>[0]) => {
-  // Generate mrkdwn text composition object (skip unnecessary HTML parsing by assigning children to null)
-  // eslint-disable-next-line react/no-children-prop
-  const mrkdwn = <Mrkdwn {...props} children={null} />;
-  // Define the passed raw mrkdwn as text
-  // @ts-ignore
-  mrkdwn.text = props.children;
-  return mrkdwn;
-};
 
 export const SuccessMessage = ({
   rotation,
@@ -202,12 +186,12 @@ export const SuccessMessage = ({
         <p>{rotation.schedule.toString()} に 👇 のような感じでお知らせします</p>
       </Section>
       <Section>
-        <RawMrkdwn verbatim={false}>
+        <Mrkdwn raw verbatim={false}>
           {rotation.message
             .split("\n")
             .map((line) => `&gt; ${line}`)
             .join("\n")}
-        </RawMrkdwn>
+        </Mrkdwn>
       </Section>
       <Section>
         <blockquote>
@@ -229,7 +213,9 @@ export const RotationMessage = ({
   JSXSlack(
     <Blocks>
       <Section>
-        <RawMrkdwn verbatim={false}>{rotation.message}</RawMrkdwn>
+        <Mrkdwn raw verbatim={false}>
+          {rotation.message}
+        </Mrkdwn>
       </Section>
       <Section>
         <Order rotation={rotation} userNameDict={userNameDict} />
