@@ -87,10 +87,8 @@ export const createSlackApp = (
       message: getViewStateValue(ID.MESSAGE).value!,
       channel: hiddenFields[ID.CHANNEL],
       schedule: {
-        days: getViewStateValue(
-          ID.DAYS
-        ).selected_options!.map((option: { value: string }) =>
-          parseInt(option.value)
+        days: getViewStateValue(ID.DAYS).selected_options!.map(
+          (option: { value: string }) => parseInt(option.value)
         ),
         hour: Number(getViewStateValue(ID.HOUR).selected_option!.value),
         minute: Number(getViewStateValue(ID.MINUTE).selected_option!.value),
