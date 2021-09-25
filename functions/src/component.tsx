@@ -9,7 +9,6 @@ import {
   Section,
   Select,
   Option,
-  Fragment,
   Mrkdwn,
   Overflow,
   OverflowItem,
@@ -122,10 +121,10 @@ const Order = ({
   readonly rotation: Rotation;
   readonly userNameDict: Record<string, string> | null;
 }) => (
-  <Fragment>
+  <>
     👑 <a href={`@${rotation.members[0]}`} />
     {rotation.members.slice(1).map((member) => (
-      <Fragment>
+      <>
         {" → "}
         {/* 念のため、条件に !userNameDict を含めてはいるが、
             mentionAll が false の場合は、本当は userNameDict が存在するはず */}
@@ -134,9 +133,9 @@ const Order = ({
         ) : (
           `@${userNameDict[member]}`
         )}
-      </Fragment>
+      </>
     ))}
-  </Fragment>
+  </>
 );
 
 const OverflowMenu = ({
@@ -149,12 +148,12 @@ const OverflowMenu = ({
   <Overflow actionId={ID.OVERFLOW_MENU}>
     <OverflowItem value={`edit:${rotation.id}`}>編集</OverflowItem>
     {canRotate && (
-      <Fragment>
+      <>
         <OverflowItem value={`rotate:${rotation.id}`}>ひとつ進む</OverflowItem>
         <OverflowItem value={`unrotate:${rotation.id}`}>
           ひとつ戻る
         </OverflowItem>
-      </Fragment>
+      </>
     )}
     <OverflowItem value={`noop:${rotation.id}`}>
       {/* 「削除」誤クリック防止のため、divider っぽい項目で区切る */}
