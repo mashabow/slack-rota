@@ -14,7 +14,7 @@ import {
 import * as admin from "firebase-admin";
 import { setupFunctionsTest, postSlackEvent, rotations } from "./index.helper";
 
-const test = setupFunctionsTest();
+const functionsTest = setupFunctionsTest();
 
 // setupFunctionsTest() の後で import する必要がある
 // eslint-disable-next-line import/order
@@ -22,7 +22,7 @@ import { slack, cron } from "../index";
 
 describe("functions", () => {
   afterAll(() => {
-    test.cleanup();
+    functionsTest.cleanup();
   });
 
   // Mock Slack API client
@@ -407,7 +407,7 @@ describe("functions", () => {
   });
 
   describe("cron", () => {
-    const wrappedCron = test.wrap(cron);
+    const wrappedCron = functionsTest.wrap(cron);
 
     it("posts matched rotations and updates members field of them", async () => {
       await wrappedCron({
