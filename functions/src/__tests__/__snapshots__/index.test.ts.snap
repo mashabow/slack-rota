@@ -734,7 +734,80 @@ Array [
 exports[`functions slack overflow menu actions rotate rotates the selected rotation and posts that 1`] = `
 Array [
   Array [],
-  Array [],
+  Array [
+    Array [
+      Object {
+        "blocks": Array [
+          Object {
+            "text": Object {
+              "text": "rotation-1 message",
+              "type": "mrkdwn",
+              "verbatim": false,
+            },
+            "type": "section",
+          },
+          Object {
+            "accessory": Object {
+              "action_id": "overflow_menu",
+              "options": Array [
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "編集",
+                    "type": "plain_text",
+                  },
+                  "value": "edit:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "ひとつ進む",
+                    "type": "plain_text",
+                  },
+                  "value": "rotate:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "ひとつ戻る",
+                    "type": "plain_text",
+                  },
+                  "value": "unrotate:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "───────────────────",
+                    "type": "plain_text",
+                  },
+                  "value": "noop:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "削除",
+                    "type": "plain_text",
+                  },
+                  "value": "delete:rotation-1",
+                },
+              ],
+              "type": "overflow",
+            },
+            "text": Object {
+              "text": "👑 <@user-b|>→ <@user-c|>→<@user-a|>",
+              "type": "mrkdwn",
+              "verbatim": true,
+            },
+            "type": "section",
+          },
+        ],
+        "channel": "channel-id",
+        "text": "rotation-1 message",
+        "ts": "1596814246.000200",
+        "unfurl_links": false,
+      },
+    ],
+  ],
 ]
 `;
 
@@ -756,7 +829,80 @@ Array [
 exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `
 Array [
   Array [],
-  Array [],
+  Array [
+    Array [
+      Object {
+        "blocks": Array [
+          Object {
+            "text": Object {
+              "text": "rotation-1 message",
+              "type": "mrkdwn",
+              "verbatim": false,
+            },
+            "type": "section",
+          },
+          Object {
+            "accessory": Object {
+              "action_id": "overflow_menu",
+              "options": Array [
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "編集",
+                    "type": "plain_text",
+                  },
+                  "value": "edit:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "ひとつ進む",
+                    "type": "plain_text",
+                  },
+                  "value": "rotate:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "ひとつ戻る",
+                    "type": "plain_text",
+                  },
+                  "value": "unrotate:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "───────────────────",
+                    "type": "plain_text",
+                  },
+                  "value": "noop:rotation-1",
+                },
+                Object {
+                  "text": Object {
+                    "emoji": true,
+                    "text": "削除",
+                    "type": "plain_text",
+                  },
+                  "value": "delete:rotation-1",
+                },
+              ],
+              "type": "overflow",
+            },
+            "text": Object {
+              "text": "👑 <@user-c|>→ <@user-a|>→<@user-b|>",
+              "type": "mrkdwn",
+              "verbatim": true,
+            },
+            "type": "section",
+          },
+        ],
+        "channel": "channel-id",
+        "text": "rotation-1 message",
+        "ts": "1596814246.000200",
+        "unfurl_links": false,
+      },
+    ],
+  ],
 ]
 `;
 

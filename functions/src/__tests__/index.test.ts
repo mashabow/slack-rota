@@ -33,6 +33,7 @@ describe("functions", () => {
   afterEach(async () => {
     clients.map((client) => {
       client.chat.postMessage.mockClear();
+      client.chat.update.mockClear();
       client.chat.postEphemeral.mockClear();
     });
   });
@@ -304,7 +305,7 @@ describe("functions", () => {
             value: "rotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
+          expect(getClientCalls("chat.update")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
@@ -341,7 +342,7 @@ describe("functions", () => {
             value: "unrotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
+          expect(getClientCalls("chat.update")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-c", "user-a", "user-b"] },
