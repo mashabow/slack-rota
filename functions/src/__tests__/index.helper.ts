@@ -100,11 +100,11 @@ export const mockSlackWebClient = (): {
 } => {
   let clients: MockWebClient[];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     clients = MockedWebClient.mock.instances;
   });
 
-  afterEach(async () => {
+  afterEach(() => {
     clients.map((client) => {
       client.chat.postMessage.mockClear();
       client.chat.update.mockClear();
