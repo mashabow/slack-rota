@@ -15,6 +15,14 @@ import {
 import { Rotation } from "./model/rotation";
 import { RotationStore } from "./store";
 
+declare module "@slack/bolt" {
+  interface Context {
+    rota: {
+      rotationStore: RotationStore;
+    };
+  }
+}
+
 const config = functions.config();
 
 export const createSlackApp = (
@@ -32,6 +40,11 @@ export const createSlackApp = (
   const app = new App({
     receiver: expressReceiver,
     token: config.slack.bot_token,
+  });
+
+  app.use(async ({ context, next }) => {
+    context.rota = { rotationStore };
+    await next?.();
   });
 
   /**
@@ -76,7 +89,7 @@ export const createSlackApp = (
     }
   });
 
-  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, client }) => {
+  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, client, context }) => {
     await ack();
 
     const hiddenFields = JSON.parse(view.private_metadata);
@@ -103,7 +116,7 @@ export const createSlackApp = (
       /* eslint-enable @typescript-eslint/no-non-null-assertion */
     }).unrotate(); // store には「前回の担当者が先頭」になるように保存するので、一つ戻した状態にする
 
-    await rotationStore.set(rotation);
+    await context.rota.rotationStore.set(rotation);
 
     const userId = body.user.id;
     const userNameDict = await getUserNameDict(rotation, client);
@@ -129,7 +142,7 @@ export const createSlackApp = (
 
   app.action<BlockOverflowAction>(
     ID.OVERFLOW_MENU,
-    async ({ ack, action, body, client }) => {
+    async ({ ack, action, body, client, context }) => {
       await ack();
 
       const channelId = body.channel?.id;
@@ -140,7 +153,7 @@ export const createSlackApp = (
 
       const userId = body.user.id;
       const [type, rotationId] = action.selected_option.value.split(":");
-      const rotation = await rotationStore.get(rotationId);
+      const rotation = await context.rota.rotationStore.get(rotationId);
       if (!rotation) {
         try {
           await client.chat.postEphemeral({
@@ -173,7 +186,7 @@ export const createSlackApp = (
           try {
             const newRotation =
               type === "rotate" ? rotation.rotate() : rotation.unrotate();
-            await rotationStore.set(newRotation);
+            await context.rota.rotationStore.set(newRotation);
             const userNameDict = await getUserNameDict(newRotation, client);
             await client.chat.update({
               channel: channelId,
@@ -190,7 +203,7 @@ export const createSlackApp = (
           break;
         case "delete":
           try {
-            await rotationStore.delete(rotationId);
+            await context.rota.rotationStore.delete(rotationId);
             // respond() だと reply_broadcast が効かない？
             await client.chat.postMessage({
               channel: channelId,
