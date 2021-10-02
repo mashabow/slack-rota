@@ -12,7 +12,7 @@ import functionsTest from "firebase-functions-test";
 
 import request from "supertest";
 
-import { RotationJSON } from "../model/rotation";
+import { RotationJSON } from "../models/rotation";
 
 const CONFIG = {
   slack: {

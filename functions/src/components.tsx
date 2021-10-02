@@ -15,8 +15,8 @@ import {
   RadioButtonGroup,
   RadioButton,
 } from "jsx-slack";
-import { Rotation } from "./model/rotation";
-import { INTERVAL_MINUTES, DAY_STRINGS } from "./model/schedule";
+import { Rotation } from "./models/rotation";
+import { INTERVAL_MINUTES, DAY_STRINGS } from "./models/schedule";
 
 export const ID = {
   SUBMIT_CALLBACK: "submit_callback",

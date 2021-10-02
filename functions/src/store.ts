@@ -1,5 +1,5 @@
-import { Rotation } from "./model/rotation";
-import { Schedule } from "./model/schedule";
+import { Rotation } from "./models/rotation";
+import { Schedule } from "./models/schedule";
 
 export class RotationStore {
   constructor(private db: FirebaseFirestore.Firestore) {}

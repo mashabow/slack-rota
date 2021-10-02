@@ -1,6 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
-import { RotationModal, SuccessMessage, RotationMessage } from "../component";
-import { Rotation } from "../model/rotation";
+import { RotationModal, SuccessMessage, RotationMessage } from "../components";
+import { Rotation } from "../models/rotation";
 
 const rotationMentionAll = Rotation.fromJSON({
   id: "rotation-id",
