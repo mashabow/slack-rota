@@ -3,13 +3,17 @@ import * as functions from "firebase-functions";
 import { cronHandler } from "./cron";
 import { INTERVAL_MINUTES } from "./models/schedule";
 import { createSlackApp } from "./slack";
-import { RotationStore } from "./store";
+import { InstallationStore, RotationStore } from "./store";
 
 admin.initializeApp();
 
 const db = admin.firestore();
 const rotationStore = new RotationStore(db);
-const { slackHandler, postRotation } = createSlackApp(rotationStore);
+const installationStore = new InstallationStore(db);
+const { slackHandler, postRotation } = createSlackApp(
+  rotationStore,
+  installationStore
+);
 
 const functionBuilder = functions.region("asia-northeast1");
 
