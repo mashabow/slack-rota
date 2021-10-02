@@ -214,7 +214,6 @@ export const createSlackApp = (
     const userNameDict = await getUserNameDict(rotation, app.client);
     try {
       await app.client.chat.postMessage({
-        token: config.slack.bot_token,
         channel: rotation.channel,
         text: rotation.message,
         blocks: RotationMessage({ rotation, userNameDict }),
