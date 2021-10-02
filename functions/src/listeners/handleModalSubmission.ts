@@ -5,8 +5,8 @@ import {
   ViewStateValue,
 } from "@slack/bolt";
 import * as functions from "firebase-functions";
-import { ID, SuccessMessage } from "../component";
-import { Rotation } from "../model/rotation";
+import { ID, SuccessMessage } from "../components";
+import { Rotation } from "../models/rotation";
 import { getUserNameDict } from "../services/getUserNameDict";
 
 export const handleModalSubmission: Middleware<

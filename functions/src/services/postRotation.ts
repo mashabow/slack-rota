@@ -1,7 +1,7 @@
 import { WebClient } from "@slack/web-api";
 import * as functions from "firebase-functions";
-import { RotationMessage } from "../component";
-import { Rotation } from "../model/rotation";
+import { RotationMessage } from "../components";
+import { Rotation } from "../models/rotation";
 import { getUserNameDict } from "./getUserNameDict";
 
 export const postRotation = async (

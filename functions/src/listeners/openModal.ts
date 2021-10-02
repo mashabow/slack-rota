@@ -1,6 +1,6 @@
 import { Middleware, SlackCommandMiddlewareArgs } from "@slack/bolt";
 import * as functions from "firebase-functions";
-import { RotationModal } from "../component";
+import { RotationModal } from "../components";
 
 export const openModal: Middleware<SlackCommandMiddlewareArgs> = async ({
   ack,

@@ -1,6 +1,6 @@
 import { WebClient } from "@slack/web-api";
 import * as functions from "firebase-functions";
-import { Rotation } from "../model/rotation";
+import { Rotation } from "../models/rotation";
 
 /**
  * ローテーションの描画に必要な { [user_id]: user_name } の辞書を返す

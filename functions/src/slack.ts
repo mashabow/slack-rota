@@ -1,10 +1,10 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
-import { ID } from "./component";
+import { ID } from "./components";
 import { handleModalSubmission } from "./listeners/handleModalSubmission";
 import { handleOverflowAction } from "./listeners/handleOverflowAction";
 import { openModal } from "./listeners/openModal";
-import { Rotation } from "./model/rotation";
+import { Rotation } from "./models/rotation";
 import { postRotation } from "./services/postRotation";
 import { RotationStore } from "./store";
 
