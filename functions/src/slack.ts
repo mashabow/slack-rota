@@ -35,11 +35,15 @@ export const createSlackApp = (
   });
 
   /**
-   * { [user_id]: user_name } の辞書を返す
+   * ローテーションの描画に必要な { [user_id]: user_name } の辞書を返す
+   * rotation.mentionAll が false の場合は不要なので、null を返す
    */
   const getUserNameDict = async (
+    rotation: Rotation,
     client: WebClient
   ): Promise<Record<string, string> | null> => {
+    if (!rotation.mentionAll) return null;
+
     try {
       const json = await client.users.list();
       // 型定義上は optional だが、正常系では必ず存在するはず
@@ -102,9 +106,7 @@ export const createSlackApp = (
     await rotationStore.set(rotation);
 
     const userId = body.user.id;
-    const userNameDict = rotation.mentionAll
-      ? null
-      : await getUserNameDict(client);
+    const userNameDict = await getUserNameDict(rotation, client);
     const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
     try {
       await client.chat.postMessage({
@@ -170,9 +172,7 @@ export const createSlackApp = (
           try {
             const newRotation = rotation.rotate();
             await rotationStore.set(newRotation);
-            const userNameDict = newRotation.mentionAll
-              ? null
-              : await getUserNameDict(client);
+            const userNameDict = await getUserNameDict(newRotation, client);
             await client.chat.update({
               channel: channelId,
               ts: body.container.message_ts,
@@ -188,9 +188,7 @@ export const createSlackApp = (
           try {
             const newRotation = rotation.unrotate();
             await rotationStore.set(newRotation);
-            const userNameDict = newRotation.mentionAll
-              ? null
-              : await getUserNameDict(client);
+            const userNameDict = await getUserNameDict(newRotation, client);
             await client.chat.update({
               channel: channelId,
               ts: body.container.message_ts,
@@ -227,9 +225,7 @@ export const createSlackApp = (
   );
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
-    const userNameDict = rotation.mentionAll
-      ? null
-      : await getUserNameDict(app.client);
+    const userNameDict = await getUserNameDict(rotation, app.client);
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
