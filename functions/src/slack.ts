@@ -6,22 +6,22 @@ import { handleOverflowAction } from "./listeners/handleOverflowAction";
 import { openModal } from "./listeners/openModal";
 import { Rotation } from "./models/rotation";
 import { postRotation } from "./services/postRotation";
-import { InstallationStore, RotationStore } from "./store";
+import { Stores } from "./stores";
 
 declare module "@slack/bolt" {
   interface Context {
     rota: {
-      rotationStore: RotationStore;
+      rotationStore: Stores["rotationStore"];
     };
   }
 }
 
 const config = functions.config();
 
-export const createSlackApp = (
-  rotationStore: RotationStore,
-  installationStore: InstallationStore
-): {
+export const createSlackApp = ({
+  rotationStore,
+  installationStore,
+}: Stores): {
   readonly slackHandler: ExpressReceiver["app"];
   readonly postRotation: (rotation: Rotation) => Promise<void>;
 } => {
