@@ -13,7 +13,7 @@ const functionsTest = setupFunctionsTest();
 // eslint-disable-next-line import/order
 import { slack, cron } from "../index";
 
-describe("functions", () => {
+describe("functions test in online mode", () => {
   afterAll(() => {
     functionsTest.cleanup();
   });

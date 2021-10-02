@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`functions cron does nothing when no rotation matched 1`] = `
+exports[`functions test in online mode cron does nothing when no rotation matched 1`] = `
 Array [
   Array [],
   Array [],
 ]
 `;
 
-exports[`functions cron posts matched rotations and updates members field of them 1`] = `
+exports[`functions test in online mode cron posts matched rotations and updates members field of them 1`] = `
 Array [
   Array [
     Array [
@@ -159,7 +159,7 @@ Array [
 ]
 `;
 
-exports[`functions slack /rota command opens RotationModal 1`] = `
+exports[`functions test in online mode slack /rota command opens RotationModal 1`] = `
 Array [
   Array [
     Array [
@@ -685,7 +685,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions delete deletes the selected rotation from Firestore and posts that 1`] = `
+exports[`functions test in online mode slack overflow menu actions delete deletes the selected rotation from Firestore and posts that 1`] = `
 Array [
   Array [],
   Array [
@@ -701,7 +701,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions delete posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+exports[`functions test in online mode slack overflow menu actions delete posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [],
   Array [
@@ -716,7 +716,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions rotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+exports[`functions test in online mode slack overflow menu actions rotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [],
   Array [
@@ -731,7 +731,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions rotate rotates the selected rotation and posts that 1`] = `
+exports[`functions test in online mode slack overflow menu actions rotate rotates the selected rotation and posts that 1`] = `
 Array [
   Array [],
   Array [
@@ -811,7 +811,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions unrotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
+exports[`functions test in online mode slack overflow menu actions unrotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [],
   Array [
@@ -826,7 +826,7 @@ Array [
 ]
 `;
 
-exports[`functions slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `
+exports[`functions test in online mode slack overflow menu actions unrotate unrotates the selected rotation and posts that 1`] = `
 Array [
   Array [],
   Array [
@@ -906,7 +906,7 @@ Array [
 ]
 `;
 
-exports[`functions slack submit from RotationModal creates a new rotation in Firestore and posts a SuccessMessage 1`] = `
+exports[`functions test in online mode slack submit from RotationModal creates a new rotation in Firestore and posts a SuccessMessage 1`] = `
 Array [
   Array [],
   Array [
@@ -982,7 +982,7 @@ Array [
 ]
 `;
 
-exports[`functions slack submit from RotationModal updates a existing rotation in Firestore and posts a SuccessMessage 1`] = `
+exports[`functions test in online mode slack submit from RotationModal updates a existing rotation in Firestore and posts a SuccessMessage 1`] = `
 Array [
   Array [],
   Array [
