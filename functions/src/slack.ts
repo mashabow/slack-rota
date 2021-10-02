@@ -169,24 +169,10 @@ export const createSlackApp = (
           }
           break;
         case "rotate":
-          try {
-            const newRotation = rotation.rotate();
-            await rotationStore.set(newRotation);
-            const userNameDict = await getUserNameDict(newRotation, client);
-            await client.chat.update({
-              channel: channelId,
-              ts: body.container.message_ts,
-              text: newRotation.message,
-              blocks: RotationMessage({ rotation: newRotation, userNameDict }),
-              unfurl_links: false,
-            });
-          } catch (error) {
-            functions.logger.error("error", { error });
-          }
-          break;
         case "unrotate":
           try {
-            const newRotation = rotation.unrotate();
+            const newRotation =
+              type === "rotate" ? rotation.rotate() : rotation.unrotate();
             await rotationStore.set(newRotation);
             const userNameDict = await getUserNameDict(newRotation, client);
             await client.chat.update({
