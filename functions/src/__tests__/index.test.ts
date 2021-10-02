@@ -1,54 +1,25 @@
+import { afterAll, describe, it, expect, jest } from "@jest/globals";
 import {
-  afterAll,
-  beforeEach,
-  afterEach,
-  describe,
-  it,
-  expect,
-  jest,
-} from "@jest/globals";
-import {
-  MockedWebClient,
-  MockWebClient,
-} from "@slack-wrench/jest-mock-web-client";
-import * as admin from "firebase-admin";
-import { setupFunctionsTest, postSlackEvent, rotations } from "./index.helper";
+  setupFunctionsTest,
+  postSlackEvent,
+  rotations,
+  mockSlackWebClient,
+  setupFirestore,
+} from "./index.helper";
 
-const test = setupFunctionsTest();
+const functionsTest = setupFunctionsTest();
 
 // setupFunctionsTest() の後で import する必要がある
 // eslint-disable-next-line import/order
 import { slack, cron } from "../index";
 
-describe("functions", () => {
+describe("functions test in online mode", () => {
   afterAll(() => {
-    test.cleanup();
+    functionsTest.cleanup();
   });
 
-  // Mock Slack API client
-  let client: MockWebClient;
-  beforeEach(async () => {
-    client = MockedWebClient.mock.instances[0];
-  });
-  afterEach(async () => {
-    client.chat.postMessage.mockClear();
-  });
-
-  // Firestore
-  const rotationsRef = admin.firestore().collection("rotations");
-  const getAllRotations = async () =>
-    (await rotationsRef.get()).docs.map((doc) => doc.data());
-  beforeEach(async () => {
-    // Prepare rotations in Firestore
-    await Promise.all(
-      rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
-    );
-  });
-  afterEach(async () => {
-    // Delete all rotations from Firestore
-    const snapshot = await rotationsRef.get();
-    await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
-  });
+  const { getSlackWebClientCalls } = mockSlackWebClient();
+  const { getAllRotations } = setupFirestore();
 
   describe("slack", () => {
     describe("/rota command", () => {
@@ -61,7 +32,7 @@ describe("functions", () => {
           // ...more unused parameters
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.views.open.mock.calls).toMatchSnapshot();
+        expect(getSlackWebClientCalls("views.open")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual(rotations);
       });
@@ -189,7 +160,7 @@ describe("functions", () => {
           payload: JSON.stringify(payloadObj),
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+        expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual([
           submittedRotation,
@@ -209,7 +180,7 @@ describe("functions", () => {
           }),
         });
         expect(res.body).toEqual({}); // ack
-        expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+        expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual([
           ...rotations.slice(0, 3),
@@ -270,7 +241,7 @@ describe("functions", () => {
             value: "rotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getSlackWebClientCalls("chat.update")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
@@ -290,7 +261,9 @@ describe("functions", () => {
             value: "rotate:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+          expect(
+            getSlackWebClientCalls("chat.postEphemeral")
+          ).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(rotations);
         });
@@ -307,7 +280,7 @@ describe("functions", () => {
             value: "unrotate:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getSlackWebClientCalls("chat.update")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual([
             { ...rotations[0], members: ["user-c", "user-a", "user-b"] },
@@ -327,11 +300,11 @@ describe("functions", () => {
             value: "unrotate:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
-
           expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual(rotations);
+            getSlackWebClientCalls("chat.postEphemeral")
+          ).toMatchSnapshot();
+
+          expect(await getAllRotations()).toEqual(rotations);
         });
       });
 
@@ -346,7 +319,7 @@ describe("functions", () => {
             value: "delete:rotation-1",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+          expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(
             rotations.filter((r) => r.id !== "rotation-1")
@@ -363,7 +336,9 @@ describe("functions", () => {
             value: "delete:rotation-not-exist",
           });
           expect(res.body).toEqual({}); // ack
-          expect(client.chat.postEphemeral.mock.calls).toMatchSnapshot();
+          expect(
+            getSlackWebClientCalls("chat.postEphemeral")
+          ).toMatchSnapshot();
 
           expect(await getAllRotations()).toEqual(rotations);
         });
@@ -372,13 +347,13 @@ describe("functions", () => {
   });
 
   describe("cron", () => {
-    const wrappedCron = test.wrap(cron);
+    const wrappedCron = functionsTest.wrap(cron);
 
     it("posts matched rotations and updates members field of them", async () => {
       await wrappedCron({
         timestamp: "2020-08-08T22:33:44.000Z", // Sun, 09 Aug 2020 07:33:44 JST
       });
-      expect(client.chat.postMessage.mock.calls).toMatchSnapshot();
+      expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
       expect(await getAllRotations()).toEqual([
         { ...rotations[0], members: ["user-b", "user-c", "user-a"] },
         { ...rotations[1], members: ["user-q", "user-p"] },
@@ -391,7 +366,7 @@ describe("functions", () => {
       await wrappedCron({
         timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
       });
-      expect(client.chat.postMessage.mock.calls).toEqual([]);
+      expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
       expect(await getAllRotations()).toEqual(rotations);
     });
   });

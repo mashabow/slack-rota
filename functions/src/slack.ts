@@ -4,6 +4,7 @@ import {
   BlockOverflowAction,
   ViewStateValue,
 } from "@slack/bolt";
+import { WebClient } from "@slack/web-api";
 import * as functions from "firebase-functions";
 import {
   RotationModal,
@@ -34,13 +35,17 @@ export const createSlackApp = (
   });
 
   /**
-   * { [user_id]: user_name } の辞書を返す
+   * ローテーションの描画に必要な { [user_id]: user_name } の辞書を返す
+   * rotation.mentionAll が false の場合は不要なので、null を返す
    */
-  const getUserNameDict = async (): Promise<Record<string, string> | null> => {
+  const getUserNameDict = async (
+    rotation: Rotation,
+    client: WebClient
+  ): Promise<Record<string, string> | null> => {
+    if (!rotation.mentionAll) return null;
+
     try {
-      const json = await app.client.users.list({
-        token: config.slack.bot_token,
-      });
+      const json = await client.users.list();
       // 型定義上は optional だが、正常系では必ず存在するはず
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return json.members!.reduce<Record<string, string>>(
@@ -57,12 +62,11 @@ export const createSlackApp = (
     return null;
   };
 
-  app.command("/rota", async ({ ack, body, context }) => {
+  app.command("/rota", async ({ ack, body, client }) => {
     await ack();
 
     try {
-      const result = await app.client.views.open({
-        token: context.botToken as string,
+      const result = await client.views.open({
         trigger_id: body.trigger_id,
         view: RotationModal({ channelId: body.channel_id }),
       });
@@ -72,7 +76,7 @@ export const createSlackApp = (
     }
   });
 
-  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view }) => {
+  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, client }) => {
     await ack();
 
     const hiddenFields = JSON.parse(view.private_metadata);
@@ -102,11 +106,10 @@ export const createSlackApp = (
     await rotationStore.set(rotation);
 
     const userId = body.user.id;
-    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const userNameDict = await getUserNameDict(rotation, client);
     const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
     try {
-      await app.client.chat.postMessage({
-        token: config.slack.bot_token,
+      await client.chat.postMessage({
         channel: rotation.channel,
         text: `<@${userId}> さんがローテーションを${
           isUpdate ? "編集" : "作成"
@@ -126,7 +129,7 @@ export const createSlackApp = (
 
   app.action<BlockOverflowAction>(
     ID.OVERFLOW_MENU,
-    async ({ ack, action, body }) => {
+    async ({ ack, action, body, client }) => {
       await ack();
 
       const channelId = body.channel?.id;
@@ -140,8 +143,7 @@ export const createSlackApp = (
       const rotation = await rotationStore.get(rotationId);
       if (!rotation) {
         try {
-          await app.client.chat.postEphemeral({
-            token: config.slack.bot_token,
+          await client.chat.postEphemeral({
             channel: channelId,
             text: "このローテーションは削除済みです",
             user: userId,
@@ -155,8 +157,7 @@ export const createSlackApp = (
       switch (type) {
         case "edit":
           try {
-            await app.client.views.open({
-              token: config.slack.bot_token,
+            await client.views.open({
               trigger_id: body.trigger_id,
               view: RotationModal({
                 channelId,
@@ -168,33 +169,13 @@ export const createSlackApp = (
           }
           break;
         case "rotate":
-          try {
-            const newRotation = rotation.rotate();
-            await rotationStore.set(newRotation);
-            const userNameDict = newRotation.mentionAll
-              ? null
-              : await getUserNameDict();
-            await app.client.chat.update({
-              token: config.slack.bot_token,
-              channel: channelId,
-              ts: body.container.message_ts,
-              text: newRotation.message,
-              blocks: RotationMessage({ rotation: newRotation, userNameDict }),
-              unfurl_links: false,
-            });
-          } catch (error) {
-            functions.logger.error("error", { error });
-          }
-          break;
         case "unrotate":
           try {
-            const newRotation = rotation.unrotate();
+            const newRotation =
+              type === "rotate" ? rotation.rotate() : rotation.unrotate();
             await rotationStore.set(newRotation);
-            const userNameDict = newRotation.mentionAll
-              ? null
-              : await getUserNameDict();
-            await app.client.chat.update({
-              token: config.slack.bot_token,
+            const userNameDict = await getUserNameDict(newRotation, client);
+            await client.chat.update({
               channel: channelId,
               ts: body.container.message_ts,
               text: newRotation.message,
@@ -211,8 +192,7 @@ export const createSlackApp = (
           try {
             await rotationStore.delete(rotationId);
             // respond() だと reply_broadcast が効かない？
-            await app.client.chat.postMessage({
-              token: config.slack.bot_token,
+            await client.chat.postMessage({
               channel: channelId,
               text: `<@${userId}> さんがこのローテーションを削除しました 👋`,
               thread_ts: body.container.message_ts,
@@ -231,10 +211,9 @@ export const createSlackApp = (
   );
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
-    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const userNameDict = await getUserNameDict(rotation, app.client);
     try {
       await app.client.chat.postMessage({
-        token: config.slack.bot_token,
         channel: rotation.channel,
         text: rotation.message,
         blocks: RotationMessage({ rotation, userNameDict }),
