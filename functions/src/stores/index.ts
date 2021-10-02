@@ -10,7 +10,7 @@ export const createStores = (db: FirebaseFirestore.Firestore): Stores => {
   db.settings({ ignoreUndefinedProperties: true });
 
   return {
-  rotationStore: new RotationStore(db),
-  installationStore: new InstallationStore(db),
+    rotationStore: new RotationStore(db),
+    installationStore: new InstallationStore(db),
   };
 };
