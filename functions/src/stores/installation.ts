@@ -11,7 +11,11 @@ const getEnterpriseOrTeamId = (
 };
 
 export class InstallationStore {
-  constructor(private db: FirebaseFirestore.Firestore) {}
+  private collection: FirebaseFirestore.CollectionReference;
+
+  constructor(db: FirebaseFirestore.Firestore) {
+    this.collection = db.collection("installations");
+  }
 
   async set(installation: Installation): Promise<void> {
     const enterpriseOrTeamId =
@@ -20,17 +24,13 @@ export class InstallationStore {
         : installation.team?.id;
     if (!enterpriseOrTeamId) throw new Error();
 
-    await this.db
-      .collection("installation")
-      .doc(enterpriseOrTeamId)
-      .set(installation);
+    await this.collection.doc(enterpriseOrTeamId).set(installation);
   }
 
   async get(
     installationQuery: InstallationQuery<boolean>
   ): Promise<Installation> {
-    const doc = await this.db
-      .collection("installation")
+    const doc = await this.collection
       .doc(getEnterpriseOrTeamId(installationQuery))
       .get();
     if (!doc.exists) throw new Error();
@@ -38,8 +38,7 @@ export class InstallationStore {
   }
 
   async delete(installationQuery: InstallationQuery<boolean>): Promise<void> {
-    await this.db
-      .collection("installation")
+    await this.collection
       .doc(getEnterpriseOrTeamId(installationQuery))
       .delete();
   }
