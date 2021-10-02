@@ -46,6 +46,10 @@ export const createSlackApp = ({
       fetchInstallation: installationStore.get,
       deleteInstallation: installationStore.delete,
     },
+    installerOptions: {
+      installPath: "/install",
+      redirectUriPath: "/oauth_redirect",
+    },
     endpoints: "/events",
     processBeforeResponse: true,
   });
