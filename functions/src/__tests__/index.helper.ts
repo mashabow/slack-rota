@@ -1,5 +1,10 @@
 import crypto from "crypto";
 import querystring from "querystring";
+import { beforeEach, afterEach } from "@jest/globals";
+import {
+  MockedWebClient,
+  MockWebClient,
+} from "@slack-wrench/jest-mock-web-client";
 import dotenv from "dotenv";
 import { HttpsFunction } from "firebase-functions";
 import functionsTest from "firebase-functions-test";
@@ -14,6 +19,9 @@ const CONFIG = {
   },
 };
 
+/**
+ * オンラインテストのセットアップ
+ */
 export const setupFunctionsTest = (): ReturnType<typeof functionsTest> => {
   dotenv.config({ path: `${__dirname}/../../../.env` });
   const { TEST_PROJECT_ID } = process.env;
@@ -34,6 +42,13 @@ export const setupFunctionsTest = (): ReturnType<typeof functionsTest> => {
   return test;
 };
 
+/**
+ * Firebase Functions の関数に対して Slack の代わりにイベントを投げる
+ *
+ * @param httpsFunction Slack からのイベントを受け取る関数
+ * @param body Slack からのリクエストボディ（イベントの内容）
+ * @returns 関数が返すレスポンスの Promise
+ */
 export const postSlackEvent = (
   httpsFunction: HttpsFunction,
   body: Record<string, string>
@@ -53,6 +68,65 @@ export const postSlackEvent = (
       "x-slack-request-timestamp": timestamp.toString(),
     })
     .send(encodedBody);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IsAny<T> = (any extends T ? true : false) extends true ? true : false;
+
+/**
+ * jest.Mock<any, any> である T の末端のプロパティを、ドット区切りの keyPath で列挙する
+ */
+type KeyPath<T> = {
+  [K in keyof T]: K extends string
+    ? // @slack-wrench/jest-mock-web-client の参照する jest の型定義が古い関係で、
+      // 「jest.Mock<any, any> か否か」は「any か否か」で判別する必要がある
+      IsAny<T[K]> extends true
+      ? K // leaf
+      : T[K] extends Record<string, unknown>
+      ? `${K}.${KeyPath<T[K]>}`
+      : never
+    : never;
+}[keyof T];
+
+/**
+ * Bolt 内部で使われている Slack API Client をモックする
+ */
+export const mockSlackWebClient = (): {
+  getSlackWebClientCalls: (
+    keyPath: KeyPath<MockWebClient>
+  ) => readonly unknown[];
+} => {
+  let clients: MockWebClient[];
+
+  beforeEach(async () => {
+    clients = MockedWebClient.mock.instances;
+  });
+
+  afterEach(async () => {
+    clients.map((client) => {
+      client.chat.postMessage.mockClear();
+      client.chat.update.mockClear();
+      client.chat.postEphemeral.mockClear();
+    });
+  });
+
+  return {
+    // Bolt は複数の WebClient をプールして使い回すため、
+    // メソッド呼び出し履歴を assert するためには、
+    // 全 WebClient に対して、そのメソッドの .mock.calls を取得する必要がある
+    getSlackWebClientCalls: (keyPath: KeyPath<MockWebClient>) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const trace = (obj: any, keyPathParts: string[]): any => {
+        if (keyPathParts.length === 0) return obj;
+        const [head, ...rest] = keyPathParts;
+        return trace(obj[head], rest);
+      };
+
+      return clients.map(
+        (client) => trace(client, keyPath.split(".")).mock.calls
+      );
+    },
+  };
 };
 
 export const rotations: readonly RotationJSON[] = [
