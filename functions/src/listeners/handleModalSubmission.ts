@@ -7,7 +7,7 @@ import {
 import * as functions from "firebase-functions";
 import { ID, SuccessMessage } from "../component";
 import { Rotation } from "../model/rotation";
-import { getUserNameDict } from "./getUserNameDict";
+import { getUserNameDict } from "../services/getUserNameDict";
 
 export const handleModalSubmission: Middleware<
   SlackViewMiddlewareArgs<SlackViewAction>

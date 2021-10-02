@@ -5,7 +5,7 @@ import {
 } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import { RotationMessage, RotationModal } from "../component";
-import { getUserNameDict } from "./getUserNameDict";
+import { getUserNameDict } from "../services/getUserNameDict";
 
 export const handleOverflowAction: Middleware<
   SlackActionMiddlewareArgs<BlockOverflowAction>

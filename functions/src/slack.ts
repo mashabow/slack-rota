@@ -1,11 +1,11 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
-import { RotationMessage, ID } from "./component";
-import { getUserNameDict } from "./listeners/getUserNameDict";
+import { ID } from "./component";
 import { handleModalSubmission } from "./listeners/handleModalSubmission";
 import { handleOverflowAction } from "./listeners/handleOverflowAction";
 import { openModal } from "./listeners/openModal";
 import { Rotation } from "./model/rotation";
+import { postRotation } from "./services/postRotation";
 import { RotationStore } from "./store";
 
 declare module "@slack/bolt" {
@@ -44,22 +44,8 @@ export const createSlackApp = (
   app.view(ID.SUBMIT_CALLBACK, handleModalSubmission);
   app.action<BlockOverflowAction>(ID.OVERFLOW_MENU, handleOverflowAction);
 
-  const postRotation = async (rotation: Rotation): Promise<void> => {
-    const userNameDict = await getUserNameDict(rotation, app.client);
-    try {
-      await app.client.chat.postMessage({
-        channel: rotation.channel,
-        text: rotation.message,
-        blocks: RotationMessage({ rotation, userNameDict }),
-        unfurl_links: false,
-      });
-    } catch (error) {
-      functions.logger.error("error", { error });
-    }
-  };
-
   return {
     slackHandler: expressReceiver.app,
-    postRotation,
+    postRotation: (rotation) => postRotation(rotation, app.client),
   };
 };
