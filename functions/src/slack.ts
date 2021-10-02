@@ -42,9 +42,9 @@ export const createSlackApp = ({
     stateSecret: "my-state-secret",
     scopes: ["chat:write", "chat:write.public", "commands", "users:read"],
     installationStore: {
-      storeInstallation: installationStore.set,
-      fetchInstallation: installationStore.get,
-      deleteInstallation: installationStore.delete,
+      storeInstallation: (i) => installationStore.set(i),
+      fetchInstallation: (iq) => installationStore.get(iq),
+      deleteInstallation: (iq) => installationStore.delete(iq),
     },
     installerOptions: {
       installPath: "/install",
