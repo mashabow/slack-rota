@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { RotationModal, RotationMessage, ID } from "./component";
 import { getUserNameDict } from "./listeners/getUserNameDict";
 import { overflowMenu } from "./listeners/overflowMenu";
+import { slashRota } from "./listeners/slashRota";
 import { submitCallback } from "./listeners/submitCallback";
 import { Rotation } from "./model/rotation";
 import { RotationStore } from "./store";
@@ -39,19 +40,7 @@ export const createSlackApp = (
     await next?.();
   });
 
-  app.command("/rota", async ({ ack, body, client }) => {
-    await ack();
-
-    try {
-      const result = await client.views.open({
-        trigger_id: body.trigger_id,
-        view: RotationModal({ channelId: body.channel_id }),
-      });
-      functions.logger.info("result", { result });
-    } catch (error) {
-      functions.logger.error("error", { error });
-    }
-  });
+  app.command("/rota", slashRota);
 
   app.view(ID.SUBMIT_CALLBACK, submitCallback);
 
