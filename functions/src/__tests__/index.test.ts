@@ -1,18 +1,10 @@
-import {
-  afterAll,
-  beforeEach,
-  afterEach,
-  describe,
-  it,
-  expect,
-  jest,
-} from "@jest/globals";
-import * as admin from "firebase-admin";
+import { afterAll, describe, it, expect, jest } from "@jest/globals";
 import {
   setupFunctionsTest,
   postSlackEvent,
   rotations,
   mockSlackWebClient,
+  setupFirestore,
 } from "./index.helper";
 
 const functionsTest = setupFunctionsTest();
@@ -27,22 +19,7 @@ describe("functions", () => {
   });
 
   const { getSlackWebClientCalls } = mockSlackWebClient();
-
-  // Firestore
-  const rotationsRef = admin.firestore().collection("rotations");
-  const getAllRotations = async () =>
-    (await rotationsRef.get()).docs.map((doc) => doc.data());
-  beforeEach(async () => {
-    // Prepare rotations in Firestore
-    await Promise.all(
-      rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
-    );
-  });
-  afterEach(async () => {
-    // Delete all rotations from Firestore
-    const snapshot = await rotationsRef.get();
-    await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
-  });
+  const { getAllRotations } = setupFirestore();
 
   describe("slack", () => {
     describe("/rota command", () => {
@@ -327,9 +304,7 @@ describe("functions", () => {
             getSlackWebClientCalls("chat.postEphemeral")
           ).toMatchSnapshot();
 
-          expect(
-            (await rotationsRef.get()).docs.map((doc) => doc.data())
-          ).toEqual(rotations);
+          expect(await getAllRotations()).toEqual(rotations);
         });
       });
 

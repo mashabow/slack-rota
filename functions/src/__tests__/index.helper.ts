@@ -6,10 +6,12 @@ import {
   MockWebClient,
 } from "@slack-wrench/jest-mock-web-client";
 import dotenv from "dotenv";
+import * as admin from "firebase-admin";
 import { HttpsFunction } from "firebase-functions";
 import functionsTest from "firebase-functions-test";
 
 import request from "supertest";
+
 import { RotationJSON } from "../model/rotation";
 
 const CONFIG = {
@@ -126,6 +128,30 @@ export const mockSlackWebClient = (): {
         (client) => trace(client, keyPath.split(".")).mock.calls
       );
     },
+  };
+};
+
+export const setupFirestore = (): {
+  getAllRotations: () => Promise<readonly FirebaseFirestore.DocumentData[]>;
+} => {
+  const rotationsRef = admin.firestore().collection("rotations");
+
+  beforeEach(async () => {
+    // Prepare rotations in Firestore
+    await Promise.all(
+      rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
+    );
+  });
+
+  afterEach(async () => {
+    // Delete all rotations from Firestore
+    const snapshot = await rotationsRef.get();
+    await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
+  });
+
+  return {
+    getAllRotations: async () =>
+      (await rotationsRef.get()).docs.map((doc) => doc.data()),
   };
 };
 
