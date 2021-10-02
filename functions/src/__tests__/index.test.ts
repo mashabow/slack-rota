@@ -425,7 +425,7 @@ describe("functions", () => {
       await wrappedCron({
         timestamp: "2020-08-09T22:33:44.000Z", // Mon, 10 Aug 2020 07:33:44 JST
       });
-      expect(getClientCalls("chat.postMessage")).toEqual([]);
+      expect(getClientCalls("chat.postMessage")).toMatchSnapshot();
       expect(await getAllRotations()).toEqual(rotations);
     });
   });

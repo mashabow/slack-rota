@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`functions cron does nothing when no rotation matched 1`] = `
+Array [
+  Array [],
+  Array [],
+]
+`;
+
 exports[`functions cron posts matched rotations and updates members field of them 1`] = `
 Array [
   Array [
