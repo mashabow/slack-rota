@@ -1,17 +1,8 @@
-import {
-  App,
-  ExpressReceiver,
-  BlockOverflowAction,
-  ViewStateValue,
-} from "@slack/bolt";
-import { WebClient } from "@slack/web-api";
+import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import * as functions from "firebase-functions";
-import {
-  RotationModal,
-  SuccessMessage,
-  RotationMessage,
-  ID,
-} from "./component";
+import { RotationModal, RotationMessage, ID } from "./component";
+import { getUserNameDict } from "./listeners/getUserNameDict";
+import { submitCallback } from "./listeners/submitCallback";
 import { Rotation } from "./model/rotation";
 import { RotationStore } from "./store";
 
@@ -47,34 +38,6 @@ export const createSlackApp = (
     await next?.();
   });
 
-  /**
-   * ローテーションの描画に必要な { [user_id]: user_name } の辞書を返す
-   * rotation.mentionAll が false の場合は不要なので、null を返す
-   */
-  const getUserNameDict = async (
-    rotation: Rotation,
-    client: WebClient
-  ): Promise<Record<string, string> | null> => {
-    if (!rotation.mentionAll) return null;
-
-    try {
-      const json = await client.users.list();
-      // 型定義上は optional だが、正常系では必ず存在するはず
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return json.members!.reduce<Record<string, string>>(
-        (acc, { id, profile }) => ({
-          ...acc,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          [id!]: profile?.display_name || profile?.real_name || "",
-        }),
-        {}
-      );
-    } catch (error) {
-      functions.logger.error("error", { error });
-    }
-    return null;
-  };
-
   app.command("/rota", async ({ ack, body, client }) => {
     await ack();
 
@@ -89,56 +52,7 @@ export const createSlackApp = (
     }
   });
 
-  app.view(ID.SUBMIT_CALLBACK, async ({ ack, body, view, client, context }) => {
-    await ack();
-
-    const hiddenFields = JSON.parse(view.private_metadata);
-    const getViewStateValue = (id: string): ViewStateValue =>
-      view.state.values[id][id];
-
-    const rotation = Rotation.fromJSON({
-      id: hiddenFields[ID.ROTATION_ID], // 新規作成のときは undefined
-      // 型定義上は optional だが、正常系では必ず存在するはず
-      /* eslint-disable @typescript-eslint/no-non-null-assertion */
-      members: getViewStateValue(ID.MEMBERS).selected_users!,
-      message: getViewStateValue(ID.MESSAGE).value!,
-      channel: hiddenFields[ID.CHANNEL],
-      schedule: {
-        days: getViewStateValue(ID.DAYS).selected_options!.map(
-          (option: { value: string }) => parseInt(option.value)
-        ),
-        hour: Number(getViewStateValue(ID.HOUR).selected_option!.value),
-        minute: Number(getViewStateValue(ID.MINUTE).selected_option!.value),
-      },
-      mentionAll: JSON.parse(
-        getViewStateValue(ID.MENTION_ALL).selected_option!.value
-      ),
-      /* eslint-enable @typescript-eslint/no-non-null-assertion */
-    }).unrotate(); // store には「前回の担当者が先頭」になるように保存するので、一つ戻した状態にする
-
-    await context.rota.rotationStore.set(rotation);
-
-    const userId = body.user.id;
-    const userNameDict = await getUserNameDict(rotation, client);
-    const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
-    try {
-      await client.chat.postMessage({
-        channel: rotation.channel,
-        text: `<@${userId}> さんがローテーションを${
-          isUpdate ? "編集" : "作成"
-        }しました！`,
-        blocks: SuccessMessage({
-          rotation,
-          userId,
-          userNameDict,
-          isUpdate,
-        }),
-        unfurl_links: false,
-      });
-    } catch (error) {
-      functions.logger.error("error", { error });
-    }
-  });
+  app.view(ID.SUBMIT_CALLBACK, submitCallback);
 
   app.action<BlockOverflowAction>(
     ID.OVERFLOW_MENU,
