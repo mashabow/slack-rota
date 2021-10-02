@@ -7,7 +7,7 @@ import * as functions from "firebase-functions";
 import { RotationMessage, RotationModal } from "../component";
 import { getUserNameDict } from "./getUserNameDict";
 
-export const overflowMenu: Middleware<
+export const handleOverflowAction: Middleware<
   SlackActionMiddlewareArgs<BlockOverflowAction>
 > = async ({ ack, action, body, client, context }) => {
   await ack();

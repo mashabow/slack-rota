@@ -9,7 +9,7 @@ import { ID, SuccessMessage } from "../component";
 import { Rotation } from "../model/rotation";
 import { getUserNameDict } from "./getUserNameDict";
 
-export const submitCallback: Middleware<
+export const handleModalSubmission: Middleware<
   SlackViewMiddlewareArgs<SlackViewAction>
 > = async ({ ack, body, view, client, context }) => {
   await ack();
