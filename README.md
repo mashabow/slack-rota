@@ -136,6 +136,7 @@ Slack から Firebase Functions を呼び出せるようにします。
 
 ```console
 $ cd functions/
+$ firebase functions:config:get > .runtimeconfig.json
 $ npm run serve
 ```
 
