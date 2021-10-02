@@ -6,7 +6,8 @@ const getEnterpriseOrTeamId = (
   const id =
     (installationQuery.isEnterpriseInstall && installationQuery.enterpriseId) ||
     installationQuery.teamId;
-  if (!id) throw new Error();
+  if (!id)
+    throw new Error("Missing enterprise or team ID in installationQuery");
   return id;
 };
 
@@ -22,7 +23,8 @@ export class InstallationStore {
       installation.isEnterpriseInstall && installation.enterprise
         ? installation.enterprise.id
         : installation.team?.id;
-    if (!enterpriseOrTeamId) throw new Error();
+    if (!enterpriseOrTeamId)
+      throw new Error("Missing enterprise or team ID in installation");
 
     await this.collection.doc(enterpriseOrTeamId).set(installation);
   }
@@ -33,7 +35,7 @@ export class InstallationStore {
     const doc = await this.collection
       .doc(getEnterpriseOrTeamId(installationQuery))
       .get();
-    if (!doc.exists) throw new Error();
+    if (!doc.exists) throw new Error("Installation not found");
     return doc.data() as Installation;
   }
 
