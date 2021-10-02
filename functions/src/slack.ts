@@ -4,6 +4,7 @@ import {
   BlockOverflowAction,
   ViewStateValue,
 } from "@slack/bolt";
+import { WebClient } from "@slack/web-api";
 import * as functions from "firebase-functions";
 import {
   RotationModal,
@@ -36,11 +37,11 @@ export const createSlackApp = (
   /**
    * { [user_id]: user_name } の辞書を返す
    */
-  const getUserNameDict = async (): Promise<Record<string, string> | null> => {
+  const getUserNameDict = async (
+    client: WebClient
+  ): Promise<Record<string, string> | null> => {
     try {
-      const json = await app.client.users.list({
-        token: config.slack.bot_token,
-      });
+      const json = await client.users.list();
       // 型定義上は optional だが、正常系では必ず存在するはず
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return json.members!.reduce<Record<string, string>>(
@@ -101,7 +102,9 @@ export const createSlackApp = (
     await rotationStore.set(rotation);
 
     const userId = body.user.id;
-    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const userNameDict = rotation.mentionAll
+      ? null
+      : await getUserNameDict(client);
     const isUpdate = Boolean(hiddenFields[ID.ROTATION_ID]);
     try {
       await client.chat.postMessage({
@@ -169,7 +172,7 @@ export const createSlackApp = (
             await rotationStore.set(newRotation);
             const userNameDict = newRotation.mentionAll
               ? null
-              : await getUserNameDict();
+              : await getUserNameDict(client);
             await client.chat.update({
               channel: channelId,
               ts: body.container.message_ts,
@@ -187,7 +190,7 @@ export const createSlackApp = (
             await rotationStore.set(newRotation);
             const userNameDict = newRotation.mentionAll
               ? null
-              : await getUserNameDict();
+              : await getUserNameDict(client);
             await client.chat.update({
               channel: channelId,
               ts: body.container.message_ts,
@@ -224,7 +227,9 @@ export const createSlackApp = (
   );
 
   const postRotation = async (rotation: Rotation): Promise<void> => {
-    const userNameDict = rotation.mentionAll ? null : await getUserNameDict();
+    const userNameDict = rotation.mentionAll
+      ? null
+      : await getUserNameDict(app.client);
     try {
       await app.client.chat.postMessage({
         token: config.slack.bot_token,
