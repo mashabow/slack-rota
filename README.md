@@ -71,34 +71,22 @@
 
 ### Slack アプリの作成
 
-Slack のワークスペースに紐づく Slack アプリを作成し、インストールします。
-
 1. [Bolt 入門ガイド](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started) の「[アプリを作成する](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started#%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B)」を参考にして、Slack アプリを作成
 
    1. [アプリ作成ページ](https://api.slack.com/apps?new_app=1) に移動
    1. 適当なアプリ名と、インストール先のワークスペースを入力し、アプリを作成
-   1. Basic Information > Signing Secret の値をメモしておく
-
-1. 「[トークンとアプリのインストール](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started#%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E3%81%A8%E3%82%A2%E3%83%97%E3%83%AA%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)」を参考にして、OAuth & Permissions を設定
-
-   1. Scopes > Bot Token Scopes に `chat:write`, `chat:write.public`, `commands`, `users:read` を追加
-   1. OAuth Tokens & Redirect URLs の [Install App to Workspace] ボタンをクリックして、インストール
-   1. インストールが完了すると Bot User OAuth Access Token が表示されるので、それをメモしておく
+   1. Manage Distribution > Share Your App with Other Workspaces を開き、Remove Hard Coded Information のチェックを入れたら [Activate Public Distribution] をクリック
 
 ### Firebase へのデプロイ
 
-Slack アプリの情報を Firebase に設定し、デプロイします。
+Slack アプリの Basic Information > App Credentials の情報を Firebase に設定し、デプロイします。
 
-1. Slack アプリの Signing Secret を、Firebase Functions の `slack.signing_secret` に設定
+1. Slack アプリの Client ID, Client Secret, Signing Secret を、Firebase Functions の `slack.***` に設定
 
    ```console
+   $ firebase functions:config:set slack.client_id="012345678.1234567..."
+   $ firebase functions:config:set slack.client_secret="01234567890abcdef..."
    $ firebase functions:config:set slack.signing_secret="01234567890abcdef..."
-   ```
-
-1. Slack アプリの Bot User OAuth Access Token を、Firebase Functions の `slack.bot_token` に設定
-
-   ```console
-   $ firebase functions:config:set slack.bot_token="xoxb-0123456789..."
    ```
 
 1. Firebase にデプロイ 🚀
@@ -124,6 +112,15 @@ Slack から Firebase Functions を呼び出せるようにします。
    1. Request URL に `https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/events` と入力
    1. 設定を保存
 
+1. Redirect URLs を設定
+
+   1. OAuth & Permissions の Redirect URLs に `https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/oauth_redirect` と入力して、[Add] をクリック
+   1. [Save URLs] をクリックして設定を保存
+
+### ワークスペースへのインストール
+
+`https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/install` にアクセスして、ワークスペースにインストールします。
+
 ### 動作確認
 
 以上で完了です。適当なパブリックチャンネル上で `/rota` コマンドを実行し、Rota が動作するか確認してください。
@@ -148,12 +145,14 @@ Slack からのイベントを受け取るためには、[ngrok](https://ngrok.c
 $ ngrok http 5001
 ```
 
-を実行すると、https://12345abcde.ngrok.io のような URL で、http://localhost:5001 にアクセスできるようになります。Slack アプリの以下の設定に、https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/events を指定しましょう。
+を実行すると、https://12345abcde.ngrok.io のような URL で、http://localhost:5001 にアクセスできるようになります。Slack アプリの以下の設定に、ngrok の URL をそれぞれ指定しましょう。Firebase で動かす本番用 Slack アプリとは別に、開発用の Slack アプリを作成しておくと楽です。
 
 - Interactivity & Shortcuts > Interactivity > Request URL
+  - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/events`
 - Slash Commands > `/rota` > Request URL
-
-Firebase で動かす本番用 Slack アプリとは別に、開発用の Slack アプリを作成しておくと楽です。
+  - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/events`
+- OAuth & Permissions > Redirect URLs
+  - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/oauth_redirect`
 
 [Cloud Functions シェル](https://firebase.google.com/docs/functions/local-shell?hl=ja)を使うと、Firebase Emulator 上の `cron` 関数を手動で実行することができます。
 
