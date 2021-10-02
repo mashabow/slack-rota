@@ -13,11 +13,13 @@ import functionsTest from "firebase-functions-test";
 import request from "supertest";
 
 import { RotationJSON } from "../models/rotation";
+import { FunctionsConfig } from "../slack";
 
-const CONFIG = {
+const CONFIG: FunctionsConfig = {
   slack: {
-    bot_token: "dummy-bot-token",
     signing_secret: "dummy-signing-secret",
+    client_id: "dummy-client-id",
+    client_secret: "dummy-client-secret",
   },
 };
 
@@ -39,6 +41,7 @@ export const setupFunctionsTest = (): ReturnType<typeof functionsTest> => {
     },
     `${__dirname}/../../../serviceAccountKey.json`
   );
+  // @ts-expect-error: test.mockConfig の型定義が雑
   test.mockConfig(CONFIG);
 
   return test;

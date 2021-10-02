@@ -16,7 +16,15 @@ declare module "@slack/bolt" {
   }
 }
 
-const config = functions.config();
+export interface FunctionsConfig {
+  slack: {
+    signing_secret: string;
+    client_id: string;
+    client_secret: string;
+  };
+}
+
+const config = functions.config() as FunctionsConfig;
 
 export const createSlackApp = ({
   rotationStore,
