@@ -159,6 +159,7 @@ Array [
 
 exports[`functions test in online mode slack /rota command opens RotationModal 1`] = `
 Array [
+  Array [],
   Array [
     Array [
       Object {

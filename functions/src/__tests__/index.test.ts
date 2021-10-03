@@ -29,6 +29,7 @@ describe("functions test in online mode", () => {
           text: "foobar",
           channel_id: "channel-id",
           trigger_id: "trigger-id",
+          team_id: "team-id",
           // ...more unused parameters
         });
         expect(res.body).toEqual({}); // ack
