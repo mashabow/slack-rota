@@ -1,6 +1,6 @@
 import { Installation, InstallationQuery } from "@slack/bolt";
 
-const getEnterpriseOrTeamId = (
+const getInstallationIdFromQuery = (
   installationQuery: InstallationQuery<boolean>
 ): string => {
   const id =
@@ -11,6 +11,9 @@ const getEnterpriseOrTeamId = (
   return id;
 };
 
+// installation のキー installationId は、以下の値を使う
+// - org-wide app installation の場合、enterprise id（Enterprise Grid の OrG の id）
+// - ワークスペースへのインストールの場合、team id（ワークスペースの id）
 export class InstallationStore {
   private collection: FirebaseFirestore.CollectionReference;
 
@@ -19,21 +22,21 @@ export class InstallationStore {
   }
 
   async set(installation: Installation): Promise<void> {
-    const enterpriseOrTeamId =
+    const installationId =
       installation.isEnterpriseInstall && installation.enterprise
         ? installation.enterprise.id
         : installation.team?.id;
-    if (!enterpriseOrTeamId)
+    if (!installationId)
       throw new Error("Missing enterprise or team ID in installation");
 
-    await this.collection.doc(enterpriseOrTeamId).set(installation);
+    await this.collection.doc(installationId).set(installation);
   }
 
   async get(
     installationQuery: InstallationQuery<boolean>
   ): Promise<Installation> {
     const doc = await this.collection
-      .doc(getEnterpriseOrTeamId(installationQuery))
+      .doc(getInstallationIdFromQuery(installationQuery))
       .get();
     if (!doc.exists) throw new Error("Installation not found");
     return doc.data() as Installation;
@@ -41,7 +44,7 @@ export class InstallationStore {
 
   async delete(installationQuery: InstallationQuery<boolean>): Promise<void> {
     await this.collection
-      .doc(getEnterpriseOrTeamId(installationQuery))
+      .doc(getInstallationIdFromQuery(installationQuery))
       .delete();
   }
 }

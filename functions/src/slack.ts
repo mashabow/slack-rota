@@ -13,7 +13,7 @@ declare module "@slack/bolt" {
   interface Context {
     rota: {
       rotationStore: Stores["rotationStore"];
-      enterpriseOrTeamId: string; // installation の検索に使う
+      installationId: string;
     };
   }
 }
@@ -51,7 +51,7 @@ export const createSlackApp = ({
   app.use(async ({ context, body, next }) => {
     context.rota = {
       rotationStore,
-      enterpriseOrTeamId: (isBodyWithTypeEnterpriseInstall(body)
+      installationId: (isBodyWithTypeEnterpriseInstall(body)
         ? context.enterpriseId
         : context.teamId) as string,
     };
