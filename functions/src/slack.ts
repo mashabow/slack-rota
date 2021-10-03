@@ -7,11 +7,13 @@ import { openModal } from "./listeners/openModal";
 import { Rotation } from "./models/rotation";
 import { postRotation } from "./services/postRotation";
 import { Stores } from "./stores";
+import { isBodyWithTypeEnterpriseInstall } from "./util";
 
 declare module "@slack/bolt" {
   interface Context {
     rota: {
       rotationStore: Stores["rotationStore"];
+      enterpriseOrTeamId: string; // installation の検索に使う
     };
   }
 }
@@ -46,8 +48,13 @@ export const createSlackApp = ({
 
   const app = new App({ receiver: expressReceiver });
 
-  app.use(async ({ context, next }) => {
-    context.rota = { rotationStore };
+  app.use(async ({ context, body, next }) => {
+    context.rota = {
+      rotationStore,
+      enterpriseOrTeamId: (isBodyWithTypeEnterpriseInstall(body)
+        ? context.enterpriseId
+        : context.teamId) as string,
+    };
     await next?.();
   });
 
