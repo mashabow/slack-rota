@@ -34,6 +34,14 @@ export const handleOverflowAction: Middleware<
     return;
   }
 
+  if (rotation.installationId !== context.rota.installationId) {
+    functions.logger.error("No permission to change this rotation", {
+      rotation,
+      installationId: context.rota.installationId,
+    });
+    return;
+  }
+
   switch (type) {
     case "edit":
       try {

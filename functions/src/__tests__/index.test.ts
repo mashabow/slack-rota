@@ -345,6 +345,21 @@ describe("functions test in online mode", () => {
           expect(await getAllRotations()).toEqual(rotations);
         });
       });
+
+      it("ignores a event to change another team's rotation", async () => {
+        const res = await postOverflowAction({
+          text: {
+            type: "plain_text",
+            text: "ひとつ進む",
+            emoji: true,
+          },
+          value: "rotate:rotation-4",
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(getSlackWebClientCalls("chat.update")).toMatchSnapshot();
+
+        expect(await getAllRotations()).toEqual(rotations);
+      });
     });
   });
 

@@ -715,6 +715,13 @@ Array [
 ]
 `;
 
+exports[`functions test in online mode slack overflow menu actions ignores a event to change another team's rotation 1`] = `
+Array [
+  Array [],
+  Array [],
+]
+`;
+
 exports[`functions test in online mode slack overflow menu actions rotate posts 'already deleted' as ephemeral if the rotation not exist 1`] = `
 Array [
   Array [],

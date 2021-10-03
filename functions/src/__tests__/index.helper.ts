@@ -207,7 +207,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-4",
-    installationId: "team-id",
+    installationId: "another-team-id",
     members: ["user-x", "user-y", "user-z"],
     message: "rotation-4 message",
     channel: "channel-4",
