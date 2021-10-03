@@ -4,11 +4,15 @@ exports[`functions test in online mode cron does nothing when no rotation matche
 Array [
   Array [],
   Array [],
+  Array [],
+  Array [],
 ]
 `;
 
 exports[`functions test in online mode cron posts matched rotations and updates members field of them 1`] = `
 Array [
+  Array [],
+  Array [],
   Array [
     Array [
       Object {
@@ -81,6 +85,8 @@ Array [
         "unfurl_links": false,
       },
     ],
+  ],
+  Array [
     Array [
       Object {
         "blocks": Array [
@@ -153,7 +159,6 @@ Array [
       },
     ],
   ],
-  Array [],
 ]
 `;
 

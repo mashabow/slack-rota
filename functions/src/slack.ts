@@ -64,6 +64,6 @@ export const createSlackApp = ({
 
   return {
     slackHandler: expressReceiver.app,
-    postRotation: (rotation) => postRotation(rotation, app.client),
+    postRotation: (rotation) => postRotation(rotation, app),
   };
 };
