@@ -5,7 +5,6 @@ import {
   MockedWebClient,
   MockWebClient,
 } from "@slack-wrench/jest-mock-web-client";
-import { Installation } from "@slack/bolt";
 import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import { HttpsFunction } from "firebase-functions";
@@ -14,7 +13,7 @@ import functionsTest from "firebase-functions-test";
 import request from "supertest";
 
 import { FunctionsConfig } from "../config";
-import { RotationJSON } from "../models/rotation";
+import { installation, rotations } from "./index.fixture";
 
 const CONFIG: FunctionsConfig = {
   slack: {
@@ -150,7 +149,8 @@ export const setupFirestore = (): {
     await Promise.all(
       rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
     );
-    await installationRef.doc("team-id").set(installation);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await installationRef.doc(installation.team!.id).set(installation);
   });
 
   afterEach(async () => {
@@ -163,81 +163,4 @@ export const setupFirestore = (): {
     getAllRotations: async () =>
       (await rotationsRef.get()).docs.map((doc) => doc.data()),
   };
-};
-
-export const rotations: readonly RotationJSON[] = [
-  {
-    id: "rotation-1",
-    installationId: "team-id",
-    members: ["user-a", "user-b", "user-c"],
-    message: "rotation-1 message",
-    channel: "channel-1",
-    schedule: {
-      days: [0],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: true,
-  },
-  {
-    id: "rotation-2",
-    installationId: "team-id",
-    members: ["user-p", "user-q"],
-    message: "rotation-2 message",
-    channel: "channel-2",
-    schedule: {
-      days: [0, 6],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: false,
-  },
-  {
-    id: "rotation-3",
-    installationId: "team-id",
-    members: ["user-s", "user-t"],
-    message: "rotation-3 message",
-    channel: "channel-3",
-    schedule: {
-      days: [0],
-      hour: 22,
-      minute: 35,
-    },
-    mentionAll: true,
-  },
-  {
-    id: "rotation-4",
-    installationId: "another-team-id",
-    members: ["user-x", "user-y", "user-z"],
-    message: "rotation-4 message",
-    channel: "channel-4",
-    schedule: {
-      days: [2, 3, 4, 5],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: false,
-  },
-];
-
-const installation: Installation = {
-  team: { id: "team-id", name: "workspace name" },
-  enterprise: undefined,
-  user: { token: undefined, scopes: undefined, id: "user-id" },
-  tokenType: "bot",
-  isEnterpriseInstall: false,
-  appId: "app-id",
-  authVersion: "v2",
-  bot: {
-    scopes: [
-      "chat:write",
-      "commands",
-      "chat:write.public",
-      "channels:read",
-      "users:read",
-    ],
-    token: "xoxb-...",
-    userId: "bot-user-id",
-    id: "bot-id",
-  },
 };
