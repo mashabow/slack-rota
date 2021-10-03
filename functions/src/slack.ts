@@ -26,9 +26,9 @@ export const createSlackApp = ({
   const config = getConfig();
 
   const expressReceiver = new ExpressReceiver({
-    signingSecret: config.slack.signing_secret,
     clientId: config.slack.client_id,
     clientSecret: config.slack.client_secret,
+    signingSecret: config.slack.signing_secret,
     stateSecret: config.rota.state_secret,
     scopes: ["chat:write", "chat:write.public", "commands", "users:read"],
     installationStore: {

@@ -17,9 +17,9 @@ import { RotationJSON } from "../models/rotation";
 
 const CONFIG: FunctionsConfig = {
   slack: {
-    signing_secret: "dummy-signing-secret",
     client_id: "dummy-client-id",
     client_secret: "dummy-client-secret",
+    signing_secret: "dummy-signing-secret",
   },
   rota: {
     state_secret: "dummy-state-secret",
