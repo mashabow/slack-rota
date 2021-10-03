@@ -4,6 +4,7 @@ import { Rotation } from "../models/rotation";
 
 const rotationMentionAll = Rotation.fromJSON({
   id: "rotation-id",
+  installationId: "installation-id",
   members: ["user-a", "user-b", "user-c"],
   message: "message line 1\nmessage line 2",
   channel: "channel-id",
@@ -17,6 +18,7 @@ const rotationMentionAll = Rotation.fromJSON({
 
 const rotationNotMentionAll = Rotation.fromJSON({
   id: "rotation-id",
+  installationId: "installation-id",
   members: ["user-a", "user-b", "user-c"],
   message: "message line 1\nmessage line 2",
   channel: "channel-id",

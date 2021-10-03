@@ -8,6 +8,7 @@ export type RotationJSON = Omit<RotationArgs, "schedule"> & {
 
 export class Rotation {
   readonly id: string;
+  readonly installationId: string;
   // members の先頭が担当者。store には、最後に post したときの状態で保存する
   readonly members: readonly string[];
   readonly message: string;
@@ -17,6 +18,7 @@ export class Rotation {
 
   private constructor(args: RotationArgs) {
     this.id = args.id;
+    this.installationId = args.installationId;
     this.members = args.members;
     this.message = args.message;
     this.channel = args.channel;
@@ -27,6 +29,7 @@ export class Rotation {
   toJSON(): RotationJSON {
     return {
       id: this.id,
+      installationId: this.installationId,
       members: this.members,
       message: this.message,
       channel: this.channel,
@@ -38,6 +41,7 @@ export class Rotation {
   static fromJSON(json: Optional<RotationJSON, "id">): Rotation {
     return new Rotation({
       id: json.id ?? Date.now().toString(),
+      installationId: json.installationId,
       members: json.members,
       message: json.message,
       channel: json.channel,

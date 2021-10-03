@@ -20,6 +20,7 @@ export const handleModalSubmission: Middleware<
 
   const rotation = Rotation.fromJSON({
     id: hiddenFields[ID.ROTATION_ID], // 新規作成のときは undefined
+    installationId: context.rota.installationId,
     // 型定義上は optional だが、正常系では必ず存在するはず
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     members: getViewStateValue(ID.MEMBERS).selected_users!,

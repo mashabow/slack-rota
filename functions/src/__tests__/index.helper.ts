@@ -164,6 +164,7 @@ export const setupFirestore = (): {
 export const rotations: readonly RotationJSON[] = [
   {
     id: "rotation-1",
+    installationId: "installation-1",
     members: ["user-a", "user-b", "user-c"],
     message: "rotation-1 message",
     channel: "channel-1",
@@ -176,6 +177,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-2",
+    installationId: "installation-1",
     members: ["user-p", "user-q"],
     message: "rotation-2 message",
     channel: "channel-2",
@@ -188,6 +190,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-3",
+    installationId: "installation-1",
     members: ["user-s", "user-t"],
     message: "rotation-3 message",
     channel: "channel-3",
@@ -200,6 +203,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-4",
+    installationId: "installation-1",
     members: ["user-x", "user-y", "user-z"],
     message: "rotation-4 message",
     channel: "channel-4",
