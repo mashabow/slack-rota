@@ -142,6 +142,7 @@ describe("functions test in online mode", () => {
       };
       const submittedRotation = {
         id: "1597200000000",
+        installationId: "team-id",
         channel: "channel-id",
         members: ["user-c", "user-a", "user-b"],
         message: "てすてす\n\n*テスト*です",

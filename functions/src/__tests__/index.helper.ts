@@ -5,6 +5,7 @@ import {
   MockedWebClient,
   MockWebClient,
 } from "@slack-wrench/jest-mock-web-client";
+import { Installation } from "@slack/bolt";
 import dotenv from "dotenv";
 import * as admin from "firebase-admin";
 import { HttpsFunction } from "firebase-functions";
@@ -140,17 +141,20 @@ export const mockSlackWebClient = (): {
 export const setupFirestore = (): {
   getAllRotations: () => Promise<readonly FirebaseFirestore.DocumentData[]>;
 } => {
-  const rotationsRef = admin.firestore().collection("rotations");
+  const db = admin.firestore();
+  const rotationsRef = db.collection("rotations");
+  const installationRef = db.collection("installations");
 
   beforeEach(async () => {
-    // Prepare rotations in Firestore
+    // Prepare rotations and a installation
     await Promise.all(
       rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
     );
+    await installationRef.doc("team-id").set(installation);
   });
 
   afterEach(async () => {
-    // Delete all rotations from Firestore
+    // Delete all rotations
     const snapshot = await rotationsRef.get();
     await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
   });
@@ -164,7 +168,7 @@ export const setupFirestore = (): {
 export const rotations: readonly RotationJSON[] = [
   {
     id: "rotation-1",
-    installationId: "installation-1",
+    installationId: "team-id",
     members: ["user-a", "user-b", "user-c"],
     message: "rotation-1 message",
     channel: "channel-1",
@@ -177,7 +181,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-2",
-    installationId: "installation-1",
+    installationId: "team-id",
     members: ["user-p", "user-q"],
     message: "rotation-2 message",
     channel: "channel-2",
@@ -190,7 +194,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-3",
-    installationId: "installation-1",
+    installationId: "team-id",
     members: ["user-s", "user-t"],
     message: "rotation-3 message",
     channel: "channel-3",
@@ -203,7 +207,7 @@ export const rotations: readonly RotationJSON[] = [
   },
   {
     id: "rotation-4",
-    installationId: "installation-1",
+    installationId: "team-id",
     members: ["user-x", "user-y", "user-z"],
     message: "rotation-4 message",
     channel: "channel-4",
@@ -215,3 +219,25 @@ export const rotations: readonly RotationJSON[] = [
     mentionAll: false,
   },
 ];
+
+const installation: Installation = {
+  team: { id: "team-id", name: "workspace name" },
+  enterprise: undefined,
+  user: { token: undefined, scopes: undefined, id: "user-id" },
+  tokenType: "bot",
+  isEnterpriseInstall: false,
+  appId: "app-id",
+  authVersion: "v2",
+  bot: {
+    scopes: [
+      "chat:write",
+      "commands",
+      "chat:write.public",
+      "channels:read",
+      "users:read",
+    ],
+    token: "xoxb-...",
+    userId: "bot-user-id",
+    id: "bot-id",
+  },
+};
