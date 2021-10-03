@@ -1,6 +1,6 @@
 import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
-import * as functions from "firebase-functions";
 import { ID } from "./components";
+import { getConfig } from "./config";
 import { handleModalSubmission } from "./listeners/handleModalSubmission";
 import { handleOverflowAction } from "./listeners/handleOverflowAction";
 import { openModal } from "./listeners/openModal";
@@ -16,16 +16,6 @@ declare module "@slack/bolt" {
   }
 }
 
-export interface FunctionsConfig {
-  slack: {
-    signing_secret: string;
-    client_id: string;
-    client_secret: string;
-  };
-}
-
-const config = functions.config() as FunctionsConfig;
-
 export const createSlackApp = ({
   rotationStore,
   installationStore,
@@ -33,6 +23,8 @@ export const createSlackApp = ({
   readonly slackHandler: ExpressReceiver["app"];
   readonly postRotation: (rotation: Rotation) => Promise<void>;
 } => {
+  const config = getConfig();
+
   const expressReceiver = new ExpressReceiver({
     signingSecret: config.slack.signing_secret,
     clientId: config.slack.client_id,

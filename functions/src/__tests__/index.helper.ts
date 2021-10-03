@@ -12,8 +12,8 @@ import functionsTest from "firebase-functions-test";
 
 import request from "supertest";
 
+import { FunctionsConfig } from "../config";
 import { RotationJSON } from "../models/rotation";
-import { FunctionsConfig } from "../slack";
 
 const CONFIG: FunctionsConfig = {
   slack: {
