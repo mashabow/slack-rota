@@ -81,12 +81,20 @@
 
 Slack アプリの Basic Information > App Credentials の情報を Firebase に設定し、デプロイします。
 
-1. Slack アプリの Client ID, Client Secret, Signing Secret を、Firebase Functions の `slack.***` に設定
+1. Slack アプリの Client ID, Client Secret, Signing Secret を、Firebase Functions の `slack.*` に設定
 
    ```console
-   $ firebase functions:config:set slack.client_id="012345678.1234567..."
-   $ firebase functions:config:set slack.client_secret="01234567890abcdef..."
-   $ firebase functions:config:set slack.signing_secret="01234567890abcdef..."
+   $ firebase functions:config:set \
+     slack.client_id="012345678.1234567..." \
+     slack.client_secret="01234567890abcdef..." \
+     slack.signing_secret="01234567890abcdef..."
+   ```
+
+1. Firebase Functions の `rota.*` に任意のランダム値を設定
+
+   ```console
+   $ firebase functions:config:set \
+     rota.state_secret="01234567890abcdef..."
    ```
 
 1. Firebase にデプロイ 🚀

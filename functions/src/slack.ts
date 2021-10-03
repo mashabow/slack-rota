@@ -29,9 +29,7 @@ export const createSlackApp = ({
     signingSecret: config.slack.signing_secret,
     clientId: config.slack.client_id,
     clientSecret: config.slack.client_secret,
-    // OAuth の state を生成するときの salt のようなもの
-    // Firebase だと stateStore を自前で用意する必要ある？
-    stateSecret: "my-state-secret",
+    stateSecret: config.rota.state_secret,
     scopes: ["chat:write", "chat:write.public", "commands", "users:read"],
     installationStore: {
       storeInstallation: (i) => installationStore.set(i),

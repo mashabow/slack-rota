@@ -21,6 +21,9 @@ const CONFIG: FunctionsConfig = {
     client_id: "dummy-client-id",
     client_secret: "dummy-client-secret",
   },
+  rota: {
+    state_secret: "dummy-state-secret",
+  },
 };
 
 /**
