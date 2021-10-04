@@ -4,13 +4,14 @@ import { Rotation } from "../models/rotation";
 
 /**
  * ローテーションの描画に必要な { [user_id]: user_name } の辞書を返す
- * rotation.mentionAll が false の場合は不要なので、null を返す
+ * （メンション**でない**ユーザー名の表示に必要になる）
+ * rotation.mentionAll が true の場合は不要なので、null を返す
  */
 export const getUserNameDict = async (
   rotation: Rotation,
   client: WebClient
 ): Promise<Record<string, string> | null> => {
-  if (!rotation.mentionAll) return null;
+  if (rotation.mentionAll) return null;
 
   try {
     const json = await client.users.list();
