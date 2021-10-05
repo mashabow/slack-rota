@@ -1,18 +1,19 @@
-import { Rotation } from "./models/rotation";
-import { Schedule } from "./models/schedule";
+import { Rotation } from "../models/rotation";
+import { Schedule } from "../models/schedule";
 
 export class RotationStore {
-  constructor(private db: FirebaseFirestore.Firestore) {}
+  private collection: FirebaseFirestore.CollectionReference;
+
+  constructor(db: FirebaseFirestore.Firestore) {
+    this.collection = db.collection("rotations");
+  }
 
   async set(rotation: Rotation): Promise<void> {
-    await this.db
-      .collection("rotations")
-      .doc(rotation.id)
-      .set(rotation.toJSON());
+    await this.collection.doc(rotation.id).set(rotation.toJSON());
   }
 
   async get(rotationId: string): Promise<Rotation | null> {
-    const doc = await this.db.collection("rotations").doc(rotationId).get();
+    const doc = await this.collection.doc(rotationId).get();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return doc.exists ? Rotation.fromJSON(doc.data() as any) : null;
   }
@@ -22,8 +23,7 @@ export class RotationStore {
       throw new Error("Length of schedule.days must be 1");
     }
 
-    const snapshot = await this.db
-      .collection("rotations")
+    const snapshot = await this.collection
       .where("schedule.days", "array-contains", schedule.days[0])
       .where("schedule.hour", "==", schedule.hour)
       .where("schedule.minute", "==", schedule.minute)
@@ -33,6 +33,6 @@ export class RotationStore {
   }
 
   async delete(rotationId: string): Promise<void> {
-    await this.db.collection("rotations").doc(rotationId).delete();
+    await this.collection.doc(rotationId).delete();
   }
 }

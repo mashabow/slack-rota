@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { Rotation } from "./models/rotation";
 import { Schedule } from "./models/schedule";
-import { RotationStore } from "./store";
+import { RotationStore } from "./stores/rotation";
 
 export const cronHandler =
   (

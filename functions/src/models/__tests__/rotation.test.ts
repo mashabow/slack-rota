@@ -4,6 +4,7 @@ import { Rotation } from "../rotation";
 describe("Rotation", () => {
   const json = {
     id: "rotation-id",
+    installationId: "installation-id",
     members: ["user-a", "user-b", "user-c"],
     message: "message line 1\nmessage line 2",
     channel: "channel-id",
@@ -26,6 +27,7 @@ describe("Rotation", () => {
     it("creates an instance from a JSON object", () => {
       const rotation = Rotation.fromJSON(json);
       expect(rotation.id).toBe(json.id);
+      expect(rotation.installationId).toEqual(json.installationId);
       expect(rotation.members).toEqual(json.members);
       expect(rotation.channel).toBe(json.channel);
       expect(rotation.schedule.toJSON()).toEqual(json.schedule);
@@ -47,6 +49,7 @@ describe("Rotation", () => {
 
       expect(rotated).not.toBe(original);
       expect(rotated.id).toBe(original.id);
+      expect(rotated.installationId).toEqual(original.installationId);
       expect(rotated.channel).toBe(original.channel);
       expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
       expect(rotated.mentionAll).toBe(json.mentionAll);
@@ -56,14 +59,15 @@ describe("Rotation", () => {
   describe("unrotate", () => {
     it("unrotates the members array", () => {
       const original = Rotation.fromJSON(json);
-      const rotated = original.unrotate();
-      expect(rotated.members).toEqual(["user-c", "user-a", "user-b"]);
+      const unrotated = original.unrotate();
+      expect(unrotated.members).toEqual(["user-c", "user-a", "user-b"]);
 
-      expect(rotated).not.toBe(original);
-      expect(rotated.id).toBe(original.id);
-      expect(rotated.channel).toBe(original.channel);
-      expect(rotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
-      expect(rotated.mentionAll).toBe(json.mentionAll);
+      expect(unrotated).not.toBe(original);
+      expect(unrotated.id).toBe(original.id);
+      expect(unrotated.installationId).toEqual(original.installationId);
+      expect(unrotated.channel).toBe(original.channel);
+      expect(unrotated.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(unrotated.mentionAll).toBe(json.mentionAll);
     });
   });
 });

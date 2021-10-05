@@ -1,8 +1,12 @@
 import { afterAll, describe, it, expect, jest } from "@jest/globals";
 import {
+  rotations,
+  submissionPayload,
+  submittedRotation,
+} from "./index.fixture";
+import {
   setupFunctionsTest,
   postSlackEvent,
-  rotations,
   mockSlackWebClient,
   setupFirestore,
 } from "./index.helper";
@@ -29,6 +33,7 @@ describe("functions test in online mode", () => {
           text: "foobar",
           channel_id: "channel-id",
           trigger_id: "trigger-id",
+          team_id: "team-id",
           // ...more unused parameters
         });
         expect(res.body).toEqual({}); // ack
@@ -39,125 +44,11 @@ describe("functions test in online mode", () => {
     });
 
     describe("submit from RotationModal", () => {
-      const payloadObj = {
-        type: "view_submission",
-        team: { id: "team-id", domain: "team-domain" },
-        user: {
-          id: "user-id",
-          // ...snip
-        },
-        view: {
-          type: "modal",
-          private_metadata: '{"channel":"channel-id"}',
-          callback_id: "submit_callback",
-          state: {
-            values: {
-              hour: {
-                hour: {
-                  type: "static_select",
-                  selected_option: {
-                    text: {
-                      type: "plain_text",
-                      text: "23時",
-                      emoji: true,
-                    },
-                    value: "23",
-                  },
-                },
-              },
-              minute: {
-                minute: {
-                  type: "static_select",
-                  selected_option: {
-                    text: {
-                      type: "plain_text",
-                      text: "45分",
-                      emoji: true,
-                    },
-                    value: "45",
-                  },
-                },
-              },
-              members: {
-                members: {
-                  type: "multi_users_select",
-                  selected_users: ["user-a", "user-b", "user-c"],
-                },
-              },
-              message: {
-                message: {
-                  type: "plain_text_input",
-                  value: "てすてす\n\n*テスト*です",
-                },
-              },
-              days: {
-                days: {
-                  type: "multi_static_select",
-                  selected_options: [
-                    {
-                      text: {
-                        type: "plain_text",
-                        text: "月曜",
-                        emoji: true,
-                      },
-                      value: "1",
-                    },
-                    {
-                      text: {
-                        type: "plain_text",
-                        text: "水曜",
-                        emoji: true,
-                      },
-                      value: "3",
-                    },
-                    {
-                      text: {
-                        type: "plain_text",
-                        text: "金曜",
-                        emoji: true,
-                      },
-                      value: "5",
-                    },
-                  ],
-                },
-              },
-              mention_all: {
-                mention_all: {
-                  type: "radio_buttons",
-                  selected_option: {
-                    text: {
-                      type: "mrkdwn",
-                      text: "全員にメンションする",
-                      verbatim: true,
-                    },
-                    value: "true",
-                  },
-                },
-              },
-            },
-          },
-          // ...snip
-        },
-        // ...snip
-      };
-      const submittedRotation = {
-        id: "1597200000000",
-        channel: "channel-id",
-        members: ["user-c", "user-a", "user-b"],
-        message: "てすてす\n\n*テスト*です",
-        schedule: {
-          days: [1, 3, 5],
-          hour: 23,
-          minute: 45,
-        },
-        mentionAll: true,
-      };
-
       it("creates a new rotation in Firestore and posts a SuccessMessage", async () => {
         Date.now = jest.fn(() => 1597200000000);
 
         const res = await postSlackEvent(slack, {
-          payload: JSON.stringify(payloadObj),
+          payload: JSON.stringify(submissionPayload),
         });
         expect(res.body).toEqual({}); // ack
         expect(getSlackWebClientCalls("chat.postMessage")).toMatchSnapshot();
@@ -171,9 +62,9 @@ describe("functions test in online mode", () => {
       it("updates a existing rotation in Firestore and posts a SuccessMessage", async () => {
         const res = await postSlackEvent(slack, {
           payload: JSON.stringify({
-            ...payloadObj,
+            ...submissionPayload,
             view: {
-              ...payloadObj.view,
+              ...submissionPayload.view,
               private_metadata:
                 '{"rotation_id":"rotation-4","channel":"channel-id"}',
             },
@@ -342,6 +233,21 @@ describe("functions test in online mode", () => {
 
           expect(await getAllRotations()).toEqual(rotations);
         });
+      });
+
+      it("ignores a event to change another team's rotation", async () => {
+        const res = await postOverflowAction({
+          text: {
+            type: "plain_text",
+            text: "ひとつ進む",
+            emoji: true,
+          },
+          value: "rotate:rotation-4",
+        });
+        expect(res.body).toEqual({}); // ack
+        expect(getSlackWebClientCalls("chat.update")).toMatchSnapshot();
+
+        expect(await getAllRotations()).toEqual(rotations);
       });
     });
   });

@@ -12,12 +12,17 @@ import functionsTest from "firebase-functions-test";
 
 import request from "supertest";
 
-import { RotationJSON } from "../models/rotation";
+import { FunctionsConfig } from "../config";
+import { installation, rotations } from "./index.fixture";
 
-const CONFIG = {
+const CONFIG: FunctionsConfig = {
   slack: {
-    bot_token: "dummy-bot-token",
+    client_id: "dummy-client-id",
+    client_secret: "dummy-client-secret",
     signing_secret: "dummy-signing-secret",
+  },
+  rota: {
+    state_secret: "dummy-state-secret",
   },
 };
 
@@ -39,6 +44,7 @@ export const setupFunctionsTest = (): ReturnType<typeof functionsTest> => {
     },
     `${__dirname}/../../../serviceAccountKey.json`
   );
+  // @ts-expect-error: test.mockConfig の型定義が雑
   test.mockConfig(CONFIG);
 
   return test;
@@ -134,17 +140,21 @@ export const mockSlackWebClient = (): {
 export const setupFirestore = (): {
   getAllRotations: () => Promise<readonly FirebaseFirestore.DocumentData[]>;
 } => {
-  const rotationsRef = admin.firestore().collection("rotations");
+  const db = admin.firestore();
+  const rotationsRef = db.collection("rotations");
+  const installationRef = db.collection("installations");
 
   beforeEach(async () => {
-    // Prepare rotations in Firestore
+    // Prepare rotations and a installation
     await Promise.all(
       rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
     );
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await installationRef.doc(installation.team!.id).set(installation);
   });
 
   afterEach(async () => {
-    // Delete all rotations from Firestore
+    // Delete all rotations
     const snapshot = await rotationsRef.get();
     await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
   });
@@ -154,54 +164,3 @@ export const setupFirestore = (): {
       (await rotationsRef.get()).docs.map((doc) => doc.data()),
   };
 };
-
-export const rotations: readonly RotationJSON[] = [
-  {
-    id: "rotation-1",
-    members: ["user-a", "user-b", "user-c"],
-    message: "rotation-1 message",
-    channel: "channel-1",
-    schedule: {
-      days: [0],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: true,
-  },
-  {
-    id: "rotation-2",
-    members: ["user-p", "user-q"],
-    message: "rotation-2 message",
-    channel: "channel-2",
-    schedule: {
-      days: [0, 6],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: false,
-  },
-  {
-    id: "rotation-3",
-    members: ["user-s", "user-t"],
-    message: "rotation-3 message",
-    channel: "channel-3",
-    schedule: {
-      days: [0],
-      hour: 22,
-      minute: 35,
-    },
-    mentionAll: true,
-  },
-  {
-    id: "rotation-4",
-    members: ["user-x", "user-y", "user-z"],
-    message: "rotation-4 message",
-    channel: "channel-4",
-    schedule: {
-      days: [2, 3, 4, 5],
-      hour: 7,
-      minute: 35,
-    },
-    mentionAll: false,
-  },
-];
