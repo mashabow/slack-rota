@@ -76,6 +76,7 @@
    1. [アプリ作成ページ](https://api.slack.com/apps?new_app=1) に移動
    1. 適当なアプリ名と、インストール先のワークスペースを入力し、アプリを作成
    1. Manage Distribution > Share Your App with Other Workspaces を開き、Remove Hard Coded Information のチェックを入れたら [Activate Public Distribution] をクリック
+   1. Scopes > Bot Token Scopes に `chat:write`, `chat:write.public`, `commands`, `users:read` を追加
 
 ### Firebase へのデプロイ
 
