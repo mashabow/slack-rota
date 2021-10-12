@@ -23,6 +23,7 @@ const CONFIG: FunctionsConfig = {
   },
   rota: {
     state_secret: "dummy-state-secret",
+    encryption_secret: "dummy-encryption-secret",
   },
 };
 

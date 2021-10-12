@@ -95,7 +95,8 @@ Slack アプリの Basic Information > App Credentials の情報を Firebase に
 
    ```console
    $ firebase functions:config:set \
-     rota.state_secret="01234567890abcdef..."
+     rota.state_secret="state_secret" \
+     rota.encryption_secret="encryption_secret"
    ```
 
 1. Firebase にデプロイ 🚀
