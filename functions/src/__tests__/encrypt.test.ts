@@ -2,16 +2,16 @@ import { describe, it, expect } from "@jest/globals";
 import { encrypt, decrypt } from "../encrypt";
 
 describe("encrypt", () => {
-  const key = "0123456789abcedf0123456789abcedf";
-  const plain = "This is a plain text!";
+  const secret = "secret";
+  const plain = "This is a plaintext!";
 
-  it("decrypts an encrypted string to the original plain text with the same key", () => {
-    expect(decrypt(encrypt(plain, key), key)).toEqual(plain);
+  it("decrypts an encrypted string to the original plaintext with the same secret", () => {
+    expect(decrypt(encrypt(plain, secret), secret)).toEqual(plain);
   });
 
-  it("with a wrong key", () => {
-    expect(() =>
-      decrypt(encrypt(plain, key), "00000000000000000000000000000000")
-    ).toThrow("Failed to decrypt");
+  it("throws an error when decrypting with a wrong secret", () => {
+    expect(() => decrypt(encrypt(plain, secret), "wrong secret")).toThrow(
+      "Failed to decrypt"
+    );
   });
 });
