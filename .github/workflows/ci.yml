@@ -13,14 +13,17 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "14.x"
-      - run: npm ci
-      - run: npm run lint
+      - name: Install node modules
+        run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Type check
         run: npm run type
       - name: Create serviceAccountKey.json for online testing
         run: echo "$SERVICE_ACCOUNT_KEY_JSON" > ../serviceAccountKey.json
         env:
           SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
-      - run: npm run test:ci
+      - name: Tests
+        run: npm run test:ci
         env:
           TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
