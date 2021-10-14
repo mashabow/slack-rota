@@ -1,3 +1,4 @@
+import { getConfig } from "../config";
 import { InstallationStore } from "./installation";
 import { RotationStore } from "./rotation";
 
@@ -11,6 +12,9 @@ export const createStores = (db: FirebaseFirestore.Firestore): Stores => {
 
   return {
     rotationStore: new RotationStore(db),
-    installationStore: new InstallationStore(db),
+    installationStore: new InstallationStore(
+      db,
+      getConfig().rota.encryption_secret
+    ),
   };
 };

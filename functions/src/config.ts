@@ -7,9 +7,10 @@ export interface FunctionsConfig {
     client_secret: string;
     signing_secret: string;
   };
-  // 任意の値を設定
+  // 任意の文字列を設定
   rota: {
     state_secret: string; // OAuth の state パラメータの JWT 署名に使う
+    encryption_secret: string; // トークン保管時の暗号化に使う
   };
 }
 

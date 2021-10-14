@@ -13,6 +13,7 @@ import functionsTest from "firebase-functions-test";
 import request from "supertest";
 
 import { FunctionsConfig } from "../config";
+import { encrypt } from "../encrypt";
 import { installation, rotations } from "./index.fixture";
 
 const CONFIG: FunctionsConfig = {
@@ -23,6 +24,7 @@ const CONFIG: FunctionsConfig = {
   },
   rota: {
     state_secret: "dummy-state-secret",
+    encryption_secret: "dummy-encryption-secret",
   },
 };
 
@@ -150,7 +152,14 @@ export const setupFirestore = (): {
       rotations.map((rotation) => rotationsRef.doc(rotation.id).set(rotation))
     );
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await installationRef.doc(installation.team!.id).set(installation);
+    await installationRef.doc(installation.team!.id).set({
+      ...installation,
+      bot: {
+        ...installation.bot,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        token: encrypt(installation.bot!.token, CONFIG.rota.encryption_secret),
+      },
+    });
   });
 
   afterEach(async () => {
