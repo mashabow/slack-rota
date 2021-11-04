@@ -14,14 +14,16 @@ export const getUserNameDict = async (
   if (rotation.mentionAll) return null;
 
   try {
-    const json = await client.users.list();
-    // 型定義上は optional だが、正常系では必ず存在するはず
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return json.members!.reduce<Record<string, string>>(
-      (acc, { id, profile }) => ({
+    const responses = await Promise.all(
+      rotation.members.map((member) => client.users.info({ user: member }))
+    );
+    return responses.reduce<Record<string, string>>(
+      (acc, { user }) => ({
         ...acc,
+        // 型定義上は optional だが、正常系では必ず存在するはず
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        [id!]: profile?.display_name || profile?.real_name || "",
+        [user!.id!]:
+          user?.profile?.display_name || user?.profile?.real_name || "???",
       }),
       {}
     );
