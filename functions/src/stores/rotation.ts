@@ -18,7 +18,7 @@ export class RotationStore {
     return doc.exists ? Rotation.fromJSON(doc.data() as any) : null;
   }
 
-  async getBySchedule(schedule: Schedule): Promise<readonly Rotation[]> {
+  async getAllBySchedule(schedule: Schedule): Promise<readonly Rotation[]> {
     if (schedule.days.length !== 1) {
       throw new Error("Length of schedule.days must be 1");
     }
@@ -32,7 +32,7 @@ export class RotationStore {
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
 
-  async getByMember(member: string): Promise<readonly Rotation[]> {
+  async getAllByMember(member: string): Promise<readonly Rotation[]> {
     const snapshot = await this.collection
       .where("members", "array-contains", member)
       .get();

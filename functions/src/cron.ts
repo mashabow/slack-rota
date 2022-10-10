@@ -12,7 +12,7 @@ export const cronHandler =
     const schedule = Schedule.dateToNearestSchedule(
       new Date(context.timestamp)
     );
-    const rotations = await rotationStore.getBySchedule(schedule);
+    const rotations = await rotationStore.getAllBySchedule(schedule);
     functions.logger.log("rotations", { rotations });
 
     for (const rotation of rotations) {

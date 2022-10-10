@@ -10,7 +10,7 @@ export const handleUserChange: Middleware<
   functions.logger.log("User deactivated", { user });
 
   const rotationStore = context.rota.rotationStore;
-  const rotations = await rotationStore.getByMember(user.id);
+  const rotations = await rotationStore.getAllByMember(user.id);
 
   for (const rotation of rotations) {
     const newRotation = rotation.removeMember(user.id);
