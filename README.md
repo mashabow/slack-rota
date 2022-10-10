@@ -127,6 +127,13 @@ Slack から Firebase Functions を呼び出せるようにします。
    1. OAuth & Permissions の Redirect URLs に `https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/oauth_redirect` と入力して、[Add] をクリック
    1. [Save URLs] をクリックして設定を保存
 
+1. Event Subscriptions を有効化
+
+   1. Event Subscriptions の Enable Events を On に変更
+   1. Request URL に `https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/events` と入力
+   1. Subscribe to bot events に `user_change` を追加
+   1. 設定を保存
+
 ### ワークスペースへのインストール
 
 `https://asia-northeast1-<FirebaseのプロジェクトID>.cloudfunctions.net/slack/install` にアクセスして、ワークスペースにインストールします。
@@ -163,6 +170,8 @@ $ ngrok http 5001
   - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/events`
 - OAuth & Permissions > Redirect URLs
   - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/oauth_redirect`
+- Event Subscriptions > Request URL
+  - `https://12345abcde.ngrok.io/your-project-id/asia-northeast1/slack/events`
 
 [Cloud Functions シェル](https://firebase.google.com/docs/functions/local-shell?hl=ja)を使うと、Firebase Emulator 上の `cron` 関数を手動で実行することができます。
 
