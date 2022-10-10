@@ -2,9 +2,9 @@ import { App, ExpressReceiver, BlockOverflowAction } from "@slack/bolt";
 import { ID } from "./components";
 import { getConfig } from "./config";
 import { handleModalSubmission } from "./listeners/handleModalSubmission";
-import { handleOverflowAction } from "./listeners/handleOverflowAction";
-import { handleUserChange } from "./listeners/handleUserChange";
 import { openModal } from "./listeners/openModal";
+import { removeDeactivatedUser } from "./listeners/removeDeactivatedUser";
+import { runOverflowAction } from "./listeners/runOverflowAction";
 import { Rotation } from "./models/rotation";
 import { postRotation } from "./services/postRotation";
 import { Stores } from "./stores";
@@ -64,8 +64,8 @@ export const createSlackApp = ({
   // リスナーを定義
   app.command("/rota", openModal);
   app.view(ID.SUBMIT_CALLBACK, handleModalSubmission);
-  app.action<BlockOverflowAction>(ID.OVERFLOW_MENU, handleOverflowAction);
-  app.event("user_change", handleUserChange);
+  app.action<BlockOverflowAction>(ID.OVERFLOW_MENU, runOverflowAction);
+  app.event("user_change", removeDeactivatedUser);
 
   return {
     slackHandler: expressReceiver.app,

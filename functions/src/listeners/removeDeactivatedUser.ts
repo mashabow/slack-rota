@@ -5,7 +5,7 @@ import * as functions from "firebase-functions";
  * deactivate されたユーザーを全ローテーションのメンバーから削除する
  * ローテーションのメンバーが空になる場合は、そのローテーション自体を削除する
  */
-export const handleUserChange: Middleware<
+export const removeDeactivatedUser: Middleware<
   SlackEventMiddlewareArgs<"user_change">
 > = async ({ event, context }) => {
   const { user } = event;
