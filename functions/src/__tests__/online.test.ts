@@ -3,13 +3,13 @@ import {
   rotations,
   submissionPayload,
   submittedRotation,
-} from "./index.fixture";
+} from "./online.fixture";
 import {
   setupFunctionsTest,
   postSlackEvent,
   mockSlackWebClient,
   setupFirestore,
-} from "./index.helper";
+} from "./online.helper";
 
 const functionsTest = setupFunctionsTest();
 
