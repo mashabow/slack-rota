@@ -70,4 +70,19 @@ describe("Rotation", () => {
       expect(unrotated.mentionAll).toBe(json.mentionAll);
     });
   });
+
+  describe("removeMember", () => {
+    it("removes the specified member from the members array", () => {
+      const original = Rotation.fromJSON(json);
+      const removed = original.removeMember("user-a");
+      expect(removed.members).toEqual(["user-b", "user-c"]);
+
+      expect(removed).not.toBe(original);
+      expect(removed.id).toBe(original.id);
+      expect(removed.installationId).toEqual(original.installationId);
+      expect(removed.channel).toBe(original.channel);
+      expect(removed.schedule.toJSON()).toEqual(original.schedule.toJSON());
+      expect(removed.mentionAll).toBe(json.mentionAll);
+    });
+  });
 });

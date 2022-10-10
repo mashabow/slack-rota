@@ -32,6 +32,14 @@ export class RotationStore {
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
   }
 
+  async getByMember(member: string): Promise<readonly Rotation[]> {
+    const snapshot = await this.collection
+      .where("members", "array-contains", member)
+      .get();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
+  }
+
   async delete(rotationId: string): Promise<void> {
     await this.collection.doc(rotationId).delete();
   }
