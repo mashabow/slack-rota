@@ -49,6 +49,8 @@ export const createSlackApp = ({
 
   const app = new App({ receiver: expressReceiver });
 
+  // 各リスナーで扱いやすいように、context に rotationStore と installationId を入れておく
+  // リスナーの中では、引数 context を通じてアクセスできる
   app.use(async ({ context, body, next }) => {
     context.rota = {
       rotationStore,
@@ -59,6 +61,7 @@ export const createSlackApp = ({
     await next?.();
   });
 
+  // リスナーを定義
   app.command("/rota", openModal);
   app.view(ID.SUBMIT_CALLBACK, handleModalSubmission);
   app.action<BlockOverflowAction>(ID.OVERFLOW_MENU, handleOverflowAction);

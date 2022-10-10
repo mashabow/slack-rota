@@ -1,6 +1,10 @@
 import { Middleware, SlackEventMiddlewareArgs } from "@slack/bolt";
 import * as functions from "firebase-functions";
 
+/**
+ * deactivate されたユーザーを全ローテーションのメンバーから削除する
+ * ローテーションのメンバーが空になる場合は、そのローテーション自体を削除する
+ */
 export const handleUserChange: Middleware<
   SlackEventMiddlewareArgs<"user_change">
 > = async ({ event, context }) => {
