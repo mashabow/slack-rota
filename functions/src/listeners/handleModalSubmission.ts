@@ -9,6 +9,10 @@ import { ID, SuccessMessage } from "../components";
 import { Rotation } from "../models/rotation";
 import { getUserNameDict } from "../services/getUserNameDict";
 
+/**
+ * ローテーション作成・編集モーダルから送信された内容を受け取り、rotationStore に保存する
+ * 同時に、ローテーションのプレビューをメッセージとして投稿する
+ */
 export const handleModalSubmission: Middleware<
   SlackViewMiddlewareArgs<SlackViewAction>
 > = async ({ ack, body, view, client, context }) => {

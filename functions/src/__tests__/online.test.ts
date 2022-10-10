@@ -3,13 +3,13 @@ import {
   rotations,
   submissionPayload,
   submittedRotation,
-} from "./index.fixture";
+} from "./online.fixture";
 import {
   setupFunctionsTest,
   postSlackEvent,
   mockSlackWebClient,
   setupFirestore,
-} from "./index.helper";
+} from "./online.helper";
 
 const functionsTest = setupFunctionsTest();
 
@@ -248,6 +248,75 @@ describe("functions test in online mode", () => {
         expect(getSlackWebClientCalls("chat.update")).toMatchSnapshot();
 
         expect(await getAllRotations()).toEqual(rotations);
+      });
+    });
+
+    describe("user deactivated event", () => {
+      it("removes the deactivated user from rotation members", async () => {
+        await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "event_callback",
+            team_id: "team-id",
+            event: {
+              type: "user_change",
+              user: {
+                id: "user-a",
+                deleted: true,
+                // ...snip
+              },
+              // ...snip
+            },
+            // ...snip
+          }),
+        });
+
+        expect(await getAllRotations()).toEqual([
+          { ...rotations[0], members: ["user-b", "user-c"] },
+          rotations[1],
+          rotations[2],
+          rotations[3],
+        ]);
+      });
+
+      it("deletes a rotation when no members left by removing the deactivated user", async () => {
+        await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "event_callback",
+            team_id: "team-id",
+            event: {
+              type: "user_change",
+              user: {
+                id: "user-s",
+                deleted: true,
+                // ...snip
+              },
+              // ...snip
+            },
+            // ...snip
+          }),
+        });
+        await postSlackEvent(slack, {
+          payload: JSON.stringify({
+            type: "event_callback",
+            team_id: "team-id",
+            event: {
+              type: "user_change",
+              user: {
+                id: "user-t",
+                deleted: true,
+                // ...snip
+              },
+              // ...snip
+            },
+            // ...snip
+          }),
+        });
+
+        expect(await getAllRotations()).toEqual([
+          rotations[0],
+          rotations[1],
+          rotations[3],
+        ]);
       });
     });
   });

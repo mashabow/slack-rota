@@ -7,7 +7,10 @@ import * as functions from "firebase-functions";
 import { RotationMessage, RotationModal } from "../components";
 import { getUserNameDict } from "../services/getUserNameDict";
 
-export const handleOverflowAction: Middleware<
+/**
+ * 投稿されたローテーションの […] メニューが選択されたとき、それぞれの動作を実行する
+ */
+export const runOverflowAction: Middleware<
   SlackActionMiddlewareArgs<BlockOverflowAction>
 > = async ({ ack, action, body, client, context }) => {
   await ack();

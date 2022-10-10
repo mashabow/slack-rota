@@ -18,7 +18,7 @@ export class RotationStore {
     return doc.exists ? Rotation.fromJSON(doc.data() as any) : null;
   }
 
-  async getBySchedule(schedule: Schedule): Promise<readonly Rotation[]> {
+  async getAllBySchedule(schedule: Schedule): Promise<readonly Rotation[]> {
     if (schedule.days.length !== 1) {
       throw new Error("Length of schedule.days must be 1");
     }
@@ -27,6 +27,14 @@ export class RotationStore {
       .where("schedule.days", "array-contains", schedule.days[0])
       .where("schedule.hour", "==", schedule.hour)
       .where("schedule.minute", "==", schedule.minute)
+      .get();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));
+  }
+
+  async getAllByMember(member: string): Promise<readonly Rotation[]> {
+    const snapshot = await this.collection
+      .where("members", "array-contains", member)
       .get();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return snapshot.docs.map((doc) => Rotation.fromJSON(doc.data() as any));

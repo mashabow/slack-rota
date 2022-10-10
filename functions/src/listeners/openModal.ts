@@ -2,6 +2,9 @@ import { Middleware, SlackCommandMiddlewareArgs } from "@slack/bolt";
 import * as functions from "firebase-functions";
 import { RotationModal } from "../components";
 
+/**
+ * ローテーション作成モーダルを開く
+ */
 export const openModal: Middleware<SlackCommandMiddlewareArgs> = async ({
   ack,
   body,

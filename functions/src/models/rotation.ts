@@ -9,7 +9,10 @@ export type RotationJSON = Omit<RotationArgs, "schedule"> & {
 export class Rotation {
   readonly id: string;
   readonly installationId: string;
-  // members の先頭が担当者。store には、最後に post したときの状態で保存する
+  /**
+   * members の先頭が担当者。store には、最後に post したときの状態で保存する
+   * 各要素は Slack の user_id
+   */
   readonly members: readonly string[];
   readonly message: string;
   readonly channel: string;
@@ -64,6 +67,13 @@ export class Rotation {
         this.members[this.members.length - 1],
         ...this.members.slice(0, -1),
       ],
+    });
+  }
+
+  removeMember(member: string): Rotation {
+    return new Rotation({
+      ...this,
+      members: this.members.filter((m) => m !== member),
     });
   }
 }

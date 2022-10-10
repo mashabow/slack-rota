@@ -14,7 +14,7 @@ import request from "supertest";
 
 import { FunctionsConfig } from "../config";
 import { encrypt } from "../encrypt";
-import { installation, rotations } from "./index.fixture";
+import { installation, rotations } from "./online.fixture";
 
 const CONFIG: FunctionsConfig = {
   slack: {
